@@ -20,6 +20,8 @@
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{enumerate}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \usepackage[
     backend=biber,
@@ -103,23 +105,22 @@
 \maketitle 
 
 \section{Abstract}
-Consider the following process over time: Given a graph $G = (V,E)$ with positive integral edge weights $l$, we choose for each edge $e$ exactly one point in time $\tau_e \in [0, \infty)$. This causes $e$ to be active during $[\tau_e, \tau_e + l(e)]$. For (a) $F = V$ or (b) $F = \set{s,t}$, we introduce the problem of maximizing the time such that $F$ is connected by active edges. The problem is related to spanning tree packing, Menger's problem, and maximizing the minimum load time in nonpreemptive scheduling. We show that both (a) and (b) are NP-complete, even on quite simple graphs with treewidth at most 3. We show that (a) is NP-complete even if $l(e) \in \fromto{1}{6}$ and that (b) is NP-complete even if $l(e) \in \set{1,2}$. We show that (a) can not be approximated in polynomial time by a factor better than 7/6, if P $\neq$ NP. If both the treewidth of the input graph and the edge weights are bounded by a constant, we give a linear time algorithm for (a).
+Consider the following process over time: Given a graph $G = (V,E)$ with positive integral edge weights $w$, we choose for each edge $e$ exactly one point in time $\tau_e \in [0, \infty)$. This causes $e$ to be active during $[\tau_e, \tau_e + w(e)]$. For (a) $F = V$ or (b) $F = \set{s,t}$, we introduce the problem of maximizing the time such that $F$ is connected by active edges. The problem is related to spanning tree packing, Menger's problem, and maximizing the minimum load time in nonpreemptive scheduling. We show that both (a) and (b) are NP-complete, even on quite simple graphs with treewidth at most 3. We show that (a) is NP-complete even if $w(e) \in \fromto{1}{6}$ and that (b) is NP-complete even if $w(e) \in \set{1,2}$. We show that (a) can not be approximated in polynomial time by a factor better than 7/6, if P $\neq$ NP. If both the treewidth of the input graph and the edge weights are bounded by a constant, we give a linear time algorithm for (a).
 \section{Introduction}
 \comment{Comments made by Lasse}
-Suppose we have an electrical network, represented by a graph $G = (V,E)$, where each of the vertices represents a consumer or a producer, and each edge $e = uv$ represents a power line between $u$ and $v$. However, the use of a power line $e$ is restricted by its \emph{lifetime} $l(e) \in \N$: We can only use it during an interval $[\tau_e, \tau_e + l(e)]$, where we may choose the \emph{activation time} $\tau_e \geq 0$ freely. In particular, we are not allowed to split this interval into multiple disjoint intervals of total length $l(e)$, i.e.\ the scheduling process is \emph{nonpreemptive}. We say that $e$ is \emph{active} during $[\tau_e, \tau_e + l(e)]$. In this paper, we consider two different problems:
+Suppose we have an electrical network, represented by a graph $G = (V,E)$, where each of the vertices represents a consumer or a producer, and each edge $e = \{u,v\}$ represents a power line between $u$ and $v$. However, the use of a power line $e$ is restricted by its \emph{lifetime} $w(e) \in \N$: We can only use it during an interval $[\tau_e, \tau_e + w(e)]$, where we may choose the \emph{activation time} $\tau_e \geq 0$ freely. In particular, we are not allowed to split this interval into multiple disjoint intervals of total length $w(e)$, i.e.\ the scheduling process is \emph{nonpreemptive}. We say that $e$ is \emph{active} during $[\tau_e, \tau_e + w(e)]$. In this paper, we consider two different problems:
 \begin{enumerate}
-\item \emph{Activation problem} \act: Keep the electrical network connected for as long as possible.
-\item \emph{s-t-Activation problem} \stact: Given $s, t \in V$, keep them connected for as long as possible.
+\item \emph{Activation problem} \act: Keep the electrical network connected for as long as possible, i.e.\ choose the $\tau_e$ such that the subgraph of active edges is spanning for a maximal amount of time. 
+\item \emph{s-t-Activation problem} \stact: Given $s, t \in V$, keep them connected for as long as possible, i.e.\ choose the $\tau_e$ such that $s, t$ are connected by active edges for a maximal amount of time.
 \end{enumerate}
-In more technical terms, \act\ is the problem to choose the $\tau_e$ such that the subgraph of active edges is spanning for a maximal amount of time, and \stact\ is the problem to choose the $\tau_e$ such that $s, t$ are connected by a path of active edges for a maximal amount of time (given $s, t \in V$).
 
-It is easy to see, that w.l.o.g.\ this maximal amount of time, such that $V$ (or $\set{s,t}$) is connected by active edges, equals some interval $[0, T]$. Due to $l(e) \in \N$, it is also easy to see that w.l.o.g.\ the $\tau_e$ can be chosen to be integral. Therefore, $T$ is integral.
+We stress the point that in general, at different points in time, the set of active edges is different. It is only required that at each point in time, the subgraph of active edges is spanning (is connecting $s$ and $t$). 
 
-Assume for a moment that we drop the condition of nonpreemptiveness, i.e.\ we allow activation of $e$ during multiple intervals, whose total length does not exceed $l(e)$. Then \stact\ is clearly equivalent to the \emph{Menger problem} of finding a maximum number of edge-disjoint $s$-$t$-paths, and \act\ is equivalent to the problem of packing a maximum number of spanning trees into a weighted graph. Both of these are classical problems and can be solved in time polynomial in the input size. The first is solved by finding a maximal $s$-$t$-flow and finding a path decomposition of it, the second is solved either by matroid decomposition or flow techniques [cite]. 
+The problems \act\ and \stact\ are nonpreemptive variants of known problems. To see this, assume for a moment that we drop the condition of nonpreemptiveness, i.e.\ we allow activation of $e$ during multiple intervals, whose total length does not exceed $w(e)$. Then \stact\ becomes the problem of finding a maximum set of $s$-$t$-paths, such that for each edge, the number of paths crossing it does not exceed $w(e)$. This is called \emph{Menger's problem}. Similarily, the preemptive variant of \act\ is the problem of packing a maximum number of spanning trees into a weighted graph, i.e.\ the problem of \emph{spanning tree packing}. Both of these are classical problems and can be solved in strongly polynomial time. The first is solved by finding a maximal $s$-$t$-flow and finding a path decomposition of it, the second is solved either by matroid decomposition or flow techniques [cite]. There is a further connection to a classical problem from the area of job scheduling: The problem \act\ can be understood as a generalization of the problem of \emph{maximizing the minimum machine load time}. We can interprete this problem as an activation problem for uniform matroids, whereas problem \act\ is an activation problem for graphic matroids (details, see \cref{appendix:connection_act_job_scheduling}). Like both Menger's problem and spanning tree packing, this problem also has been considered extensively in the past [cite]. It is known to be strongly NP-complete, but to admit a PTAS [cite].
 
-In contrast, we show in this paper, that \act\ is strongly NP-complete, even if a.) the input graph is $K_{2,n}$ or if b.) we have $l(e) \in \fromto{1}{6}$. Similarily, we show that \stact\ is NP-complete, even if a.) the treewidth of the input graph is bounded by 3, or if b.) we have $l(e) \in \set{1,2}$ for all $e$. On the other hand, when both treewidth and $l(e)$ are bounded by some constant $k$, we show that there is a $\bigO((k+1)^{\bigO(k^3)}n)$ \enquote{linear} time algorithm for \act, employing dynamic programming. The same algorithm applies for \stact, when both the treewidth and the optimum value of a solution are bounded by a constant. (Note that bounding the weight is a weaker condition than bounding the optimal solution value).
-
-Problem \act\ is related to job scheduling in the following way: Let $G = (V, E)$ be a graph. The \emph{graphic matroid} of $G$ is the set system $\set{F \subseteq E \mid F \text{ is acyclic}}$. A \emph{base} in a matroid is set of maximal cardinality. Hence problem \act\ has the following generalization: Given a ground set $E$, lifetimes $l: E \rightarrow \N$, and some matroid $\mathcal{F} \subseteq 2^E$, find activation times such that for a maximal amount of time, the set of active elements comprises a base of $\mathcal{F}$. Now, if $E$ is a set of jobs with processing times $l$, and $\mathcal{F} = \set{F \subseteq E : |F| = k}$ is the uniform matroid of rank $k$, then the matroid activation problem is exactly the problem of maximizing the minimum machine load time when distributing the jobs onto $k$ machines. Like both Menger's problem and spanning tree packing, this problem also has been considered extensively in the past [cite]. It is known to be strongly NP-complete, but to admit a PTAS [cite]. In contrast, we show in theorem \cref{corollary_act_no_approx} that $\act$ can not be approximated by a factor better than 7/6.
+\emph{Our contribution.}
+We show that \act\ is strongly NP-complete, even if a.) the input graph is $K_{2,n}$ or if b.) the input graph is outerplanar of bandwidth 2, or c.) we have $w(e) \in \fromto{1}{6}$. Similarily, we show that \stact\ is NP-complete, even if a.) the treewidth of the input graph is bounded by 3, or if b.) we have $w(e) \in \set{1,2}$ for all $e$. On the other hand, when both treewidth and $w(e)$ are bounded by some constant $k$, we show that there is a linear time FPT-algorithm for \act. The same algorithm applies for \stact, when both the treewidth and the optimum value of a solution are bounded by a constant. (Note that bounding the weight is a weaker condition than bounding the optimal solution value).
+In contrast, we show in theorem \cref{corollary_act_no_approx} that $\act$ can not be approximated by a factor better than 7/6.
 
 \section{Related Work}
 
@@ -128,27 +129,47 @@ Problem \act\ is related to job scheduling in the following way: Let $G = (V, E)
 \item Nash-Williams theorem: $G$ contains $k$ edge-disjoint spanning tree if and only $\delta(X_1, \dots, X_p) \geq k(p - 1)$ for all partitions $(X_1, \dots, X_p)$ of $V(G)$. 
 \end{enumerate}
 
-\section{Notation}
+\section{Definitions and Notation}
 \label{sec_notation}
 
-We write $\N_0 := \N \cup \set{0}$ for the set of nonnegative integers. For $a \leq b$, the terms $[a, b]$ and $[a, b)$ denote the closed interval and half-open interval between $a$ and $b$, respectively. An instance for \act\ or \stact\ is a simple, undirected graph $G = (V, E)$ together with lifetimes $l : E \rightarrow \N$. We do not allow parallel edges in $G$. However, note that a parallel edge $e = uv$ can be easily modeled by introducing a vertex $w_e$ and edges $uw_e$ and $w_ev$ with $l'(uw_e) = l(uv)$ and $l'(w_ev) = \infty$ (or some integer big enough). A \emph{schedule} for this instance is simply a map $\sigma : E \rightarrow \N_0;\ e \mapsto \tau_e$. Given a schedule $\sigma$ and $t \in [0, \infty)$, we denote the \emph{set of edges active at time $t$} by $\ac_\sigma (t) := \set{e \in E : \sigma(e) \leq t \leq \sigma(e) + l(e)}$ and the \emph{set of edges becoming inactive at time $t$} by $B_\sigma (t) := \set{e \in E : t = \sigma(e) + l(e)}$. Furthermore, for $e \in E$, we denote the \emph{active interval of $e$} by $T_\sigma(e) := [\sigma(e), \sigma(e) + l(e)]$. If $\sigma$ is clear from context, we write $A(t)$, $B(t)$ and $T(e)$ instead. Depending whether we are in the context of the activation problem or the $s$-$t$-activation problem, let $F = V$ or $F = \set{s,t}$. Given a schedule $\sigma$, let $C(\sigma) := \set{t \in \N_0 : A(t) \setminus B(t) \text{ connects }F}$. Notice that $A(t) \setminus B(t) = A(t+1/2)$.
+We write $\N_0 := \N \cup \set{0}$ for the set of nonnegative integers. For $a \leq b$, the terms $[a, b]$ and $[a, b)$ denote the closed interval and half-open interval between $a$ and $b$, respectively. An instance for \act\ or \stact\ is a weighted graph $(G, w)$, where $G = (V, E)$ and $w : E \rightarrow \N$. For the problem \act\ the graph $G$ is undirected. For the problem \stact\ the graph $G$ is directed, like in the classical Menger problem. We do not consider parallel edges. (However, it is easy to see that a pair of parallel edges can be easily modeled, by subdividing and using infinite or large enough edge weights.) A \emph{schedule} for some instance $(G, w)$ is simply a map $\sigma : E \rightarrow \N_0$, mapping each edge $e$ to its activation time $\sigma(e)$. Note that we do not need to consider non-integral activation times. This follows from the fact that all edge weights are integral, and it is unecessary to activate an edge, before some connection breaks down.
 
+Given a schedule $\sigma$ and an edge $e$, we denote the \emph{active interval of $e$} by $I_\sigma(e) := [\sigma(e), \sigma(e) + w(e)]$. We introduce discrete time steps: For $i \in \{1, 2, \dots\}$, the variable $E^\sigma_i := \set{e \in E : [i-1, i] \subseteq I_\sigma(e)}$ denotes the set of edges active in the $i$-th timestep, and the graph $G^\sigma_i := (V, E^\sigma_i)$ denotes the graph of active edges in the $i$-th timestep. For a vertex $v$, let $d^\sigma_i(v)$ denote the degree of $v$ in $G^\sigma_i$, i.e.\ the number of incident active edges of $v$ in the $i$-th timestep.
+Depending whether we are in the context of the activation problem or the $s$-$t$-activation problem, let $C(\sigma) := \set{i \in \N : V \text{ is connected in } G^\sigma_i}$ or  $C(\sigma) := \set{i \in \N : G_i^\sigma \text{ contains a directed $s$-$t$-path}}$. The set $C(\sigma)$ is the set of all time steps, where the objective is fulfilled by the schedule $\sigma$. Finally, we define the \emph{value} of a schedule. If $C(\sigma) = \fromto{1}{T}$ for some $T$, let $\val(\sigma) = T$, else $\val(\sigma) = 0$.
+With this terminology, the problems \act\ and \stact\ are the problems to find a schedule of maximal value. Both problems are in NP, because it is possible in polynomial time to compute the value of a schedule. 
 
-We say that a schedule $\sigma$ is \emph{valid}, if $C(\sigma) = \fromto{0}{T-1}$ for some $T \in \N_0$ (allowing for $C(\sigma) = \emptyset$ and $T = 0$). Any schedule that is a solution to \act\ or \stact\ can be transformed into a valid schedule of at least the same quality of solution. We define $\val(\sigma) := T$. With this terminology, the problems \act\ and \stact\ are the problems to find a valid schedule of maximal value. Both problems are in NP, because it is possible in polynomial time to verify the validness of a schedule and compute its value.
+When the schedule $\sigma$ is clear from the context, we also write $I(e), E_i$, $G_i$ and $d_i(v)$ instead of $I_\sigma(e), E^\sigma_i$, $G^\sigma_i$, and $d^\sigma_i(v)$. 
 
-Finally, for $t \in \fromto{1}{T}$, we define $G_t^\sigma := (V, A_\sigma(t - 1/2))$ and again write $G_t$, if $\sigma$ is clear from context. Then the schedule $\sigma$ is uniquely described by the sequence $(G_1, \dots G_T)$ of graphs of the edges active at time $t - 1/2$ for $t \in \fromto{1}{T}$.
+We give a short example of the introduced concepts. Consider \cref{fig:introduction_examples}. For the instance of problem \act\ depicted in subfigure (a), one has that the optimal value of a schedule is 2. A schedule $\sigma$ of value 3 does not exist, because in such a schedule there would be distinct edges $e, e'$ with $\sigma(e) = \sigma(e') = 0$. This implies $I(e) = I(e') = [0, 2]$, hence $G_3$ is not spanning. However, note that three spanning trees can be packed into this instance. In a similar fashion, subfigure (b) depicts an instance of \stact\ where the optimal solution is 3, but the solution to the Menger problem is 4.
+\begin{figure}
+     \centering
+     \begin{subfigure}[t]{0.3\textwidth}
+         \centering
+         \includegraphics[scale=1]{img/example-act}
+         \label{fig:example_act}
+     \end{subfigure}
+     \begin{subfigure}[t]{0.3\textwidth}
+         \centering
+         \includegraphics[scale=1]{img/example-st-act}
+         \label{fig:example_st_act}
+     \end{subfigure}
+        \caption{Example instances for (a) problem \act\ and (b) problem \stact.}
+        \label{fig:introduction_examples}
+\end{figure}
+
+We make use of the following graph-theoretic concepts and notations: Let $G = (V,E)$ be a directed or undirected graph. If $V' \subseteq V$ is a subset of the vertices, the corresponding \emph{edge cut} $\delta(V')$ is the set of edges having one endpoint in $V'$ and one endpoint in $V \setminus V'$ (in the directed case, we do not distinguish here between incoming and outgoing edges). For a vertex $v$, we let $\delta(v) := \delta(\set{v})$. If $(V_1,\dots,V_k)$ is a partition of $V$, the \emph{multicut} $\delta(V_1,\dots,V_k)$ is the set of edges with endpoints in diiferent parts of the partition. We denote by $G[V']$ the \emph{induced subgraph} on $V'$. By removing the vertex $v$ from $G$, we obtain $G - v := G[V \setminus \set{v}]$. Similarily, if $E' \subseteq E$ and $e \in E$, then $G - E' := (V, E \setminus E')$, and $G - e := G - \set{e}$. The \emph{treewidth} of a graph is an important parameter in the area of parameterized complexity (for an introduction, see e.g.\ [cite]).
+
 
 \textbf{ Other Preliminaries: }
 \begin{enumerate}
-\item Treewidth
-\item Nice tree decomposition
-\item Matroids, base of a matroid, matroid base packing problem
-\item Notation $\delta(v)$
-\item Notation $uv := \set{u, v}$
+\item definition path (directed/undirected)
 \item hamiltonian path/cycle
+\item complete (bipartite) graph
+\item $[n]$
 \end{enumerate}
 
 \section{NP-Hardness}
+\label{sec:hardness}
 
 In this section, we show NP-hardness of the problems \act\ and \stact, even if the input instances are restricted. This is done by reducing from the following two classical problems:
 
@@ -164,7 +185,7 @@ Problem \textsc{3-Partition} (variant): Given $A = \set{a_1, \ldots, a_{3n}}$ wi
 
 It is known that \textsc{Partition} is NP-complete, but not strongly NP-complete, and that \textsc{3-Partition} is strongly NP-complete, meaning that there exists a polynomial $p$, such that \textsc{3-Partition} is NP-complete even if $a_i \leq p(n)$ for all $i$.
 
-For each of the two problems $\act$ and $\stact$, we show hardness even if either the structure of the input, i.e.\ the treewidth is bounded by a constant, or if the lifetimes $l(e)$ are bounded by a constant. We start with the problem $\act$.
+For each of the two problems $\act$ and $\stact$, we show hardness even if either the structure of the input, i.e.\ the treewidth is bounded by a constant, or if the lifetimes $w(e)$ are bounded by a constant. We start with the problem $\act$.
 
 \subsection{Activation Problem}
 
@@ -172,17 +193,22 @@ For each of the two problems $\act$ and $\stact$, we show hardness even if eithe
 The problem \act\ is strongly NP-complete, even if the input graph is $K_{2,n}$.
 \end{theorem}
 \begin{proof}
-Let $(A = \fromto{a_1}{a_{3n}}, Q)$ be an instance of \textsc{3-Partition}. Consider the  bipartite graph $K_{2,4n}$ on the two vertex sets $\set{s, t}$ and $\set{x_1, \ldots, x_n, y_1, \ldots, y_{3n}}$. For $i \in [n]$, we let $l(sx_i) := iQ + i$ and $l(x_it) := (n - i)Q + n - i + 1$. For $i \in [3n]$, we let $l(sy_i) := a_i$ and $l(y_it) := \infty$ (or some integer big enough). Note that $l(sx_i) + l(x_it) = nQ + n + 1$. Hence it is easy to see, that a schedule of value $nQ + n + 1$ does not exist. We claim that a schedule of length $nQ + n$ exists, if and only if $A$ can be 3-partitioned. Suppose such a schedule $\sigma$ exists. Then for each $i \in [n]$, there is some $t_i$ such that $T(sx_i) \cap T(x_it) = [t_i, t_i + 1]$. Because $\val(\sigma) = nQ + n$, we have $t_i \neq t_j$ for $i \neq j$, so w.l.o.g., we have $t_i = iQ + i - 1$. Up so far, this means that $s$ and $t$ are connected during $[t_1, t_1 +1]$, $[t_2, t_2 + 1], \ldots [t_n, t_n + 1]$. Hence the scheduling of the edges $\fromto{y_1t}{y_{3n}t}$ needs to fill the \enquote{gaps} of size $Q$ between these intervals and therefore implies a 3-partition of $A$.
+Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and let $Q := 1/n \sum A$. Let $\beta := nQ + n - 1$. In order to prove NP-completeness, we construct an instance of problem \act\ whose optimal solution is $\beta$, if and only if $A$ is a yes-instance of \textsc{3-Partition}. Consider the  complete bipartite graph $K_{2,4n-1}$ on the two vertex sets $\set{s, t}$ and $\set{x_1, \ldots, x_{n-1}, y_1, \ldots, y_{3n}}$. For $i \in [n-1]$, we let $w(\set{s,x_i}) := i(Q + 1)$ and $w(\set{x_i,t}) := (n - i)(Q + 1)$. For $i \in [3n]$, we let $w(\set{s,y_i}) := a_i$ and $w(\set{y_i,t}) := \beta$. 
 
-The other direction of the claim is easy to see.
+Now, assume that for the described instance, there exists a schedule $\sigma$ of value $\beta$. Note that for all $i \in [n-1]$, we have $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, hence the sum of all weights is $(n-1)(\beta + 1) + 3n\beta + (\beta - n + 1) = \beta 4n$. Because the set of active edges is spanning at each point in time, and a spanning tree of $K_{2, 4n-1}$ has $4n$ edges, this implies that all of the graphs $G_1, \dots G_\beta$ have exactly $4n$ edges and are spanning trees. For $i \in [n-1
+]$, consider vertex $x_i$.  Due to $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, there is exactly one $k \in [\beta]$, such that $d_k(x_i) = 2$. Furthermore, because the scheduling of the edges is nonpreemptive, and clearly $d_1(x_i) \geq 1$ and $d_\beta(x_i) \geq 1$, we can further deduce that $k$ has only the two possible values $i(Q+1)$ or $(n-i)(Q+1)$. Additionally, if there exists a $k$ such that for distinct $i, i' \in [n-1]$ one has $d_k(x_i) = d_k(x_{i'}) = 2$, then $G_k$ has a cycle, which is impossible. We conclude that there exists some $i \in [n-1]$ with $d_k(x_i) = 2$ if and only if $k \in \set{Q+1, 2(Q+1), \dots (n-1)(Q+1)}$. But this is a set of $n-1$ equidistant numbers, in $[\beta]$, such that $n$ gaps of size $Q$ are created. Using again acyclicity of $G_1, \dots, G_\beta$, it is then easy to see that the scheduling of the edges $\fromto{\set{s,y_1}}{\set{s,y_{3n}}}$ implies a correct 3-partion of $A$.
+
+%Note that $w(sx_i) + w(x_it) = nQ + n + 1$. Hence it is easy to see, that a schedule of value $nQ + n + 1$ does not exist. We claim that a schedule of length $nQ + n$ exists, if and only if $A$ can be 3-partitioned. Suppose such a schedule $\sigma$ exists. Then for each $i \in [n]$, there is some $t_i$ such that $T(sx_i) \cap T(x_it) = [t_i, t_i + 1]$. Because $\val(\sigma) = nQ + n$, we have $t_i \neq t_j$ for $i \neq j$, so w.l.o.g., we have $t_i = iQ + i - 1$. Up so far, this means that $s$ and $t$ are connected during $[t_1, t_1 +1]$, $[t_2, t_2 + 1], \ldots [t_n, t_n + 1]$. Hence the scheduling of the edges $\fromto{y_1t}{y_{3n}t}$ needs to fill the \enquote{gaps} of size $Q$ between these intervals and therefore implies a 3-partition of $A$.
+
+On the other hand, assume $A$ is a yes-instance. Then it is easy to see that a schedule of value $\beta$ exists. (The schedule has the same properties as the schedule $\sigma$ in the first direction of the proof.)
 \end{proof}
 
 %We wish to show that, analogoulsy, \act\ is NP-complete, even if the lifetimes are bounded by a constant. However, it is not clear whether a gadget similar to the one used in \cref{lemma_gadget} exists. The difficulty is that each time that we introduce a new vertex $v$, in a valid schedule $v$ must be connected by active edges to the rest of the graph at all times. Instead, we use a diiferent approach.
-This shows hardness, even if the treewidth of the input is bounded by two. We now show hardness even if the lifetimes $l(e)$ are bounded. For this, we reduce from the Hamilton cycle problem. Akiyama, Nishizeki and Saito proved that the Hamilton cycle problem is NP-complete even for bipartite, 3-regular graphs \cite{hamilton3regularBip}. We additionally require the following technical lemma, based on an idea by \comment{I don't know who first had this idea?}.
+This shows hardness, even if the treewidth of the input is bounded by two. We now show hardness even if the lifetimes $w(e)$ are bounded. For this, we reduce from the Hamilton cycle problem. Akiyama, Nishizeki and Saito proved that the Hamilton cycle problem is NP-complete even for bipartite, 3-regular graphs \cite{hamilton3regularBip}. We additionally require hardness for a more restricted variant of the hamilton cycle problem, which we call \textsc{Hamilton'}. The following lemma is surely known, however, we were unable to find it in the literature. We give a proof of this lemma in 
 
 \begin{lemma}
 \label{hamilton_cycle_lemma}
-Let $G = (V, E)$ be a 3-regular, bipartite graph. There exists a 4-regular, bipartite graph $H$ and an edge $xy$ in $H$, with the following properties: (i) If $G$ has a Hamiltonian cycle, then $H$ as a Hamiltonian cycle using the edge $xy$. (ii) If $H$ has a Hamiltonian path starting at $x$, then $G$ has a Hamiltonian cycle. 
+The Hamilton cycle problem for a graph $H$ is NP-complete, even under the following restrictions: The graph $H$ is undirected, bipartite, and 4-regular. Furthermore, as part of the input we are given a special edge $\set{u, z}$, such that $H$ has a Hamilton cycle iff $H$ has a Hamilton cycle using the edge $\set{u, z}$ iff $H$ has a Hamilton path starting at $u$.
 \end{lemma} 
 
 \begin{proof}
@@ -199,7 +225,8 @@ For a schedule $\sigma$ of value 7, let for $t \in \fromto{1}{7}$, $G_t := (V, A
 
 Now, suppose $G'$ has a Hamiltonian cycle. By \cref{hamilton_cycle_lemma}, there exists a Hamiltonian cycle $C$ in $H$, which uses $e_0$. Then $H - E(C)$ is 2-regular, hence there exist disjoint matchings $M_1, \ldots, M_4$ such that $M_1 \dotunion M_2 = E(C)$ and $M_3 \dotunion M_4 = E(H) \setminus E(C)$ and $e_0 \in M_1$. Then we schedule $e_0$ in $G_3$; $M_1 \setminus \set{e_0}$ in $G_3, G_4$; $M_2$ in $G_4, G_5$; $M_3$ in $G_1, G_2$; and $M_4$ in $G_6, G_7$. We schedule the gadgets such that $U$ is connected to $x$ via the $L$'s in $G_1, G_3, G_5$ and $ G_7$, and that $W$ is connected to $x$ via $R$'s in $G_2$ and $G_6$, and that $x$ is connected to $w_k$ via $y$ in $G_4$. Now observe that the active edges in $U \cup W$ form a matching of $H$ in $G_1, G_2, G_3, G_5, G_6$ and $G_7$ and a Hamiltonian path in $G_4$. It is easy to see that this is a valid schedule of value 7. 
 
-On the other hand, suppose there exists a schedule $\sigma$ of value 7 for $(G, l)$.  
+On the other hand, suppose there exists a schedule $\sigma$ of value 7 for $(G, l)$.
+  
 Recall the properties of the gadgets $L$ and $R$. Then, for $t' \in \set{1, 7}$, consider $G_{t'}$ and some $w_i$ for $i \in \fromto{1}{k-1}$. Note that for all $t \in \set{1, 3, 4, 5, 7}$ at least one of the edges in $\delta(w_i) \cap E(H)$ is active. This implies that $w_i$ has degree 1 in $G_{t'}[U \cup W]$, due to the different possibilities of covering the set $[0, 1] \cup [2, 5] \cup [6, 7]$ with 4 intervals of length 2. Similarly, by considering $t \in \set{1, 3, 5, 7}$, we see that $w_k$ has degree 1 in $G_{t'}[U \cup W]$ and that $e_0 \not \in E(G_{4})$. So all $w \in W$ have degree 1 in $G_{t'}[U \cup H]$. But this implies that $G_{t'}[L']$ is connected for each copy $L'$ of $L$, otherwise $U$ is disonnected in $G_{t'}$. Hence $G_t[L']$ is connected if and only if $t \in \set{1, 3, 5, 7}$. Hence, for $u \in U$ and $t' \in \set{2, 6}$, we have that the degree of $u$ in $G_{t'}[U \cup W]$ is at least one. Finally, consider $F := G_{4}[U \cup W]$: Due to the restrictions of the minimum degrees for $t' \in \set{1, 7}$ or $t' \in \set{2, 6}$, we have that the maximum degree in $F$ is two. Similarly as before, we see that the degree of $u_k$ in $F$ is 1. Note that $F$ is connected. We conclude that $F$ is a Hamiltonian path in $H$ starting at $u_k$. By \cref{hamilton_cycle_lemma}, $G'$ has a Hamiltonian cycle.
 
 %%Due to the different possibilities of covering the interval $[0, 7]$ with four intervals of length 2, we have that for $t' \in \set{0.5, 6.5}$, each of $w_1, \ldots w_{k-1}$ has degree 1 in $G_{t'}$. Similarly, both $y, w_k$ have degree 1 in $G_{t'}$. We conclude that $u_1, \ldots, u_k$ lie in $k$ different connected components of $G_{t'} - x$ and hence $G_{t'}$ has an edge connecting $x$ and $u_i$ for each $i$. But then, $G_{3.5}$ has none of the edges between $x$ and $u_i$, hence $G_{3.5}[Z]$ is connected, where $Z := \set{u_1, \ldots, u_k, w_1, \ldots, w_k}$.  Again, by the different possibilities of covering the interval $[0, 7]$ with subintervals, we conclude that in $G_{3.5}$, the vertices $u_k, w_k$ have degree 1, $e_0 \not\in E(G_{3.5})$, and each of $w_1, \ldots w_{k-1}$ have degree at most two. They also have degree exactly two, otherwise we find a cyle in one of $\set{G_{0.5}, \ldots, G_{6.5}} \setminus \set{G_{3.5}}$. 
@@ -283,7 +310,8 @@ Reduction from \textsc{3-Partition}. Let $(A = \fromto{a_1}{a_{3n}}, Q)$ be an i
 \end{proof}
 
 
-\section{Bounded Treewidth and Edge weights}
+\section{Positive Results}
+\label{sec:positive_results}
 
 Consider a graph $G$ with treewidth bounded by a constant $k$ and edge weights bounded by a  constant $L$. As stated in the introduction, we exclude parallel edges. Then in particular there is a vertex of degree at most $k$ in $G$, therefore the size of a solution to \act, i.e.\ the value of a valid schedule, is at most $kL =: T$. (This is not true anymore in the presence of parallel edges.) We prove:
 
@@ -437,6 +465,17 @@ $\stact$ & ? & ? \\
 \end{table}
 
 \printbibliography
+
+
+\appendix
+
+\section{Connection to job scheduling}
+\label{appendix:connection_act_job_scheduling}
+A \emph{matroid} is defined ...
+Problem \act\ is related to job scheduling in the following way: Let $G = (V, E)$ be a graph. The \emph{graphic matroid} of $G$ is the set system $\set{F \subseteq E \mid F \text{ is acyclic}}$. A \emph{base} in a matroid is set of maximal cardinality. Hence problem \act\ has the following generalization: Given a ground set $E$, lifetimes $l: E \rightarrow \N$, and some matroid $\mathcal{F} \subseteq 2^E$, find activation times such that for a maximal amount of time, the set of active elements comprises a base of $\mathcal{F}$. Now, if $E$ is a set of jobs with processing times $l$, and $\mathcal{F} = \set{F \subseteq E : |F| = k}$ is the uniform matroid of rank $k$, then the matroid activation problem is exactly the problem of maximizing the minimum machine load time when distributing the jobs onto $k$ machines.
+
+\section{Possible idea relaxation ratio undirected}
+
 \begin{figure}[htpb]
 \centering
 \includegraphics[width=\textwidth]{img/idea_undirected_approximation_ratio.jpg}
