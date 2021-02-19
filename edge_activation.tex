@@ -63,6 +63,7 @@
 
 \DeclareMathOperator{\ac}{\text{A}}
 \DeclareMathOperator{\val}{\text{value}}
+\newcommand{\vall}{w}
 \DeclareMathOperator{\radius}{\text{radius}}
 
 \DeclareMathOperator{\Nout}{N^\text{out}}
@@ -113,7 +114,7 @@ Consider the following process over time: Given a graph $G = (V,E)$ with positiv
 \end{abstract}
 
 \section{Introduction}
-\comment{Comments made by Lasse}
+\comment{Comments by Lasse}
 Suppose we have an electrical network, represented by a graph $G = (V,E)$, where each of the vertices represents a consumer or a producer, and each edge $e = \{u,v\}$ represents a power line between $u$ and $v$. However, the use of a power line $e$ is restricted by its \emph{weight} $w(e) \in \N$: We can only use it during an interval $[\tau_e, \tau_e + w(e)]$, where we may choose the \emph{activation time} $\tau_e \geq 0$ freely. In particular, we are not allowed to split this interval into multiple disjoint intervals of total length $w(e)$, i.e.\ the scheduling process is \emph{nonpreemptive}. We say that $e$ is \emph{active} during $[\tau_e, \tau_e + w(e)]$. In this paper, we consider two different problems:
 \begin{enumerate}
 \item \emph{Activation problem} \act: Keep the electrical network connected for as long as possible, i.e.\ choose the $\tau_e$ such that the subgraph of active edges is spanning for a maximal amount of time. 
@@ -122,19 +123,11 @@ Suppose we have an electrical network, represented by a graph $G = (V,E)$, where
 
 We stress the point that in general, at different points in time, the set of active edges is different. It is only required that at each point in time, the subgraph of active edges is spanning (is connecting $s$ and $t$). 
 
-The problems \act\ and \stact\ are nonpreemptive variants of known problems. To see this, assume for a moment that we drop the condition of nonpreemptiveness, i.e.\ we allow activation of $e$ during multiple intervals, whose total length does not exceed $w(e)$. Then \stact\ becomes the problem of finding a maximum set of $s$-$t$-paths, such that for each edge, the number of paths crossing it does not exceed $w(e)$. This is called \emph{Menger's problem}. Similarily, the preemptive variant of \act\ is the problem of packing a maximum number of spanning trees into a weighted graph, i.e.\ the problem of \emph{spanning tree packing}. Both of these are classical problems and can be solved in strongly polynomial time. The first is solved by finding a maximal $s$-$t$-flow and finding a path decomposition of it, the second is solved either by matroid decomposition or flow techniques [cite]. There is a further connection to a classical problem from the area of job scheduling: The problem \act\ can be understood as a generalization of the problem of \emph{maximizing the minimum machine load time}. We can interprete this problem as an activation problem for uniform matroids, whereas problem \act\ is an activation problem for graphic matroids (details, see \cref{appendix:connection_act_job_scheduling}). Like both Menger's problem and spanning tree packing, this problem also has been considered extensively in the past [cite]. It is known to be strongly NP-complete, but to admit a PTAS [cite].
+The problems \act\ and \stact\ are nonpreemptive variants of known problems. To see this, assume for a moment that we drop the condition of nonpreemptiveness, i.e.\ we allow activation of $e$ during multiple intervals, whose total length does not exceed $w(e)$. Then \stact\ becomes the problem of finding a maximum set of $s$-$t$-paths, such that for each edge, the number of paths crossing it does not exceed $w(e)$. This is called \emph{Menger's problem}. Similarily, the preemptive variant of \act\ is the problem of packing a maximum number of spanning trees into a weighted graph, i.e.\ the problem of \emph{spanning tree packing}. Both of these are classical problems and can be solved in strongly polynomial time. The first is solved by finding a maximal $s$-$t$-flow and finding a path decomposition of it, the second is solved either by matroid decomposition or flow techniques [cite]. There is a further connection to a classical problem from the area of job scheduling: The problem \act\ can be understood as a generalization of the problem of \emph{maximizing the minimum machine load time}. We can interprete this problem as an activation problem for uniform matroids, whereas problem \act\ is an activation problem for graphic matroids (details, see \cref{appendix:connection_act_job_scheduling}). Like both Menger's problem and spanning tree packing, this problem also has been considered extensively in the past [cite]. It is known to be strongly NP-complete, but to admit a PTAS [cite]. \comment{which exact papers should we cite for max-flow-min-cut, spanning tree packing, and maximizing min finish time?}
 
 \emph{Our contribution.}
 We introduce the problems \act\ and \stact. We show that \act\ is strongly NP-complete, even if a.) the input graph is $K_{2,n}$ or if b.) the input graph is outerplanar of bandwidth 2, or c.) we have $w(e) \in \fromto{1}{6}$. Furthermore, there is no fast (7/6)-approximation algorithm assuming P $\neq$ NP, even if $w(e) \in \fromto{1}{6}$. Similarily, we show that \stact\ is NP-complete, even if a.) the treewidth of the input graph is bounded by 3, or if b.) we have $w(e) \in \set{1,2}$ for all $e$. 
-\cref{sec:positive_results} is concerned with positive results for \act. We give a linear time algorithm, if both the treewidth and edge weights are bounded by a constant. We describe an FPT-algorithm for the parameter of feedback edge set. We introduce a Greedy algorithm, which is a $(n-1)$-approximation. Using techniques from extremal graph theory, we show in \cref{sec:ratio_relaxation}, that for problem \stact, the ratio to its relaxation, i.e.\ Menger's problem is unbounded.
-
-\subsection{Related Work}
-\comment{ToDo}
-\begin{enumerate}
-\item Menger's problem / max-flow-min-cut
-\item Nash-Williams theorem: $G$ contains $k$ edge-disjoint spanning tree if and only $\delta(X_1, \dots, X_p) \geq k(p - 1)$ for all partitions $(X_1, \dots, X_p)$ of $V(G)$. 
-\item Maximizing the minimum finish time in job scheduling -- some results.
-\end{enumerate}
+\cref{sec:positive_results} is concerned with positive results for \act. We give a linear time algorithm, if both the treewidth and edge weights are bounded by a constant. We describe an FPT-algorithm for the parameter of feedback edge set. We introduce a Greedy algorithm, which is a $(n-1)$-approximation. We show that the Greedy algorithm is optimal, if and only if the input graph is a cactus graph. Using techniques from extremal graph theory, we show in \cref{sec:ratio_relaxation}, that for problem \stact, the ratio to its relaxation, i.e.\ Menger's problem is unbounded.
 
 \subsection{Definitions and Notation}
 \label{sec_notation}
@@ -184,18 +177,18 @@ We make use of the following graph-theoretic concepts and notations: Let $G = (V
 
 In this section, we show NP-hardness of the problems \act\ and \stact, even if the input instances are restricted. This is done by reducing from the following two classical problems: (We denote by $\sum A$ the sum of the set $A$.)
 
-\vspace*{0.2cm}
+\begin{quote}
 
 Problem \textsc{Partition}: Given a (multi-)set $A = \set{a_1, \ldots, a_n} \subseteq \N$, let $Q := 1/2 \sum A$. Does there exist $S \subseteq A$ with $\sum S = Q$?
 
-\vspace*{0.2cm}
+\end{quote}
+\begin{quote}
 
-Problem \textsc{3-Partition}: Given a (multi-)set $A = \set{a_1, \ldots, a_{3n}}$ with $Q/4 < a_i < Q/2$ for all $i$, where $Q := 1/n \sum A$, does there exist a partition $A = A_1 \dotunion A_2 \ldots \dotunion A_n$ of $A$, such that $\sum A_j = Q$ for all $j$?
+Problem \textsc{3-Partition}: Given a (multi-)set $A = \set{a_1, \ldots, a_{3n}} \subseteq \N$ with $Q/4 < a_i < Q/2$ for all $i$, where $Q := 1/n \sum A$, does there exist a partition of $A$ into $n$ into triplets, such that every triplet sums up to $Q$?
 
-\vspace*{0.2cm}
+\end{quote}
 
 It is known that \textsc{Partition} is NP-complete, but not strongly NP-complete, and that \textsc{3-Partition} is strongly NP-complete, meaning that there exists a polynomial $p$, such that \textsc{3-Partition} is NP-complete even if $a_i \leq p(n)$ for all $i$.
-
 For each of the two problems $\act$ and $\stact$, we show hardness even if either the structure of the input is restricted, or if the weights $w(e)$ are restricted.
 
 \subsection{Activation Problem}
@@ -218,7 +211,74 @@ On the other hand, assume $A$ is a yes-instance. Then it is easy to see that a s
 The problem \act\ is strongly NP-complete, even on outerplanar graphs of bandwidth 2.
 \end{theorem}
 \begin{proof}
-\comment{ToDo.}
+Given an instance $A = \fromto{a_1}{a_{3n}}$ of \textsc{3-Partition} where $Q := 1/n \sum A$, we construct an instance of problem \act, whose optimal solution is $\beta := (2n - 1)Q$, if and only if $A$ is a yes-instance of \textsc{3-Partition}.
+
+The graph has $4n+1$ vertices $u_0,\ldots,u_n$ and $v_1,\ldots,v_{3n}$.
+We will sometimes denote vertex $u_k$ also by the name $v_{k-n}$, for $1\le k\le n+1$;
+in particular we use $u_n=v_0$ and $u_{n-1}=v_{-1}$. We use the short notation $uv$ for the edge $\set{u,v}$.
+\begin{itemize}
+\item 
+For $k=0,\ldots,n-1$,   the edge $u_k u_{k+1}$ has weight $\vall(u_k u_{k+1}) = 2(n-k-1)Q$.\\
+For $k=0,\ldots,n-2$,   the edge $u_k u_{k+2}$ has weight $\vall(u_k u_{k+2})=2(k+1)Q$.
+\item 
+For $k=1,\ldots,3n$,    the edge $v_{k-1} v_k$ has weight $\vall(v_{k-1} v_k)=a_k$.\\
+For $k=-1,\ldots,3n-2$, the edge $v_k v_{k+2}$ has weight $\vall(v_k v_{k+2})=\beta$.  
+\end{itemize}
+In the ordering $u_0,u_1,\ldots,u_n,v_1,v_2,\ldots,v_{3n}$, every edge either connects two neighboring 
+vertices or two vertices at distance~$2$; hence the constructed graph $G=(V,E)$ has bandwidth~$2$. 
+This implies that $G$ furthermore is outer-planar.
+
+We will study schedules $\sigma$ of value $\beta$. Notice that the sum of all weights in $G$ equals $\beta(|V| - 1)$. Hence, if $\sigma$ is such a schedule of value $\beta$, then each of $G^\sigma_1, \dots G^\sigma_\beta$ is a spanning tree and acyclic.
+
+In particular, we will consider the behavior of $\sigma$ on the induced subgraph $H_i := G[\fromto{u_0}{u_i}]$ for $1\le i\le n$.
+Since the only connections between $H_i$ and the rest of the graph are via the two vertices $u_{i-1}$ and $u_i$,
+at any moment $t\in[0,\beta]$ in time, graph $H_i$ will consist of one or two connected components
+under schedule $\sigma$.
+If there is a single connected component, we say that $H_i$ is \emph{fully-connected} at time $t$.
+If there are two connected components (one containing vertex $u_{i-1}$, the other one containing 
+vertex $u_i$), we say that $H_i$ is \emph{semi-connected} at time $t$.
+Note that if $H_i$ is semi-connected at moment $t$, then the edge $u_{i-1} u_{i+1}$ must be active at 
+that moment $t$, as there are no other edges that would be able to connect the component containing 
+$u_{i-1}$ to the rest of the graph.
+
+The graph $H_1$ consists of the vertices $u_0$ and $u_1$ and of the edge $u_0 u_1$ of weight $(2n-2)Q$.
+Suppose for the sake of contradiction that $H_1$ is neither fully-connnected at $t=0$ nor at $t=\beta$:
+Then the edge $u_0 u_2$ (of value $2Q$) must be active at $t=0$ and at $t=\beta$, which is impossible.
+By symmetry, we will henceforth assume that under schedule $\sigma$ the graph $G_1$ is fully-connnected at $t=\beta$.
+This implies that $u_0 u_1$ is active during $[Q,\beta]$ and that $u_0 u_2$ is active during $[0,2Q]$.
+For graph $H_i$ (with $1\le i\le n$) one can show by induction that $H_i$ is semi-connected
+during the time intervals $[0,Q]$, $[2Q,3Q]$, \dots, $[(2i-2)Q,(2i-1)Q]$ and fully-connected at all
+other moments in $[0,\beta]$.
+The induction uses the following facts and observations on the two edges $\set{u_{i-2}, u_i}$ and $\set{u_{i-1},u_i}$ 
+that are in $H_i$ but not in $H_{i-1}$:
+\begin{itemize}
+\item Graph $H_i$ is semi-connected at time $0$. (This is because we have by induction hypothesis that $H_{i-1}$ is semi-connected at $t=0$, so if $H_i$ would be fully-connected at $t=0$, this would imply $\sigma(u_{i-2}u_i) = \sigma(u_{i-1}u_i) = 0$. But then, because all involved edges have weight $w(e) > Q$, at time $t = Q+1$ we have a cycle, which is impossible.)
+\item Since $H_{i-1}$ is semi-connected at time $0$, the edge $u_{i-2}u_i$ must be active at time $0$
+and hence must be active during $[0,(2i-2)Q]$.
+\item $H_i$ must be fully-connnected at time $\beta$. (Otherwise, $H_i$ is fully-connnected neither 
+at $t=0$ nor at $t=\beta$, and the edge $u_{i-1}u_{i+1}$ had to be active for $\beta$ time units.)
+\item Since $H_i$ is fully-connnected at time $\beta$, the edge $u_{i-1}u_i$ must be active at time $\beta$
+and hence must be active during $[(2i-1)Q,\beta]$.
+\end{itemize}
+The induction yields for $i=n$ that the induced subgraph $H_n$ is semi-connected during the time intervals 
+$[0,Q]$, $[2Q,3Q]$, \dots, $[(2r-2)Q,(2r-1)Q]$ (that is, all the intervals of length $Q$ that start at an even multiple of $Q$)
+and fully-connected during the time intervals $[Q,2Q]$, $[3Q,4Q]$, \dots, $[(2n-3)Q,(2n-2)Q]$ (that is, all the 
+intervals of length $Q$ that start at an odd time multiple of $Q$).
+
+Next, consider the subgraph $G'$ that is induced by the $3n+2$ vertices $v_{-1}=u_{n-1}$, $v_0=u_n$ and 
+$v_1,\ldots,v_{3n}$.
+As the edges $v_kv_{k+2}$ with $k=-1,\ldots,3n-2$ all have value $\beta$, there is an active path $P_0$ 
+through the vertices with even index during the full interval $[0,\beta]$ and there is an active 
+path $P_1$ through the vertices with odd index during $[0, \beta]$.
+By the above discussion, graph $H_n$ connects these two paths $P_0$ and $P_1$ to each other during the
+time intervals $[Q,2Q]$, $[3Q,Q4]$, \dots, $[(2n-3)Q,(2n-2)Q]$.
+The only way for connecting $P_0$ and $P_1$ to each other during the remaining time intervals 
+$[0,Q]$, $[2Q,3Q]$, \dots, $[(2n-2)Q,(2n-1)Q]$ is by using the edges $v_{k-1}v_k$ with $k=1,\ldots,3n$ of 
+weight $a_k$.
+As this groups the numbers $a_1,\ldots,a_{3n}$ into $n$ groups with sum $Q$, we get a solution
+for the instance of \textsc{3-Partition}.
+Vice versa, if the \textsc{3-Partition} instance has a solution, then we can build a schedule $\sigma$
+with all desired properties from it.
 \end{proof}
 
 \cref{thm:hardness_complete_bipartite,thm:hardness_bandwidth} show hardness, even if the structure of the input is heavily restriced. We now show hardness even if the weights $w(e)$ are restricted. For this, we reduce from the Hamilton cycle problem. Akiyama, Nishizeki and Saito proved that the Hamilton cycle problem is NP-complete even for bipartite, 3-regular graphs \cite{hamilton3regularBip}. We additionally require hardness for a more restricted variant of the hamilton cycle problem, which we call \textsc{Hamilton'}. The following lemma is surely known, however, we were unable to find it in the literature. We give a proof in \cref{appendix:hamilton_prime}.
@@ -238,6 +298,12 @@ The problem \act\ is NP-complete, even if $w(e) \in \fromto{1}{6}$ for all edges
 Let $H$ be an instance of the problem \textsc{Hamilton'}, as described in \cref{hamilton_cycle_lemma}. We construct in polynomial time an instance $(G, w)$ of problem \act, such that $w(e) \in \fromto{1}{6}$ for all edges, and such that the optimal value of a schedule is at most 7, and is equal to seven if and only if $H$ has a Hamilton cycle. This is sufficient to prove the theorem.
 
 The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartite parts of $H$ be $U = \fromto{u_1}{u_k}$ and $Z = \fromto{z_1}{z_k}$, and let $\set{u_k, z_k} =: e_0$ be the special edge, as described in \cref{hamilton_cycle_lemma}. The graph $G$ consists of a copy of $H$ where every edge has weight 2, except $e_0$, which has weight 1. Furthermore, there is an additional vertex $x$, which is connected to each of $\fromto{u_1}{u_k}$ via the gadget $L$ and to each of $\fromto{z_1}{z_k}$ via the gadget $R$. Finally, there is an additional vertex $y$ connected to both $x$ and $y$ with an edge of weight 4.
+\begin{figure}[htpb]
+\centering
+\includegraphics[scale=1]{img/act-hamilton-cycle}
+\caption{(a) Reduction \textsc{Hamilton'} $\rightarrow$ \act. (b) Gadget $L$. (c) Gadget $R$.}
+\label{fig_act_hamilton_cycle}
+\end{figure}
 
 We first describe the properties of the gadgets $L$ and $R$. Assume $\sigma$ is a schedule of value 7. Note that the sum of all weights in $G$ is $8k - 1 + 39k + 16k + 8 = 63k + 7 = 7(|V(G) - 1|)$. Therefore, each of $G_{1}, \ldots, G_{7}$ is a tree, and in particular acyclic. By inspecting the vertices $r_1$ and $r_2$ and using acyclity of $G_2, G_6$ we see that the gadget $R$ necessarily connects $x$ and $z_i$ in $G_2$ and $G_6$, but does not connect $x$ and $z_i$ in $G_t$ for $t \neq 2,6$. Similarily, the gadget $L$ necessarily connects $x$ and $u_i$ in $G_3$ and $G_5$ and has some remaining edges, which are not restricted and behave like two parallel edges of weight 1. Analogously, $G_{t}[\set{x, y, w_k}]$ is connected if and only if $t = 4$.
 
@@ -249,12 +315,7 @@ In summary, $F$ is a graph of maximum degree 2, where $u_k$ has degree 1. It fol
 
 %%Due to the different possibilities of covering the interval $[0, 7]$ with four intervals of length 2, we have that for $t' \in \set{0.5, 6.5}$, each of $w_1, \ldots w_{k-1}$ has degree 1 in $G_{t'}$. Similarly, both $y, w_k$ have degree 1 in $G_{t'}$. We conclude that $u_1, \ldots, u_k$ lie in $k$ different connected components of $G_{t'} - x$ and hence $G_{t'}$ has an edge connecting $x$ and $u_i$ for each $i$. But then, $G_{3.5}$ has none of the edges between $x$ and $u_i$, hence $G_{3.5}[Z]$ is connected, where $Z := \set{u_1, \ldots, u_k, w_1, \ldots, w_k}$.  Again, by the different possibilities of covering the interval $[0, 7]$ with subintervals, we conclude that in $G_{3.5}$, the vertices $u_k, w_k$ have degree 1, $e_0 \not\in E(G_{3.5})$, and each of $w_1, \ldots w_{k-1}$ have degree at most two. They also have degree exactly two, otherwise we find a cyle in one of $\set{G_{0.5}, \ldots, G_{6.5}} \setminus \set{G_{3.5}}$. 
 \end{proof}
-\begin{figure}[htpb]
-\centering
-\includegraphics[scale=1]{img/act-hamilton-cycle}
-\caption{(a) Reduction \textsc{Hamilton'} $\rightarrow$ \act. (b) The gadget $L$. (c) The gadget $R$.}
-\label{fig_act_hamilton_cycle}
-\end{figure}
+
 
 
 \subsection{$s$-$t$-Activation Problem}
@@ -442,7 +503,7 @@ For the proof of (ii), let $G = K_n$ be the complete graph on $n$ vertices. Fix 
 
 \section{Relation between Problem and Relaxation}
 \label{sec:ratio_relaxation}
-The relaxation of problem \stact\ is Menger's problem. Given a fixed instance of $\stact$, how big can the ratio between its optimal solution $\optDirStAct$, and the optimal solution of the relaxation be? In this section, we show that it can be arbitrarily big. We describe an instance on $2n+2$ vertices, such that the solution to Menger's problem is $n^2$, but  $\optDirStAct = \theta(n^{1.5})$. In order to prove an upper bound for $\optDirStAct$, we make use of some tools from (extremal) graph theory. Namely, for vertices $x$ and $y$ in an undirected graph $H = (V, E)$, let $d(x, y) := \min\set{ |E(P)| : P \text{ is a $x$-$y$-path}}$ and $\radius(H) := \min_{x \in V} \max_{y \in V} d(x, y)$. Erd\H{o}s, Pach, Pollack and Tuza proved in 1987 \cite{erdHos1989radius}:
+The relaxation of problem \stact\ is Menger's problem. Given a fixed instance of $\stact$, how big can the ratio between its optimal solution $\optDirStAct$, and the optimal solution of the relaxation be? In this section, we show that it can be arbitrarily big. We describe an instance on $2n+2$ vertices, such that the solution to Menger's problem is $n^2$, but  $\optDirStAct = \theta(n^{1.5})$. In order to prove an upper bound for $\optDirStAct$, we make use of some tools from extremal graph theory. Namely, for vertices $x$ and $y$ in an undirected graph $H = (V, E)$, let $d(x, y) := \min\set{ |E(P)| : P \text{ is a $x$-$y$-path}}$ and $\radius(H) := \min_{x \in V} \max_{y \in V} d(x, y)$. Erd\H{o}s, Pach, Pollack and Tuza proved in 1987 \cite{erdHos1989radius}:
 \begin{theorem}
 \label{thm_mindegree_diameter_erdos}
 Let $H$ be a connected, triangle-free, undirected graph with $N$ vertices, and with minimum degree $\delta \geq 2$. Then
