@@ -138,9 +138,11 @@ Given a schedule $\sigma$ and an edge $e$, we denote the \emph{active interval o
 Let $C(\sigma) := \set{i \in \N : E_i^\sigma \text{ is spanning in } G^\sigma_i}$. The set $C(\sigma)$ is the set of all time steps, where the objective is fulfilled by the schedule $\sigma$. Finally, we define the \emph{value} of a schedule. If $C(\sigma) = \fromto{1}{T}$ for some $T$, let $\val(\sigma) = T$, else let $\val(\sigma) = 0$. When the schedule $\sigma$ is clear from the context, we also write $I(e), E_i$, $G_i$ and $d_i(v)$ instead of $I_\sigma(e), E^\sigma_i$, $G^\sigma_i$, and $d^\sigma_i(v)$. Using this new terminology, the problem {\act} is formally defined the following way:
 
 \begin{quote}
-Problem {\act}: \textbf{Input:} A tuple $(G, w)$ of a graph $G = (V,E)$ and positive integral edge weights.
+Problem {\act}: 
 
-\textbf{Output:} $\max\set{\val(\sigma) \mid \sigma \in E^{\N_0}}$.
+\textbf{Input:} A tuple $(G, w)$ of a graph $G = (V,E)$ and positive integral edge weights.
+
+\textbf{Output:} $\max\set{\val(\sigma) \mid \sigma \in (\N_0)^E}$.
 \end{quote}
 
 We give a short example of the introduced concepts. Consider the instance of problem {\act} depicted in \cref{fig:introduction_examples}. One has that the optimal value of a schedule is 2. A schedule $\sigma$ of value 3 does not exist, because in such a schedule there would be distinct edges $e, e'$ with $\sigma(e) = \sigma(e') = 0$. This implies $I(e) = I(e') = [0, 2]$, hence $G_3$ is not spanning. However, note that three spanning trees can be packed into this instance.
@@ -173,7 +175,8 @@ We denote by $G[V']$ the \emph{induced subgraph} on $V'$. By removing the vertex
 \section{NP-Hardness}
 \label{sec:hardness}
 
-In this section, we show NP-hardness of the problems \act\ and \stact, even if the input instances are restricted. This is done by reducing from the following two classical problem: (We denote by $\sum A$ the sum of the set $A$.)
+In this section, we show NP-hardness of the problems {\act}, even if the input instances are restricted. 
+This is done by reducing from the strongly NP-hard \textsc{3-Partition} problem~\cite{garey1979computers}: 
 
 
 \begin{quote}
@@ -182,74 +185,76 @@ Problem \textsc{3-Partition}: Given a (multi-)set $A = \set{a_1, \ldots, a_{3n}}
 
 \end{quote}
 
-It is known  that \textsc{3-Partition} is strongly NP-complete, meaning that there exists a polynomial $p$, such that \textsc{3-Partition} is NP-complete even if $a_i \leq p(n)$ for all $i$.
-We show hardness of {\act}, even if either the structure of the input is restricted, or if the weights $w(e)$ are restricted.
+In the following, we show that {\act} is strongly NP-hard for both series-parallel graph (see Theorem~\ref{thm:hardness_complete_bipartite}) and 
+outerplanar graphs of bandwith~2 (see Theorem~\ref{thm:hardness_bandwidth}), both well studied families of 
+graphs with treewdith~2.
 
 \begin{theorem}
 \label{thm:hardness_complete_bipartite}
-The problem \act\ is strongly NP-complete, even if the input graph is $K_{2,n}$.
+The problem \act\ is strongly NP-complete if restricted to series-parallel graphs, even if the input graph is $K_{2,n}$.
 \end{theorem}
 \begin{proof}
-Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and let $Q := 1/n \sum A$. Let $\beta := nQ + n - 1$. In order to prove NP-completeness, we construct an instance of problem \act\ whose optimal solution is $\beta$, if and only if $A$ is a yes-instance of \textsc{3-Partition}. Consider the  complete bipartite graph $K_{2,4n-1}$ on the two vertex sets $\set{s, t}$ and $\set{x_1, \ldots, x_{n-1}, y_1, \ldots, y_{3n}}$. For $i \in [n-1]$, we let $w(\set{s,x_i}) := i(Q + 1)$ and $w(\set{x_i,t}) := (n - i)(Q + 1)$. For $i \in [3n]$, we let $w(\set{s,y_i}) := a_i$ and $w(\set{y_i,t}) := \beta$. 
+Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and let $Q := 1/n \sum A$. Let $\beta := nQ + n - 1$. In order to prove NP-completeness, we construct an instance of problem \act\ with optimal objective value $\beta$, if and only if $A$ is a yes-instance of \textsc{3-Partition}. Consider the  complete bipartite graph $K_{2,4n-1}$ on the two vertex sets $\set{s, t}$ and $\set{x_1, \ldots, x_{n-1}, y_1, \ldots, y_{3n}}$. For $i \in \{1, \dots,n-1\}$, we set $w(\set{s,x_i}) := i(Q + 1)$ and $w(\set{x_i,t}) := (n - i)(Q + 1)$. For $i \in \{1,\dots,3n\}$, we set $w(\set{s,y_i}) := a_i$ and $w(\set{y_i,t}) := \beta$. 
 
-Now, assume that for the described instance, there exists a schedule $\sigma$ of value $\beta$. Note that for all $i \in [n-1]$, we have $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, hence the sum of all weights is $(n-1)(\beta + 1) + 3n\beta + (\beta - n + 1) = \beta 4n$. Because the set of active edges is spanning at each point in time, and a spanning tree of $K_{2, 4n-1}$ has $4n$ edges, this implies that all of the graphs $G_1, \dots G_\beta$ have exactly $4n$ edges and are spanning trees. For $i \in [n-1
-]$, consider vertex $x_i$.  Due to $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, there is exactly one $k \in [\beta]$, such that $d_k(x_i) = 2$. Furthermore, because the scheduling of the edges is nonpreemptive, and clearly $d_1(x_i) \geq 1$ and $d_\beta(x_i) \geq 1$, we can further deduce that $k$ has only the two possible values $i(Q+1)$ or $(n-i)(Q+1)$. Additionally, if there exists a $k$ such that for distinct $i, i' \in [n-1]$ one has $d_k(x_i) = d_k(x_{i'}) = 2$, then $G_k$ has a cycle, which is impossible. We conclude that there exists some $i \in [n-1]$ with $d_k(x_i) = 2$ if and only if $k \in \set{Q+1, 2(Q+1), \dots (n-1)(Q+1)}$. But this is a set of $n-1$ equidistant numbers, in $[\beta]$, such that $n$ gaps of size $Q$ are created. Using again acyclicity of $G_1, \dots, G_\beta$, it is then easy to see that the scheduling of the edges $\fromto{\set{s,y_1}}{\set{s,y_{3n}}}$ implies a correct 3-partion of $A$.
+Now, assume that for the described instance, there exists a schedule $\sigma$ of value $\beta$. Note that for all $i \in \{1,\dots,n-1\}$, we have $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, hence the sum of all weights is $(n-1)(\beta + 1) + 3n\beta + (\beta - n + 1) = \beta 4n$. Because the set of active edges is spanning at each point in time, and a spanning tree of $K_{2, 4n-1}$ has $4n$ edges, this implies that all of the graphs $G_1, \dots, G_\beta$ have exactly $4n$ edges and are spanning trees. 
+For $i \in \{1,\dots,n-1\}$, consider the vertex $x_i$. Due to $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, there is exactly one $k \in [\beta]$, such that $d_k(x_i) = 2$. Furthermore, because the scheduling of the edges is nonpreemptive, and clearly $d_1(x_i) \geq 1$ and $d_\beta(x_i) \geq 1$, we can further deduce that $k$ has only the two possible values $i(Q+1)$ or $(n-i)(Q+1)$. Additionally, if there exists a $k$ such that for distinct $i, i' \in \{1,\dots,n-1\}$ one has $d_k(x_i) = d_k(x_{i'}) = 2$, then $G_k$ has a cycle, which is impossible. We conclude that there exists some $i \in \{1,\dots,n-1\}$ with $d_k(x_i) = 2$, if and only if $k \in \set{Q+1, 2(Q+1), \dots (n-1)(Q+1)}$. But this is a set of $n-1$ equidistant numbers, in $[\beta]$, such that $n$ gaps of size $Q$ are created. Using again acyclicity of $G_1, \dots, G_\beta$, it is easy to see that the scheduling of the edges $\fromto{\set{s,y_1}}{\set{s,y_{3n}}}$ implies a correct 3-partion of $A$.
 
 On the other hand, assume $A$ is a yes-instance. Then it is easy to see that a schedule of value $\beta$ exists. (The schedule has the same properties as the schedule $\sigma$ in the first direction of the proof.)
+\qed
 \end{proof}
 
 \begin{theorem}
 \label{thm:hardness_bandwidth}
-The problem \act\ is strongly NP-complete, even on outerplanar graphs of bandwidth 2.
+The problem \act\ is strongly NP-complete on outerplanar graphs of bandwidth 2.
 \end{theorem}
 \begin{proof}
-Given an instance $A = \fromto{a_1}{a_{3n}}$ of \textsc{3-Partition} where $Q := 1/n \sum A$, we construct an instance of problem {\act}, whose optimal solution is $\beta := (2n - 1)Q$, if and only if $A$ is a yes-instance of \textsc{3-Partition}.
+Given an instance $A = \fromto{a_1}{a_{3n}}$ of \textsc{3-Partition} where $Q := 1/n \sum A$, we construct an instance of problem {\act}, whose optimal objective value is $\beta := (2n - 1)Q$, if and only if $A$ is a yes-instance of \textsc{3-Partition}.
 
 The graph has $4n+1$ vertices $u_0,\ldots,u_n$ and $v_1,\ldots,v_{3n}$.
 We will sometimes denote vertex $u_k$ also by the name $v_{k-n}$, for $1\le k\le n+1$;
-in particular we use $u_n=v_0$ and $u_{n-1}=v_{-1}$. We use the short notation $uv$ for the edge $\set{u,v}$.
+in particular we use $u_n=v_0$ and $u_{n-1}=v_{-1}$.
 \begin{itemize}
 \item 
-For $k=0,\ldots,n-1$,   the edge $u_k u_{k+1}$ has weight $\vall(u_k u_{k+1}) = 2(n-k-1)Q$.\\
-For $k=0,\ldots,n-2$,   the edge $u_k u_{k+2}$ has weight $\vall(u_k u_{k+2})=2(k+1)Q$.
+For $k=0,\ldots,n-1$,   the edge $\{u_k, u_{k+1}\}$ has weight $\vall(\{u_k, u_{k+1}\}) = 2(n-k-1)Q$.\\
+For $k=0,\ldots,n-2$,   the edge $\{u_k, u_{k+2}\}$ has weight $\vall(\{u_k, u_{k+2}\})=2(k+1)Q$.
 \item 
-For $k=1,\ldots,3n$,    the edge $v_{k-1} v_k$ has weight $\vall(v_{k-1} v_k)=a_k$.\\
-For $k=-1,\ldots,3n-2$, the edge $v_k v_{k+2}$ has weight $\vall(v_k v_{k+2})=\beta$.  
+For $k=1,\ldots,3n$,    the edge $\{v_{k-1}, v_k\}$ has weight $\vall(\{v_{k-1}, v_k\})=a_k$.\\
+For $k=-1,\ldots,3n-2$, the edge $\{v_k, v_{k+2}\}$ has weight $\vall(\{v_k, v_{k+2}\})=\beta$.  
 \end{itemize}
 In the ordering $u_0,u_1,\ldots,u_n,v_1,v_2,\ldots,v_{3n}$, every edge either connects two neighboring 
-vertices or two vertices at distance~$2$; hence the constructed graph $G=(V,E)$ has bandwidth~$2$. 
-This implies that $G$ furthermore is outer-planar.
+vertices or two vertices at distance~$2$. Hence, the constructed graph $G=(V,E)$ has bandwidth~$2$. 
+This implies that $G$ furthermore is outerplanar.
 
 We will study schedules $\sigma$ of value $\beta$. Notice that the sum of all weights in $G$ equals $\beta(|V| - 1)$. Hence, if $\sigma$ is such a schedule of value $\beta$, then each of $G^\sigma_1, \dots G^\sigma_\beta$ is a spanning tree and acyclic.
 
 In particular, we will consider the behavior of $\sigma$ on the induced subgraph $H_i := G[\fromto{u_0}{u_i}]$ for $1\le i\le n$.
 Since the only connections between $H_i$ and the rest of the graph are via the two vertices $u_{i-1}$ and $u_i$,
-at any moment $t\in[0,\beta]$ in time, graph $H_i$ will consist of one or two connected components
+at any moment $t\in [0,\beta]$ in time, graph $H_i$ will consist of one or two connected components
 under schedule $\sigma$.
 If there is a single connected component, we say that $H_i$ is \emph{fully-connected} at time $t$.
 If there are two connected components (one containing vertex $u_{i-1}$, the other one containing 
 vertex $u_i$), we say that $H_i$ is \emph{semi-connected} at time $t$.
-Note that if $H_i$ is semi-connected at moment $t$, then the edge $u_{i-1} u_{i+1}$ must be active at 
+Note that if $H_i$ is semi-connected at moment $t$, then the edge $\{u_{i-1}, u_{i+1}\}$ must be active at 
 that moment $t$, as there are no other edges that would be able to connect the component containing 
 $u_{i-1}$ to the rest of the graph.
 
-The graph $H_1$ consists of the vertices $u_0$ and $u_1$ and of the edge $u_0 u_1$ of weight $(2n-2)Q$.
+The graph $H_1$ consists of the vertices $u_0$ and $u_1$ and of the edge $\{u_0, u_1\}$ of weight $(2n-2)Q$.
 Suppose for the sake of contradiction that $H_1$ is neither fully-connnected at $t=0$ nor at $t=\beta$:
-Then the edge $u_0 u_2$ (of value $2Q$) must be active at $t=0$ and at $t=\beta$, which is impossible.
+Then the edge $\{u_0, u_2\}$ (of value $2Q$) must be active at $t=0$ and at $t=\beta$, which is impossible.
 By symmetry, we will henceforth assume that under schedule $\sigma$ the graph $G_1$ is fully-connnected at $t=\beta$.
-This implies that $u_0 u_1$ is active during $[Q,\beta]$ and that $u_0 u_2$ is active during $[0,2Q]$.
+This implies that $\{u_0, u_1\}$ is active during $[Q,\beta]$ and that $\{u_0, u_2\}$ is active during $[0,2Q]$.
 For graph $H_i$ (with $1\le i\le n$) one can show by induction that $H_i$ is semi-connected
 during the time intervals $[0,Q]$, $[2Q,3Q]$, \dots, $[(2i-2)Q,(2i-1)Q]$ and fully-connected at all
 other moments in $[0,\beta]$.
 The induction uses the following facts and observations on the two edges $\set{u_{i-2}, u_i}$ and $\set{u_{i-1},u_i}$ 
 that are in $H_i$ but not in $H_{i-1}$:
 \begin{itemize}
-\item Graph $H_i$ is semi-connected at time $0$. (This is because we have by induction hypothesis that $H_{i-1}$ is semi-connected at $t=0$, so if $H_i$ would be fully-connected at $t=0$, this would imply $\sigma(u_{i-2}u_i) = \sigma(u_{i-1}u_i) = 0$. But then, because all involved edges have weight $w(e) > Q$, at time $t = Q+1$ we have a cycle, which is impossible.)
-\item Since $H_{i-1}$ is semi-connected at time $0$, the edge $u_{i-2}u_i$ must be active at time $0$
+\item Graph $H_i$ is semi-connected at time $0$. (This is because we have by induction hypothesis that $H_{i-1}$ is semi-connected at $t=0$, so if $H_i$ would be fully-connected at $t=0$, this would imply $\sigma(\{u_{i-2}, u_i\}) = \sigma(\{u_{i-1}, u_i\}) = 0$. But then, because all involved edges have weight $w(e) > Q$, at time $t = Q+1$ we have a cycle, which is impossible.)
+\item Since $H_{i-1}$ is semi-connected at time $0$, the edge $\{u_{i-2},u_i\}$ must be active at time $0$
 and hence must be active during $[0,(2i-2)Q]$.
 \item $H_i$ must be fully-connnected at time $\beta$. (Otherwise, $H_i$ is fully-connnected neither 
-at $t=0$ nor at $t=\beta$, and the edge $u_{i-1}u_{i+1}$ had to be active for $\beta$ time units.)
-\item Since $H_i$ is fully-connnected at time $\beta$, the edge $u_{i-1}u_i$ must be active at time $\beta$
+at $t=0$ nor at $t=\beta$, and the edge $\{u_{i-1},u_{i+1}\}$ had to be active for $\beta$ time units.)
+\item Since $H_i$ is fully-connnected at time $\beta$, the edge $\{u_{i-1},u_i\}$ must be active at time $\beta$
 and hence must be active during $[(2i-1)Q,\beta]$.
 \end{itemize}
 The induction yields for $i=n$ that the induced subgraph $H_n$ is semi-connected during the time intervals 
@@ -259,13 +264,13 @@ intervals of length $Q$ that start at an odd time multiple of $Q$).
 
 Next, consider the subgraph $G'$ that is induced by the $3n+2$ vertices $v_{-1}=u_{n-1}$, $v_0=u_n$ and 
 $v_1,\ldots,v_{3n}$.
-As the edges $v_kv_{k+2}$ with $k=-1,\ldots,3n-2$ all have value $\beta$, there is an active path $P_0$ 
+As the edges $\{v_k, v_{k+2}\}$ with $k=-1,\ldots,3n-2$ all have value $\beta$, there is an active path $P_0$ 
 through the vertices with even index during the full interval $[0,\beta]$ and there is an active 
 path $P_1$ through the vertices with odd index during $[0, \beta]$.
 By the above discussion, graph $H_n$ connects these two paths $P_0$ and $P_1$ to each other during the
 time intervals $[Q,2Q]$, $[3Q,Q4]$, \dots, $[(2n-3)Q,(2n-2)Q]$.
 The only way for connecting $P_0$ and $P_1$ to each other during the remaining time intervals 
-$[0,Q]$, $[2Q,3Q]$, \dots, $[(2n-2)Q,(2n-1)Q]$ is by using the edges $v_{k-1}v_k$ with $k=1,\ldots,3n$ of 
+$[0,Q]$, $[2Q,3Q]$, \dots, $[(2n-2)Q,(2n-1)Q]$ is by using the edges $\{v_{k-1},v_k\}$ with $k=1,\ldots,3n$ of 
 weight $a_k$.
 As this groups the numbers $a_1,\ldots,a_{3n}$ into $n$ groups with sum $Q$, we get a solution
 for the instance of \textsc{3-Partition}.
@@ -273,23 +278,41 @@ Vice versa, if the \textsc{3-Partition} instance has a solution, then we can bui
 with all desired properties from it.
 \end{proof}
 
-\cref{thm:hardness_complete_bipartite,thm:hardness_bandwidth} show hardness, even if the structure of the input is heavily restriced. We now show hardness even if the weights $w(e)$ are restricted. For this, we reduce from the Hamilton cycle problem. Akiyama, Nishizeki and Saito proved that the Hamilton cycle problem is NP-complete even for bipartite, 3-regular graphs \cite{hamilton3regularBip}. We additionally require hardness for a more restricted variant of the hamilton cycle problem, which we call \textsc{Hamilton'}. The following lemma is surely known, however, we were unable to find it in the literature. We give a proof in \cref{appendix:hamilton_prime}.
+\section{Hardness of Approximation}
+\label{sec:inapprox}
+
+\cref{thm:hardness_complete_bipartite,thm:hardness_bandwidth} show NP-hardness, even if the structure of the input graph is heavily restriced. 
+We now show that assuming $P \neq NP$ there exists no $\alpha$-approximation algorithm for problem {\act}, for 
+any $\alpha < 7/6$, even if $w(e) \in \{1,\dots,6\}$.
+%We now show hardness even if the weights $w(e)$ are restricted. 
+For this, we reduce from the Hamilton cycle problem. Akiyama, Nishizeki and Saito proved that the Hamilton cycle problem is NP-complete even for bipartite, 3-regular graphs \cite{hamilton3regularBip}. We additionally require hardness for a more restricted variant of the hamilton cycle problem, which we call \textsc{Hamilton'}. NP-completeness of \textsc{Hamilton'} is surely known, however, we were unable to find it in the literature. We give a proof in \cref{appendix:hamilton_prime}.
+
+\begin{quote}
+
+Problem \textsc{Hamilton'} 
+
+\textbf{Given:} An undirected, bipartite and 4-regular graph $H$, a special edge $\set{u, z}$, such that the following three are equivalent: (i) $H$ has a Hamilton cycle; (ii) $H$ has a Hamilton cycle using the edge $\set{u, z}$; (iii) $H$ has a Hamilton path starting at $u$.
+
+\textbf{Question:} Does there exist a Hamilton cycle in $H$?
+
+\end{quote}
 
 \begin{restatable}{lemma}{hamiltonPrime}
 \label{hamilton_cycle_lemma}
-The Hamilton cycle problem for a graph $H$ is NP-complete, even under the following restrictions: The graph $H$ is undirected, bipartite, and 4-regular, and as part of the input we are given a special edge $\set{u, z}$, such that the following three are equivalent: (i) $H$ has a Hamilton cycle; (ii) $H$ has a Hamilton cycle using the edge $\set{u, z}$; (iii) $H$ has a Hamilton path starting at $u$.
+\textsc{Hamilton'} is NP-complete.
 \end{restatable} 
 
 Using the above lemma, we can construct a gap reduction to show:
 
 \begin{theorem}
 \label{corollary_act_no_approx}
-The problem {\act} is NP-complete, even if $w(e) \in \fromto{1}{6}$ for all edges. Furthermore, if $P \neq NP$, there is no poly-time $\alpha$-approximation with $\alpha < 7/6$, even if $w(e) \in \fromto{1}{6}$ for all edges.
+%The problem {\act} is NP-complete, even if $w(e) \in \fromto{1}{6}$ for all edges. Furthermore, if $P \neq NP$, there is no poly-time $\alpha$-approximation with $\alpha < 7/6$, even if $w(e) \in \fromto{1}{6}$ for all edges.
+If $P \neq NP$, there is no poly-time $\alpha$-approximation with $\alpha < 7/6$ for problem {\act}, even if $w(e) \in \fromto{1}{6}$ for all edges.
 \end{theorem}
 \begin{proof}
-Let $H$ be an instance of the problem \textsc{Hamilton'}, as described in \cref{hamilton_cycle_lemma}. We construct in polynomial time an instance $(G, w)$ of problem {\act}, such that $w(e) \in \fromto{1}{6}$ for all edges, and such that the optimal value of a schedule is at most 7, and is equal to seven if and only if $H$ has a Hamilton cycle. This is sufficient to prove the theorem.
+Let $H$ be an instance of the problem \textsc{Hamilton'}. We construct in polynomial time an instance $(G, w)$ of problem {\act}, such that $w(e) \in \fromto{1}{6}$ for all edges, and such that the optimal value of a schedule is at most 7, and is equal to seven if and only if $H$ has a Hamilton cycle. This is sufficient to prove the theorem.
 
-The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartite parts of $H$ be $U = \fromto{u_1}{u_k}$ and $Z = \fromto{z_1}{z_k}$, and let $\set{u_k, z_k} =: e_0$ be the special edge, as described in \cref{hamilton_cycle_lemma}. The graph $G$ consists of a copy of $H$ where every edge has weight 2, except $e_0$, which has weight 1. Furthermore, there is an additional vertex $x$, which is connected to each of $\fromto{u_1}{u_k}$ via the gadget $L$ and to each of $\fromto{z_1}{z_k}$ via the gadget $R$. Finally, there is an additional vertex $y$ connected to both $x$ and $y$ with an edge of weight 4.
+The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartite parts of $H$ be $U = \fromto{u_1}{u_k}$ and $Z = \fromto{z_1}{z_k}$, and let $\set{u_k, z_k} =: e_0$ be the special edge of the given \textsc{Hamilton'} instance. The graph $G$ consists of a copy of $H$ where every edge has weight 2, except $e_0$, which has weight 1. Furthermore, there is an additional vertex $x$, which is connected to each of $\fromto{u_1}{u_k}$ via the gadget $L$ and to each of $\fromto{z_1}{z_k}$ via the gadget $R$. Finally, there is an additional vertex $y$ connected to both $x$ and $y$ with an edge of weight 4.
 \begin{figure}[htpb]
      \centering
      \begin{subfigure}[b]{0.4\textwidth}
