@@ -291,10 +291,26 @@ Let $H$ be an instance of the problem \textsc{Hamilton'}, as described in \cref{
 
 The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartite parts of $H$ be $U = \fromto{u_1}{u_k}$ and $Z = \fromto{z_1}{z_k}$, and let $\set{u_k, z_k} =: e_0$ be the special edge, as described in \cref{hamilton_cycle_lemma}. The graph $G$ consists of a copy of $H$ where every edge has weight 2, except $e_0$, which has weight 1. Furthermore, there is an additional vertex $x$, which is connected to each of $\fromto{u_1}{u_k}$ via the gadget $L$ and to each of $\fromto{z_1}{z_k}$ via the gadget $R$. Finally, there is an additional vertex $y$ connected to both $x$ and $y$ with an edge of weight 4.
 \begin{figure}[htpb]
-\centering
-\includegraphics[scale=1]{img/act-hamilton-cycle}
-\caption{(a) Reduction \textsc{Hamilton'} $\rightarrow$ {\act}. (b) Gadget $L$. (c) Gadget $R$.}
-\label{fig_act_hamilton_cycle}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[scale=1]{img/act-hamilton-cycle-a}
+         \subcaption{Reduction}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.3\textwidth}
+         \centering
+         \includegraphics[scale=1]{img/act-hamilton-cycle-b}
+         \subcaption{Gadget $L$}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.15\textwidth}
+         \centering
+         \includegraphics[scale=1]{img/act-hamilton-cycle-c}
+         \subcaption{Gadget $R$}
+     \end{subfigure}
+        \caption{Reduction \textsc{Hamilton'} $\rightarrow$ {\act}.}
+        \label{fig_act_hamilton_cycle}
 \end{figure}
 
 We first describe the properties of the gadgets $L$ and $R$. Assume $\sigma$ is a schedule of value 7. Note that the sum of all weights in $G$ is $8k - 1 + 39k + 16k + 8 = 63k + 7 = 7(|V(G) - 1|)$. Therefore, each of $G_{1}, \ldots, G_{7}$ is a tree, and in particular acyclic. By inspecting the vertices $r_1$ and $r_2$ and using acyclity of $G_2, G_6$ we see that the gadget $R$ necessarily connects $x$ and $z_i$ in $G_2$ and $G_6$, but does not connect $x$ and $z_i$ in $G_t$ for $t \neq 2,6$. Similarily, the gadget $L$ necessarily connects $x$ and $u_i$ in $G_3$ and $G_5$ and has some remaining edges, which are not restricted and behave like two parallel edges of weight 1. Analogously, $G_{t}[\set{x, y, w_k}]$ is connected if and only if $t = 4$.
