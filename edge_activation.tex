@@ -127,7 +127,7 @@ The problems \act\ and \stact\ are nonpreemptive variants of known problems. To 
 
 \emph{Our contribution.}
 We introduce the problems \act\ and \stact. We show that \act\ is strongly NP-complete, even if a.) the input graph is $K_{2,n}$ or if b.) the input graph is outerplanar of bandwidth 2, or c.) we have $w(e) \in \fromto{1}{6}$. Furthermore, there is no fast (7/6)-approximation algorithm assuming P $\neq$ NP, even if $w(e) \in \fromto{1}{6}$. Similarily, we show that \stact\ is NP-complete, even if a.) the treewidth of the input graph is bounded by 3, or if b.) we have $w(e) \in \set{1,2}$ for all $e$. 
-\cref{sec:positive_results} is concerned with positive results for \act. We give a linear time algorithm, if both the treewidth and edge weights are bounded by a constant. We describe an FPT-algorithm for the parameter of feedback edge set. We introduce a Greedy algorithm, which is a $(n-1)$-approximation. We show that the Greedy algorithm is optimal, if and only if the input graph is a cactus graph. Using techniques from extremal graph theory, we show in \cref{sec:ratio_relaxation}, that for problem \stact, the ratio to its relaxation, i.e.\ Menger's problem is unbounded.
+\cref{sec:positive_results} is concerned with positive results for {\act}. We give a linear time algorithm, if both the treewidth and edge weights are bounded by a constant. We describe an FPT-algorithm for the parameter of feedback edge set. We introduce a Greedy algorithm, which is a $(n-1)$-approximation. We show that the Greedy algorithm is optimal, if and only if the input graph is a cactus graph. Using techniques from extremal graph theory, we show in \cref{sec:ratio_relaxation}, that for problem \stact, the ratio to its relaxation, i.e.\ Menger's problem is unbounded.
 
 \subsection{Definitions and Notation}
 \label{sec_notation}
@@ -160,9 +160,9 @@ We give a short example of the introduced concepts. Consider \cref{fig:introduct
 We make use of the following graph-theoretic concepts and notations: Let $G = (V,E)$ be a directed or undirected graph. If $V' \subseteq V$ is a subset of the vertices, the corresponding \emph{edge cut} $\delta(V')$ is the set of edges having one endpoint in $V'$ and one endpoint in $V \setminus V'$ (in the directed case, we do not distinguish here between incoming and outgoing edges). For a vertex $v$, we let $\delta(v) := \delta(\set{v})$. If $(V_1,\dots,V_k)$ is a partition of $V$, the \emph{multicut} $\delta(V_1,\dots,V_k)$ is the set of edges with endpoints in diiferent parts of the partition. We denote by $G[V']$ the \emph{induced subgraph} on $V'$. By removing the vertex $v$ from $G$, we obtain $G - v := G[V \setminus \set{v}]$. Similarily, if $E' \subseteq E$ and $e \in E$, then $G - E' := (V, E \setminus E')$, and $G - e := G - \set{e}$.
 
 
-\textbf{ Concepts currently used, but not defined }
+\textbf{ Concepts currently used, but not defined: }
 \begin{itemize}
-\item definition path (directed/undirected)
+\item definition path (i.e.\ no vertex twice, some call this specifically a simple path)
 \item cactus graph
 \item hamiltonian path/cycle
 \item complete (bipartite) graph $K_n$, $K_{n,m}$
@@ -170,28 +170,23 @@ We make use of the following graph-theoretic concepts and notations: Let $G = (V
 \item Feedback edge set
 \item treewidth
 \item bandwidth
+\item Monadic second-order graph logic $\text{MSO}_2$.
 \end{itemize}
 
 \section{NP-Hardness}
 \label{sec:hardness}
 
-In this section, we show NP-hardness of the problems \act\ and \stact, even if the input instances are restricted. This is done by reducing from the following two classical problems: (We denote by $\sum A$ the sum of the set $A$.)
+In this section, we show NP-hardness of the problems \act\ and \stact, even if the input instances are restricted. This is done by reducing from the following two classical problem: (We denote by $\sum A$ the sum of the set $A$.)
 
-\begin{quote}
 
-Problem \textsc{Partition}: Given a (multi-)set $A = \set{a_1, \ldots, a_n} \subseteq \N$, let $Q := 1/2 \sum A$. Does there exist $S \subseteq A$ with $\sum S = Q$?
-
-\end{quote}
 \begin{quote}
 
 Problem \textsc{3-Partition}: Given a (multi-)set $A = \set{a_1, \ldots, a_{3n}} \subseteq \N$ with $Q/4 < a_i < Q/2$ for all $i$, where $Q := 1/n \sum A$, does there exist a partition of $A$ into $n$ into triplets, such that every triplet sums up to $Q$?
 
 \end{quote}
 
-It is known that \textsc{Partition} is NP-complete, but not strongly NP-complete, and that \textsc{3-Partition} is strongly NP-complete, meaning that there exists a polynomial $p$, such that \textsc{3-Partition} is NP-complete even if $a_i \leq p(n)$ for all $i$.
-For each of the two problems $\act$ and $\stact$, we show hardness even if either the structure of the input is restricted, or if the weights $w(e)$ are restricted.
-
-\subsection{Activation Problem}
+It is known  that \textsc{3-Partition} is strongly NP-complete, meaning that there exists a polynomial $p$, such that \textsc{3-Partition} is NP-complete even if $a_i \leq p(n)$ for all $i$.
+We show hardness of {\act}, even if either the structure of the input is restricted, or if the weights $w(e)$ are restricted.
 
 \begin{theorem}
 \label{thm:hardness_complete_bipartite}
@@ -211,7 +206,7 @@ On the other hand, assume $A$ is a yes-instance. Then it is easy to see that a s
 The problem \act\ is strongly NP-complete, even on outerplanar graphs of bandwidth 2.
 \end{theorem}
 \begin{proof}
-Given an instance $A = \fromto{a_1}{a_{3n}}$ of \textsc{3-Partition} where $Q := 1/n \sum A$, we construct an instance of problem \act, whose optimal solution is $\beta := (2n - 1)Q$, if and only if $A$ is a yes-instance of \textsc{3-Partition}.
+Given an instance $A = \fromto{a_1}{a_{3n}}$ of \textsc{3-Partition} where $Q := 1/n \sum A$, we construct an instance of problem {\act}, whose optimal solution is $\beta := (2n - 1)Q$, if and only if $A$ is a yes-instance of \textsc{3-Partition}.
 
 The graph has $4n+1$ vertices $u_0,\ldots,u_n$ and $v_1,\ldots,v_{3n}$.
 We will sometimes denote vertex $u_k$ also by the name $v_{k-n}$, for $1\le k\le n+1$;
@@ -285,23 +280,23 @@ with all desired properties from it.
 
 \begin{restatable}{lemma}{hamiltonPrime}
 \label{hamilton_cycle_lemma}
-The Hamilton cycle problem for a graph $H$ is NP-complete, even under the following restrictions: The graph $H$ is undirected, bipartite, and 4-regular, and as part of the input we are given a special edge $\set{u, z}$, such that the following three are equivalent: (i) $H$ has a Hamilton cycle (ii) $H$ has a Hamilton cycle using the edge $\set{u, z}$ (iii) $H$ has a Hamilton path starting at $u$.
+The Hamilton cycle problem for a graph $H$ is NP-complete, even under the following restrictions: The graph $H$ is undirected, bipartite, and 4-regular, and as part of the input we are given a special edge $\set{u, z}$, such that the following three are equivalent: (i) $H$ has a Hamilton cycle; (ii) $H$ has a Hamilton cycle using the edge $\set{u, z}$; (iii) $H$ has a Hamilton path starting at $u$.
 \end{restatable} 
 
 Using the above lemma, we can construct a gap reduction to show:
 
 \begin{theorem}
 \label{corollary_act_no_approx}
-The problem \act\ is NP-complete, even if $w(e) \in \fromto{1}{6}$ for all edges. Furthermore, if $P \neq NP$, there is no poly-time $\alpha$-approximation with $\alpha < 7/6$, even if $w(e) \in \fromto{1}{6}$ for all edges.
+The problem {\act} is NP-complete, even if $w(e) \in \fromto{1}{6}$ for all edges. Furthermore, if $P \neq NP$, there is no poly-time $\alpha$-approximation with $\alpha < 7/6$, even if $w(e) \in \fromto{1}{6}$ for all edges.
 \end{theorem}
 \begin{proof}
-Let $H$ be an instance of the problem \textsc{Hamilton'}, as described in \cref{hamilton_cycle_lemma}. We construct in polynomial time an instance $(G, w)$ of problem \act, such that $w(e) \in \fromto{1}{6}$ for all edges, and such that the optimal value of a schedule is at most 7, and is equal to seven if and only if $H$ has a Hamilton cycle. This is sufficient to prove the theorem.
+Let $H$ be an instance of the problem \textsc{Hamilton'}, as described in \cref{hamilton_cycle_lemma}. We construct in polynomial time an instance $(G, w)$ of problem {\act}, such that $w(e) \in \fromto{1}{6}$ for all edges, and such that the optimal value of a schedule is at most 7, and is equal to seven if and only if $H$ has a Hamilton cycle. This is sufficient to prove the theorem.
 
 The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartite parts of $H$ be $U = \fromto{u_1}{u_k}$ and $Z = \fromto{z_1}{z_k}$, and let $\set{u_k, z_k} =: e_0$ be the special edge, as described in \cref{hamilton_cycle_lemma}. The graph $G$ consists of a copy of $H$ where every edge has weight 2, except $e_0$, which has weight 1. Furthermore, there is an additional vertex $x$, which is connected to each of $\fromto{u_1}{u_k}$ via the gadget $L$ and to each of $\fromto{z_1}{z_k}$ via the gadget $R$. Finally, there is an additional vertex $y$ connected to both $x$ and $y$ with an edge of weight 4.
 \begin{figure}[htpb]
 \centering
 \includegraphics[scale=1]{img/act-hamilton-cycle}
-\caption{(a) Reduction \textsc{Hamilton'} $\rightarrow$ \act. (b) Gadget $L$. (c) Gadget $R$.}
+\caption{(a) Reduction \textsc{Hamilton'} $\rightarrow$ {\act}. (b) Gadget $L$. (c) Gadget $R$.}
 \label{fig_act_hamilton_cycle}
 \end{figure}
 
@@ -317,71 +312,18 @@ In summary, $F$ is a graph of maximum degree 2, where $u_k$ has degree 1. It fol
 \end{proof}
 
 
-
-\subsection{$s$-$t$-Activation Problem}
-We now show hardness of the problem $\stact$, even if either the structure or the weights of the input are restricted. We begin with the case of restricted structure.
-
-\begin{theorem}
-\label{thm_stact_np_hard}
-The problem \stact\ is NP-complete, even if the input graph is planar with treewidth at most 3.
-\end{theorem}
-
-\begin{proof}
-Let $A = \fromto{a_1}{a_n}$ be an instance of \textsc{Partition} and $Q := 1/2 \sum A$. Consider the digraph from \cref{fig_stact_np_hard}. (By the symbol $\infty$, we mean a weight large enough, such that the corresponding edge is w.l.o.g.\ always active. For example, $\infty \geq 4Q$ suffices.) We claim that there exists a schedule of value $4Q$ if and only if $A$ is a yes-instance. Suppose $\sigma$ is such a schedule. By symmetry we can assume $\sigma((s,v_1)) = \sigma((v_1, z_1)) = 0$. Then also $\sigma((v_1, z
-_2)) = Q$, otherwise we are inefficient and $\sigma$ can not have a value of $4Q$ (consider the cut $\delta(s)$). Then by a similar reasoning concerning efficiency, the scheduling of the edges between $z_1$ and $t$ implies a partition of $A$ into two equal parts. The other direction of the claim is easy to see. Finally, note that the involved graph is 
-planar and has treewidth 3.
-\end{proof}
-\begin{figure}[htpb]
-\centering
-\includegraphics[scale=1]{img/st-act-np-hard}
-\caption{Reduction \textsc{Partition} $\rightarrow$ \stact\ described in \cref{thm_stact_np_hard}.}
-\label{fig_stact_np_hard}
-\end{figure}
-
-We wish to prove that \stact\ is NP-complete, even if the weights are restricted to $\set{1, 2}$. The idea is to introduce a gadget $G_k$, whose edges have weight restricted to $\set{1,2}$, such that $G_k$ behaves almost the same way as a single edge of weight $2k - 1$. The gadget is depicted in \cref{fig_gadget}. Formally, for $i \in [k]$, the edges $(s, v_i)$, $(z_i, t)$ have weight 2 each, and the edges $(v_i, z_i)$, $(v_i, z_{i+1})$ have weight 1 each (we let $z_{k+1} := z_1$).
-
-\begin{lemma}
-\label{lemma_gadget}
-Let $G_k$ be the digraph depicted in \cref{fig_gadget}. Let $\sigma$ be a schedule for $G_k$ and let $C(\sigma)$ be like in \cref{sec_notation}. Then we have that \begin{enumerate}[(i)]
-\item $|C(\sigma)| \leq 2k -1$,
-\item $|C(\sigma)| = 2k -1$ can be achieved for some $\sigma$, and
-\item If $|C(\sigma)| = 2k -1$, then $C(\sigma)$ is a set of $2k-1$ consecutive integers.
-\label{lemma_gadget_case_3}
-\end{enumerate}
-\end{lemma}
-\begin{proof}
-For claim (i), observe that if we would use all edges to their full capacity, we would get a value of $2k$. However, due to the properties of nonpreemptive schedling, this is impossible to realize. Claim (ii) is easy to see. For claim (iii), assume the contrary, i.e.\ $|C(\sigma)| = 2k -1$ and $C(\sigma) = I_1 \cup \dots \cup I_m$ where $m \geq 2$ and $I_j = \fromto{a_j}{b_j}$ and $a_{j+1} \geq b_j + 2$ for all $j < m$. Then at least one of the intervals, say $I_1$, has an odd cardinality. Because  all edges have weight at most 2, we have that the set of edges contributing to $I_1$ (i.e.\ the set $E_1 := \set{e \in E(G_k) : \sigma(e) < b_1}$) is disjoint from the set of edges contributing to $I_2$ (i.e.\ the set $E_2 := \set{e \in E(G_k) : \sigma(e) + w(e) > a_2 - 1}$). Consider the cuts $\delta(s)$ and $\delta(t)$, both of which have capacity $2k$. Because $|I_1|$ is odd, but the edges in $\delta(s)$ and $\delta(t)$ have weight 2, at least one unit of capacity from both $\delta(s)$ and $\delta(t)$ is wasted in $E_1$. Now, applying a similar argument like in claim (i) to $E_2$ and $I_2$ yields $|C(\sigma)| < 2k - 1$, a contradiction. (If the interval of odd cardinality is not $I_1$, an analogous argument holds.)
-%and $C(\sigma)$ is not an interval. Let $t_0 := \min C(\sigma)$. Because at most one unit of time from each of the cuts $\delta(s)$ or $\delta(t)$ is \enquote{wasted}, but at time $t_0 + 1$ a unit either in $\delta(s)$ or $\delta(t)$ is wasted, we have $t_0 + 1 \not\in C(\sigma)$. But then at time $t_0 + 2$ the situation looks isomorphic to \cref{fig_gadget} (b) and together with $v_1w_2$ and $v_kw_1$ we have already wasted 4 units of time. However, if we want to achieve a value of $2k - 1$ we can at most waste 3 units.
-\end{proof}
-\begin{figure}[htpb]
-\centering
-\includegraphics[scale=1]{img/gadget-new}
-\caption{Gadget graph $G_k$.}
-\label{fig_gadget}
-\end{figure}
-
-Having proven \cref{lemma_gadget}, it is natural to try the same hardness proof as \cref{thm_stact_np_hard}, and substitute an edge of weight $2k-1$ with the gadget $G_k$. This does not quite work, as the weights in this reduction are not polynomially bounded, hence the resulting graph is too large. However, if one considers instead a very similar reduction from \textsc{3-Partition}, one can prove:
-
-\begin{restatable}{theorem}{stactonetwo}
-\label{thm:stact_weights_one_two}
-The problem \stact\ is NP-complete, even if $w(e) \in \set{1, 2}$ for all edges.
-\end{restatable}
-
-The resulting graphs do not have constant treewidth in this case. The full proof can be found in \cref{appendix:proof_stact_one_two}. 
-
-
 \section{Positive Results}
 \label{sec:positive_results}
 
-In this section, we present exact solution approaches for restricted instances, and approximation results for problem \act. Unfortunately, the arguments presented here do not generalize to \stact. It is an open question to find similar results for \stact. 
+In this section, we present exact solution approaches for restricted instances, and approximation results for problem {\act}. Unfortunately, the arguments presented here do not generalize to \stact. It is an open question to find similar results for \stact. 
 
 \subsection{FPT-algorithms}
 
 \begin{theorem}
-If both the treewidth and the maximum edge weight $w(e)$ of an instance are bounded by  a constant $k$, problem \act\ can be solved in linear time. (There is an FPT-algorithm with respect to $k$). 
+If both the treewidth and the maximum edge weight $w(e)$ of an instance are bounded by  a constant $k$, problem {\act} can be solved in linear time. (There is an FPT-algorithm with respect to $k$). 
 \end{theorem}
 \begin{proof}
-Let $(G, w)$ be an instance of \act, such that $G = (V, E)$ has treewidth at most $k$, and $w(e) \leq k$ for all edges. Because $G$ has treewidth at most $k$, there exists a vertex $v$ of degree at most $k$. Every edge incident to $v$ has weight at most $k$. Hence the maximum value of a solution is at most $k^2$. For every $T \in [k^2]$, we construct a formula $\Phi_T$ in monadic second-order graph logic $\text{MSO}_2$, such that $\Phi_T$ is satisfiable if and only if a schedule of value $T$ exists. In fact, we introduce binary variables $x_{e,t}$ for $e \in E$ and $t \in [T]$. Then the following expression can be formulated in $\text{MSO}_2$:
+Let $(G, w)$ be an instance of {\act}, such that $G = (V, E)$ has treewidth at most $k$, and $w(e) \leq k$ for all edges. Because $G$ has treewidth at most $k$, there exists a vertex $v$ of degree at most $k$. Every edge incident to $v$ has weight at most $k$. Hence the maximum value of a solution is at most $k^2$. For every $T \in [k^2]$, we construct a formula $\Phi_T$ in monadic second-order graph logic $\text{MSO}_2$, such that $\Phi_T$ is satisfiable if and only if a schedule of value $T$ exists. In fact, we introduce binary variables $x_{e,t}$ for $e \in E$ and $t \in [T]$. Then the following expression can be formulated in $\text{MSO}_2$:
 \begin{align*}
 \exists \sigma :  E \rightarrow \fromto{0}{T} : &\forall e \in E, t \in [T]: (x_{e,t}=1) \leftrightarrow \left(\sigma(e) < t \leq \sigma(e) + w(e)\right)\\
 \land &\forall t \in [T]: \set{e \in E \mid x_{e,t} = 1} \text{ is spanning.}
@@ -392,8 +334,8 @@ It follows from Courcelle's theorem [cite], that for each $T \in [k^2]$, the sat
 \begin{theorem}
 For instances $(G, w)$ without any restrictions on the weights, we have: 
 \begin{enumerate}[(i)]
-\item If $G$ has at most $k$ edges, problem \act\ can be solved in time $2^{\bigO(k^2)}$.
-\item There is an  FPT-algorithm for \act\ with respect to the parameter $k =$ size of a feedback edge set, with running time $2^{\bigO(k^4)}n$. 
+\item If $G$ has at most $k$ edges, problem {\act} can be solved in time $2^{\bigO(k^2)}$.
+\item There is an  FPT-algorithm for {\act} with respect to the parameter $k =$ size of a feedback edge set, with running time $2^{\bigO(k^4)}n$. 
 
 \end{enumerate}
 \end{theorem}
@@ -403,16 +345,16 @@ Let $G = (V, E)$. For the proof of (i), consider the set $A := \set{\sum_{e \in 
 
 For the proof of (ii), assume $G$ consists out of a spanning tree $T$, plus $k$ additional edges $e_1, \dots, e_k$. Let $C$ be a cycle in $G$ with at least $2k+2$ edges, if such a cycle exists. Let $f_1, \dots, f_{|C|}$ be the edges of $C$, ordered by weight, i.e.\ $w(f_1) \leq w(f_2) \leq \dots w(f_{|C|})$. We claim that for any schedule $\sigma$, we have $\val(\sigma) \leq w(f_{2k+2})$. Indeed, note that there are exactly $k$ edges with the property $\sigma(e) \neq 0$, call these edges $e_1', \dots e'_k$. In particular, from the set $\fromto{f_1}{f_{2k+2}}$, at least $k+2$ many have $\sigma(e) = 0$, and all of these are inactive at the time step $w(f_{2k+2}) + 1$. Hence, at this time step, the cycle $C$ disintegrates into at least $k+2$ components, which need to be connected using the edges $e_1', \dots, e'_k$, but this is clearly impossible. Hence, $\val(\sigma) \leq w(f_{2k+2})$. As a consequence, if a cycle $C$ in $G$ has length more than $2k+2$, we can contract the heaviest edges until $C$ has exactly $2k+2$ edges, and obtain an equivalent instance.
 
-We now describe how to obtain a kernel of size $\bigO(k^2)$. For each of $i \in [k]$, let $C_i$ be the unique cycle in $T + e_i$. By the above argument, we can assume that $|C_i| \leq 2k+2$. If $e \in E$ is an arbitrary edge, it is either contained in some $C_i$, or not contained in any cycle. If $e$ is not contained in any cycle, it is very easy to handle when solving problem \act. Therefore, $\bigcup_{i=1}^k C_i$ is a kernel of size $\bigO(k^2)$. The running time follows from part (i).
+We now describe how to obtain a kernel of size $\bigO(k^2)$. For each of $i \in [k]$, let $C_i$ be the unique cycle in $T + e_i$. By the above argument, we can assume that $|C_i| \leq 2k+2$. If $e \in E$ is an arbitrary edge, it is either contained in some $C_i$, or not contained in any cycle. If $e$ is not contained in any cycle, it is very easy to handle when solving problem {\act}. Therefore, $\bigcup_{i=1}^k C_i$ is a kernel of size $\bigO(k^2)$. The running time follows from part (i).
 
 
 \end{proof}
 
 %\begin{theorem} \label{thm_dynamic_program}
-%Let $k, T \in \N$. Let $(G, l)$ be an instance of \act, such that $G$ has treewidth at most $k$ and the size of an optimal solution is at most $T$. Then an optimal soultion can be computed in time $\bigO(T^{k^2}B(k+1)^{2T}n)$ (where $B(k+1)$ is the $(k+1)$-st Bell number).
+%Let $k, T \in \N$. Let $(G, l)$ be an instance of {\act}, such that $G$ has treewidth at most $k$ and the size of an optimal solution is at most $T$. Then an optimal soultion can be computed in time $\bigO(T^{k^2}B(k+1)^{2T}n)$ (where $B(k+1)$ is the $(k+1)$-st Bell number).
 %\end{theorem}
 %\begin{corollary}
-%If both treewidth and maximum weight is bounded by $k$, the problem \act\ can be solved in time $(k+1)^{\bigO(k^3)}n$.
+%If both treewidth and maximum weight is bounded by $k$, the problem {\act} can be solved in time $(k+1)^{\bigO(k^3)}n$.
 %\end{corollary}
 %
 %\begin{proof}[Proof of \cref{thm_dynamic_program}]
@@ -469,19 +411,19 @@ m^3)$. \comment{I have a more detailed handwritten explanation why $\bigO(m^3)$ 
 
 \subsection{Greedy-algorithm}
 
-Let $(G, w)$ be an instance of \act, where $G  = (V, E)$. It is very natural to consider the following Greedy-algorithm:
+Let $(G, w)$ be an instance of {\act}, where $G  = (V, E)$. It is very natural to consider the following Greedy-algorithm:
 
 \textsc{Greedy-Algorithm}: Initialize the current time step $i \leftarrow 1$ and the available edges $A \leftarrow E$. While the algorithm has not stopped, do the following: Let $E_i$ be the set of currently active edges. If $E_i$ is spanning, do nothing and set $i \leftarrow i+1$. Otherwise, let $A' \leftarrow \set{e \in A \mid e \text{ does not close a cycle with } E_i}$. If $A' \neq \emptyset$, choose from $A'$ the edge $e$ with $w(e)$ maximal, set $\sigma(e) \leftarrow i - 1$, and update $A \leftarrow A \setminus \set{e}$ and update $E_i$. If $A'$ is empty, stop, and output $\sigma$.
 
 In other words, at time step 1, we pick a maximum weight spanning tree like in Kruskal's algorithm, and in each later time step, whenever the subgraph of active edges disconnects, we choose from all edges fixing the problem the one with the largest weight.
 
 \begin{theorem}
-Let $G$ be a connected graph, and $(G, w)$ be an instance of problem \act. Then we have: (i) If $G$ is a cactus graph, the Greedy algorithm returns an optimal solution. (ii) If $G$ is not a cactus graph, there exist weights $w$, such that the Greedy algorithm does not return an optimal solution.
+Let $(G, w)$ be an instance of problem {\act}. The Greedy algorithm returns a correct result for all weight assignments $w$, if and only if $G$ is a cactus graph.
 \end{theorem}
 \begin{proof}
-First, consider the case, where $G$ is just a single cycle. Let $e_1, \dots, e_n$ be the edges of this cycle, ordered by weight, i.e.\ $w(e_1) \leq w(e_2) \leq \dots w(e_n)$. Observe that any spanning tree of $G$ is defined by the single edge not included in it. We claim that the optimal value of a solution to \act\ is given by  $\text{OPT} = \min\set{w(e_1) + w(e_2), w(e_3)}$. In fact, we have $\text{OPT} \leq w(e_1) + w(e_2)$, because $\set{e_1, e_2}$ is a cut in $G$, and $\text{OPT} \leq w(e_3)$, because at least two of three edges $\set{e_1, e_2, e_3}$ have the property $\sigma(e) = 0$. Doing a case distinction on the cases $w(e_1) + w(e_2) \leq w(e_3)$ or $w(e_1) + w(e_2) > w(e_3)$, it is also easily seen, that in both cases, the Greedy algorithm returns a schedule af value $\min\set{w(e_1) + w(e_2), w(e_3)}$. This proves claim (i) if $G$ is a cycle. But observe that this result easily generalizes to the case where $G$ is a cactus graph, because every cactus graphs consists out of cycles and trees seperated by cutvertices.
+First, consider the case, where $G$ is just a single cycle. Let $e_1, \dots, e_n$ be the edges of this cycle, ordered by weight, i.e.\ $w(e_1) \leq w(e_2) \leq \dots w(e_n)$. Observe that any spanning tree of $G$ is defined by the single edge not included in it. We claim that the optimal value of a solution to {\act} is given by  $\text{OPT} = \min\set{w(e_1) + w(e_2), w(e_3)}$. In fact, we have $\text{OPT} \leq w(e_1) + w(e_2)$, because $\set{e_1, e_2}$ is a cut in $G$, and $\text{OPT} \leq w(e_3)$, because at least two of three edges $\set{e_1, e_2, e_3}$ have the property $\sigma(e) = 0$. Doing a case distinction on the cases $w(e_1) + w(e_2) \leq w(e_3)$ or $w(e_1) + w(e_2) > w(e_3)$, it is also easily seen, that in both cases, the Greedy algorithm returns a schedule af value $\min\set{w(e_1) + w(e_2), w(e_3)}$. This proves the claim, if $G$ is a cycle. But observe that this result easily generalizes to the case where $G$ is a cactus graph, because every cactus graphs consists out of cycles and trees seperated by cutvertices.
 
-For the proof of (ii), consider \cref{fig_greedy_fail}. Here, we have a graph $H$ on vertex set $\fromto{v_1}{v_4}$ with given edge weights $w$, such that the Greedy algorithm is not optimal. In fact, the Greedy algorithm returns a schedule of value 2, while the schedule $\sigma$ with $\sigma(\set{v_1,v_2}) = \sigma(\set{v_1,v_3}) = \sigma(\set{v_3,v_4}) = 0$ and $\sigma(\set{v_1,v_4}) = 1$ and $\sigma(\set{v_2,v_3}) = 2$ has value 3. Now, let $G$ be any graph which is not a cactus graph. By definition, there are two distinct cycles $C_1, C_2$, such that $C_1$ and $C_2$ share more than one vertex. There exists an edge $e$ contained in $C_1$, but not in $C_2$. Starting at $e$, following $C_1$ in both directions until we encounter $C_2$, we see that $G$ contains a subdivision of $H$. Now, claim (ii) follows easily.
+Now, consider \cref{fig_greedy_fail}. Here, we have a graph $H$ on vertex set $\fromto{v_1}{v_4}$ with given edge weights $w$, such that the Greedy algorithm is not optimal. In fact, the Greedy algorithm returns a schedule of value 2, while the schedule $\sigma$ with $\sigma(\set{v_1,v_2}) = \sigma(\set{v_1,v_3}) = \sigma(\set{v_3,v_4}) = 0$ and $\sigma(\set{v_1,v_4}) = 1$ and $\sigma(\set{v_2,v_3}) = 2$ has value 3. Now, let $G$ be any graph which is not a cactus graph. By definition, there are two distinct cycles $C_1, C_2$, such that $C_1$ and $C_2$ share more than one vertex. There exists an edge $e$ contained in $C_1$, but not in $C_2$. Starting at $e$, following $C_1$ in both directions until we encounter $C_2$, we see that $G$ contains a subdivision of $H$. Hence, there exists an assignment $w : E(G) \rightarrow \N$, such that the Greedy algorithm returns an incorrect result.
 \end{proof}
 \begin{figure}[htpb]
 \centering
@@ -491,74 +433,23 @@ For the proof of (ii), consider \cref{fig_greedy_fail}. Here, we have a graph $H
 \end{figure}
 
 \begin{theorem}
-(i) The Greedy algorithm is an $(n-1)$-approximation for problem \act.
+(i) The Greedy algorithm is an $(n-1)$-approximation for problem {\act}.
 (ii) This is tight in the following sense: There are instances, where the result of the Greedy algorithm is a factor $n/2$ worse than the optimum.
 \end{theorem}
 \begin{proof}
-For the proof of (i), let $(G, w)$ with $G = (V, E)$ be an instance of \act, and let $\text{OPT}$ be its optimal solution value. Consider a run of the Greedy-algorithm and let $i$ be the step in which the algorithm stops, because $A' = \emptyset$. We have that $E_i$ is not spanning, hence the graph $(V, E_i)$ has at least two components. Let $C \subseteq V$ be the vertex set of one of these components, consider the edge cut $\delta(C)$ and its weight $w(\delta(C)) := \sum_{e \in \delta(C)}w(e)$. We have that in step $i$, none of the edges of $\delta(C)$ were available, hence they were all chosen at sooner steps than step $i$. Furthermore, in each of the previous steps $j \in \fromto{1}{i-1}$, we have that $|E_j \cap \delta(C)| \leq n-1$, because a spanning tree has $n-1$ edges, hence $|E_j| = n-1$. But this implies that the number of previous steps is at least $i - 1 \geq w(\delta(C)) / (n-1)$. But note that clearly   $\text{OPT} \leq w(\delta(C))$. This proves the claim.
+For the proof of (i), let $(G, w)$ with $G = (V, E)$ be an instance of {\act}, and let $\text{OPT}$ be its optimal solution value. Consider a run of the Greedy-algorithm and let $i$ be the step in which the algorithm stops, because $A' = \emptyset$. We have that $E_i$ is not spanning, hence the graph $(V, E_i)$ has at least two components. Let $C \subseteq V$ be the vertex set of one of these components, consider the edge cut $\delta(C)$ and its weight $w(\delta(C)) := \sum_{e \in \delta(C)}w(e)$. We have that in step $i$, none of the edges of $\delta(C)$ were available, hence they were all chosen at sooner steps than step $i$. Furthermore, in each of the previous steps $j \in \fromto{1}{i-1}$, we have that $|E_j \cap \delta(C)| \leq n-1$, because a spanning tree has $n-1$ edges, hence $|E_j| = n-1$. But this implies that the number of previous steps is at least $i - 1 \geq w(\delta(C)) / (n-1)$. But note that clearly   $\text{OPT} \leq w(\delta(C))$. This proves the claim.
 
 For the proof of (ii), let $G = K_n$ be the complete graph on $n$ vertices. Fix a single vertex $x$, some small rational number $\epsilon > 0$, and consider the following edge weights: If an edge $e$ is adjacent to $x$, we let $w(e) = 1 + \epsilon$, otherwise $w(e) = 1$. The weights can be made integral by multiplication with a large integer. Now the Greedy algorithm returns a schedule of value $1 + \epsilon$. However, it is known that the maximum number of edge-disjoint spanning trees that can be packed into $K_n$ is equal to $\lfloor n/2 \rfloor$ (see \cite{SPTpackingSurvey}). This implies that $\text{OPT} = \lfloor n/2 \rfloor$ in this case, proving the claim.  
 \end{proof}
 \comment{Can we get rid of factor 1/2 in part (ii)?}
-
-\section{Relation between Problem and Relaxation}
-\label{sec:ratio_relaxation}
-The relaxation of problem \stact\ is Menger's problem. Given a fixed instance of $\stact$, how big can the ratio between its optimal solution $\optDirStAct$, and the optimal solution of the relaxation be? In this section, we show that it can be arbitrarily big. We describe an instance on $2n+2$ vertices, such that the solution to Menger's problem is $n^2$, but  $\optDirStAct = \theta(n^{1.5})$. In order to prove an upper bound for $\optDirStAct$, we make use of some tools from extremal graph theory. Namely, for vertices $x$ and $y$ in an undirected graph $H = (V, E)$, let $d(x, y) := \min\set{ |E(P)| : P \text{ is a $x$-$y$-path}}$ and $\radius(H) := \min_{x \in V} \max_{y \in V} d(x, y)$. Erd\H{o}s, Pach, Pollack and Tuza proved in 1987 \cite{erdHos1989radius}:
-\begin{theorem}
-\label{thm_mindegree_diameter_erdos}
-Let $H$ be a connected, triangle-free, undirected graph with $N$ vertices, and with minimum degree $\delta \geq 2$. Then
-\[\radius(H) \leq \frac{N-2}{\delta} + 12.\] 
-\end{theorem}
-
-\begin{theorem}
-\label{thm_relaxation_ratio_unbounded}
-In the instance $I = (G, w)$ depicted in \cref{fig_relaxation_ratio_unbounded} we have that the solution to Menger's problem is $n^2$, but for problem \stact\ one has
-\[ \lfloor n^{0.5} \rfloor^3 \leq \optDirStAct(I)\leq  16 n^{1.5}\].
-\end{theorem}
-\begin{figure}[htpb]
-\centering
-\includegraphics[scale=1]{img/relaxation-ratio-unbounded}
-\caption{Graph used in the proof of \cref{thm_relaxation_ratio_unbounded}}
-\label{fig_relaxation_ratio_unbounded}
-\end{figure}
-\begin{proof}
-Let $G$ be the digraph sketched in \cref{fig_relaxation_ratio_unbounded}. Formally,  let $U := \fromto{u_1}{u_n}$ and $Z := \fromto{z_1}{z_n}$. For each $i$, there is an edge $(s,v_i)$ and  an edge $(z_i, t)$ with weight $n$ and for all $i, j$ there is an edge $(u_i, z_j)$ with weight 1. It is easy to see, that the optimal solution for the Menger problem for this instance is exactly $n^2$.
- First, we describe a schedule of value $\lfloor \sqrt{n} \rfloor^3$: Let $k := \lfloor \sqrt{n} \rfloor$ and consider for $i \in \fromto{1}{k}$ the sets $U_i := \fromto{u_{(i-1)k+1}}{u_{ik}}$ and $Z_i := \fromto{z_{(i-1)k+1}}{z_{ik}}$. Then consider the schedule consisting out of $k$ phases, where in the $i$-th phase, we activate all edges between $s$ and $U_i$ and all edges between $Z_i$ and $t$ at the beginning of the phase, and all $k^2$ edges between $U_i$ and $Z_i$ in order during the phase. It is easy to see that this describes a valid schedule of value $k^3$.
- 
-We now prove that $\optDirStAct(I) \leq 16n^{1.5}$. So assume there exists a schedule $\sigma$ of value greater than $T := 16n^{1.5}$. Then, for each $k \in \fromto{1}{T}$, there is at least one path $P_{k}$ from $s$ to $t$ in $G^\sigma_{k}$. Let $(u_{i(k)}, z_{j(k)})$ be the unique edge on $P_k$ which connects $U$ and $Z$ and $e_{k} := \{u_{i(k)}, z_{j(k)}\}$ be the corresponding undirected edge. For $k \neq k'$ we have $e_{k} \neq e_{k'}$. Consider the undirected graph $H'$ on vertex set $U \cup Z$ and edge set $\fromto{e_1}{e_T}$. 
-%Then $H'$ has average degree $2E(H') / V(H') \geq T/n$. 
-We claim there is a subgraph $H$ of $H'$ which is connected and has minimum degree at least $T/(2n)$. Indeed, note that $H'$ has the property that $|E(H')| \geq T/(2n)|V(H')|$ and deleting vertices of degree less than $T/(2n)$ does not change this property. Hence we can delete those vertices until we arrive at a graph with minimum degree at least $T/(2n)$ and $H$ can be chosen as any connected component of this graph. Now, \cref{thm_mindegree_diameter_erdos} applied to $H$ yields
-\begin{equation}
-\radius(H) \leq 2n\frac{|V(H)| - 2}{T} + 12  \leq \frac 1{8}|V(H)|n^{-0.5}+12. \label{eq_radius}
-\end{equation}
-For $u_i \in U$, define $\sigma(u_i) := \sigma((s,u_i))$ and for $z_j \in W$, define $\sigma(z_j) := \sigma((z_j,t))$. Now, a crucial observation is that by the definition of $e_k$, for each $k$ we have that both $(s,u_{i(k)}), (z_{j(k)}, t) \in E(G_k^\sigma)$, and therefore $|\sigma(u_{i(k)}) - \sigma(z_{j(k)})| \leq n - 1$. Define 
-\[ L := \max_{v \in V(H)}\set{ \sigma(v) + n } - \min_{u \in V(H)} \set{\sigma(v)}, \]
- i.e.\ $L$ describes the theoretically maximal amount of time, such that $P_k$ could contain some vertex of $V(H)$. Let $R := 1/8|V(H)|n^{-0.5} +12$. By \cref{eq_radius} and the previous observation, and by $|V(H)| \geq \delta(H) \geq 8n^{0.5}$, we have 
-\begin{align*}
-L &\leq 2R(n-1) + n < (2R + 1)n = 1/4|V(H)|n^{0.5} + 25n\\ 
-&\leq 1/4|V(H)|n^{0.5} + 25/8|V(H)|n^{0.5} < 4|V(H)|n^{0.5}.
-\end{align*}
-But on the other hand, $H$ has only edges of the form $e_k$, and by definition of $L$ and $e_k$ we must have $L \geq |E(H)| \geq |V(H)|\delta(H)/2 \geq 4|V(H)|n^{0.5}$. This is a contradiction.
-\end{proof} 
-
-%(Note: A more careful calculation in the previous proof yields $\optDirStAct(I) \leq 6\sqrt{6}n^{1.5}$.)
-
-%\begin{corollary}
-%There is a directed graph on $2n+2$ vertices such that $\optDirSTP = n^2$, but $\optDirAct = \theta(n^{1.5})$.
-%\end{corollary}
-%\begin{proof}
-%Let $G$ be the same directed graph like in \cref{thm_relaxation_ratio_unbounded} with additional edges $(t, u_i)$ and $(t, w_i)$ for all $i$, each having weight $\infty$. Then finding a spanning branching in $G$ is equivalent to finding an $s$-$t$-path in the original graph, hence the claim follows by \cref{thm_relaxation_ratio_unbounded}.
-%\end{proof}
-
-Unfortunately, the idea for the proof of \cref{thm_relaxation_ratio_unbounded} can not be adapted to the case of undirected graph. Let (for even $n$) $G$ be the graph depicted in \cref{fig_relaxation_ratio_unbounded}, but without edge directions, i.e.\ we have $U = \fromto{u_1}{u_n}$, $Z := \fromto{z_1}{z_n}$ and undirected edges $\set{s, u_i}$ and $\set{z_i,t}$ of weight $n$ and undirected edges $\set{u_i, z_j}$ of weight 1 for all $i, j$. Then let $H := G[\fromto{u_{n/2+1}}{u_n} \cup \fromto{z_{n/2+1}}{z_n}]$ and fix some edge-coloring of $H$ with $n/2$ colors. Then consider the schedule consisting out of $n/2$ phases, where in the $i$-th phase we activate $\set{s,u_i}$, $\set{z_i,t}$, all edges of color $i$, and all edges $\set{u_i,z_j}$ and $\set{u_j,z_i}$ for $j \in \fromto{n/2+1}{n}$. This schedule has value $n^2/4$. So we can achieve a ratio of at least 1/4 of the solution to the Menger problem in this particular graph.
 
 
 \section{Conclusion}
 
 \begin{itemize}
 \item Computational complexity mostly solved: Both problems remain NP-complete if either treewidth or edge weights are bounded by a constant. If both are bounded, $\act$ can be solved in linear time. But we don't know whether $\stact$ can be solved polynomially in this case. 
-\item Understanding approximability properties is mostly open. We showed that $\act$ can not be approximated by a factor better than $7/6$ even if $w(e) \in \fromto{1}{6}$. But we don't know whether an analogous result holds for $\stact$. We also were not able to find approximation algorithms for $\act$  with $\bigO(1)$ approximation ratios or any reasonable approximation algorithm for \stact. \textbf{Conjecture:} In the general case, there exists no $\bigO(1)$-approximation algorithm for either \act\ or \stact.
-\item FPT results for \act\ could be obtained. FPT results for \stact\ still missing.
+\item Understanding approximability properties is mostly open. We showed that $\act$ can not be approximated by a factor better than $7/6$ even if $w(e) \in \fromto{1}{6}$. But we don't know whether an analogous result holds for $\stact$. We also were not able to find approximation algorithms for $\act$  with $\bigO(1)$ approximation ratios or any reasonable approximation algorithm for \stact. \textbf{Conjecture:} In the general case, there exists no $\bigO(1)$-approximation algorithm for either {\act} or \stact.
+\item FPT results for {\act} could be obtained. FPT results for \stact\ still missing.
 \end{itemize}
 
 
@@ -603,7 +494,7 @@ W1230.
 \section{Connection to job scheduling}
 \label{appendix:connection_act_job_scheduling}
 A \emph{matroid} is defined as ...
-Problem \act\ is related to job scheduling in the following way: Let $G = (V, E)$ be a graph. The \emph{graphic matroid} of $G$ is the set system $\set{F \subseteq E \mid F \text{ is acyclic}}$. A \emph{base} in a matroid is an independent set of maximal cardinality. Hence problem \act\ has the following generalization: Given a ground set $E$, weights $w: E \rightarrow \N$, and some matroid $\mathcal{F} \subseteq 2^E$, find activation times such that for a maximal amount of time, the set of active elements comprises a base of $\mathcal{F}$. Now, let $E$ be a set of jobs, where job $e \in E$ has processing times $w(e)$. For $k \in \N$, the set system $\mathcal{F} = \set{F \subseteq E : |F| = k}$ is a matroid, the so-called the \emph{uniform matroid of rank $k$}. One can now observe that the matroid activation problem for the uniform matroid is exactly the problem of maximizing the minimum machine load time when distributing the jobs onto $k$ machines. In this way, one can see that problem \act\ is a graph-theoretic variant of the problem of maximizing the minimum machine load time.
+Problem {\act} is related to job scheduling in the following way: Let $G = (V, E)$ be a graph. The \emph{graphic matroid} of $G$ is the set system $\set{F \subseteq E \mid F \text{ is acyclic}}$. A \emph{base} in a matroid is an independent set of maximal cardinality. Hence problem {\act} has the following generalization: Given a ground set $E$, weights $w: E \rightarrow \N$, and some matroid $\mathcal{F} \subseteq 2^E$, find activation times such that for a maximal amount of time, the set of active elements comprises a base of $\mathcal{F}$. Now, let $E$ be a set of jobs, where job $e \in E$ has processing times $w(e)$. For $k \in \N$, the set system $\mathcal{F} = \set{F \subseteq E : |F| = k}$ is a matroid, the so-called the \emph{uniform matroid of rank $k$}. One can now observe that the matroid activation problem for the uniform matroid is exactly the problem of maximizing the minimum machine load time when distributing the jobs onto $k$ machines. In this way, one can see that problem {\act} is a graph-theoretic variant of the problem of maximizing the minimum machine load time.
 
 \section{Proof of \cref{hamilton_cycle_lemma}}
 
@@ -615,7 +506,7 @@ It is known that the Hamilton cycle problem is NP-complete for bipartite, 3-regu
 
 The reduction is shown in \cref{fig_hamilton_cycle_lemma}. Formally, fix some vertex $x \in V$. Let $G_1$ and $G_2$ be two copies of $G$. For each vertex $v \in V \setminus \set{x}$, take a copy $A_v$ of $K_{4,4}$, remove some edge $\set{u_1, u_2}$ from $A_v$, and add edges $\set{v_1,u_1}$ and $\set{u_2,v_2}$, where $v_i$ is the copy of $v$ in $G_i$, $i = 1,2$. Finally, take two copies $A_x$ and $A'_x$ of $K_{4,4}$, remove an edge $\set{u_1,u_2}$ from $A_x$ and an edge $\set{u'_1,u'_2}$ from $A'_x$, add edges $\set{x_1,u_1}$, $\set{u_2,u'_1}$, $\set{u'_2,x_2}$, and let the special edge be given by $\set{u, z}$ with $u := u_2$, and $z := u'_1$. Clearly, $H$ is bipartite and 4-regular.
 
-Let (iv) be the property that $G$ has a Hamilton cycle. We show that (i) -- (iv) are equivalent, thus proving the theorem. So assume (i) holds. It is easy to see that any Hamilton cyle in $H$ uses $\set{u,z}$, so (ii) holds. Assume (ii) holds, (iii) follows immediately. Assume (iii) holds, i.e.\ there is a Hamilton path $(w_1, \dots, w_n)$ starting at $u$. Note that if $w_2 = z$, then $w_n$ is in $A_x$. On the other hand, if $w_2$ is in $A_x$, then $w_n$ is in $A'_x$. In both cases, we can slightly modify $P$ to obtain a Hamilton cycle. Therefore, (i) holds. Finally, we show that (i) and (iv) are equivalent. If $G$ has a Hamilton cycle, we can modify it to obtain a Hamilton cycle of $H$, by switching between $G_1$ and $G_2$ after every edge of the original Hamilton cycle and inserting a Hamilton path through the copies of $K_{4,4}$ (note that $G$ has an even number of vertices, as it is 3-regular). On the other hand, if $H$ has a Hamilton cycle, it necessarily switches between $G_1$ and $G_2$ after every of its edges in $G_1$ or $G_2$, so $G$ has a Hamilton path.
+Let (iv) be the property that $G$ has a Hamilton cycle. We show that (i) -- (iv) are equivalent, thus proving the theorem. So assume (i) holds. It is easy to see that any Hamilton cyle in $H$ uses $\set{u,z}$, so (ii) holds. Assume (ii) holds, (iii) follows immediately. Assume (iii) holds, i.e.\ there is a Hamilton path $(w_1, \dots, w_n)$ starting at $u$. Note that if $w_2 = z$, then $w_n$ is in $A_x$. On the other hand, if $w_2$ is in $A_x$, then $w_n$ is in $A'_x$. In both cases, we can slightly modify $P$ to obtain a Hamilton cycle. Therefore, (i) holds. Finally, we show that (i) and (iv) are equivalent. If $G$ has a Hamilton cycle, we can modify it to obtain a Hamilton cycle of $H$, by switching between $G_1$ and $G_2$ after every edge of the original Hamilton cycle and inserting a Hamilton path through the copies of $K_{4,4}$ (note that $G$ has an even number of vertices, as it is 3-regular). On the other hand, if $H$ has a Hamilton cycle, it necessarily switches between $G_1$ and $G_2$ after every of its edges in $G_1$ or $G_2$, so $G$ has a Hamilton cycle.
 \end{proof}
 \begin{figure}[htpb]
 \centering
@@ -623,41 +514,5 @@ Let (iv) be the property that $G$ has a Hamilton cycle. We show that (i) -- (iv)
 \caption{Construction used in the proof of \cref{hamilton_cycle_lemma}.}
 \label{fig_hamilton_cycle_lemma}
 \end{figure}
-
-\section{Proof of \cref{thm:stact_weights_one_two}}
-\label{appendix:proof_stact_one_two}
-
-The proof is in two steps. First, we prove a weaker result:
-
-\begin{lemma}
-\label{lemma_st_act_strongly_np_hard}
-The problem \stact\ is strongly NP-complete. 
-\end{lemma}
-\begin{proof}
-Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and $Q := 1/n \sum A$. Consider the digraph sketched in \cref{fig_stact_strongly_np_hard}. Here, there is an edge of weight $nQ$ between $s$ and $v_i$ for all $i$, there is a complete bipartite digraph between $\fromto{v_1}{v_n}$ and $\fromto{z_1}{z_n}$ with every edge having weight $Q$. Furthermore, the symbol $A$ in the figure represents $3n$ parallel edges with weights $a_1, \ldots, a_{3n}$ (compare \cref{fig_stact_np_hard}). We claim there is a schedule of value $n^2Q$, if and only if $A$ can be 3-partitioned. If $\sigma$ is such a schedule, we can assume by ($n$-fold) symmetry, that $\sigma((s, v_i)) = (i - 1)nQ$ for all $i \in [n]$. Let for $i \in [n]$, $P_i := [(i-1)nQ, inQ]$ denote the $i$-th phase of $\sigma$. During $P_i$, the edges $\fromto{(v_i,z_1)}{(v_i,z_n)}$ get activated in some order, let $(v_i,z_{f(i)})$ be the last edge in this order. Call a vertex $z_j$ exceptional, if $z_j = z_{f(i)}$ for some $i \in [n-1]$. At least one vertex $z'$ is not exceptional. Because $z'$ is not exceptional, the set of timesteps, where $z'$ is part of an $s$-$t$-path of active edges, consists out of $n$ distinct blocks of length $Q$ each, such that between two blocks there is a gap. Therefore the scheduling of the edges between $z'$ and $t$ implies a 3-partition of $A$. The other direction of the claim is easy to see.
-\end{proof}
-\begin{figure}[htpb]
-\centering
-\includegraphics[scale=1]{img/st-act-strongly-np-hard}
-\caption{Reduction \textsc{3-Partition} $\rightarrow$ \stact\ described in \cref{lemma_st_act_strongly_np_hard}.}
-\label{fig_stact_strongly_np_hard}
-\end{figure}
-
-
-\stactonetwo*
-\begin{proof}
-Reduction from \textsc{3-Partition}. Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and let $Q := 1/n \sum A$, such that $a_i \leq p(n)$ for a suitable polynomial $p$. We can assume that $n$ is odd (otherwise, let $a_{3n+1} = a_{3n + 2} := 1$ and $a_{3n + 3} :=  Q - 2$) and each $a_i$ is odd (otherwise, let $a_i' := 2a_i + 1$). Then $Q$ is also odd. Now, consider the same reduction as in \cref{lemma_st_act_strongly_np_hard}, where we substitute an edge of weight $2k - 1$ by the gadget $G_k$. If a schedule of value $n^2Q$ exists, we need to use each gadget to its full extent, and therefore \cref{lemma_gadget} (iii) is applicable. Making use of \cref{lemma_gadget}, the rest of the proof is analogous to \cref{lemma_st_act_strongly_np_hard}.
-\end{proof}
-
-
-%\section{Possible idea relaxation ratio undirected}
-%
-%\comment{Maybe can be proven with following idea: Use the graph in \cref{fig_undirected_relaxation_ratio} with a similar argument to the previous proof and additionally Szemeredi's regularity lemma???}
-%\begin{figure}[htpb]
-%\centering
-%\includegraphics[width=\textwidth]{img/idea_undirected_approximation_ratio.jpg}
-%\caption{\comment{idea for proving an analogue of \cref{thm_relaxation_ratio_unbounded} for undirected graphs?}}
-%\label{fig_undirected_relaxation_ratio}
-%\end{figure}
 
 \end{document}
