@@ -364,7 +364,7 @@ Let $(G, w)$ be an instance of {\act}, such that $G = (V, E)$ has treewidth at m
 \exists \sigma :  E \rightarrow \fromto{0}{T} : &\forall e \in E, t \in [T]: (x_{e,t}=1) \leftrightarrow \left(\sigma(e) < t \leq \sigma(e) + w(e)\right)\\
 \land &\forall t \in [T]: \set{e \in E \mid x_{e,t} = 1} \text{ is spanning.}
 \end{align*}
-It follows from Courcelle's theorem [cite], that for each $T \in [k^2]$, the satisfiability of $\Phi_T$ can be checked in linear time. This proves the claim.
+It follows from Courcelle's theorem \cite{courcelle1990monadic}, that for each $T \in [k^2]$, the satisfiability of $\Phi_T$ can be checked in linear time. This proves the claim.
 \end{proof}
 
 \begin{theorem}
