@@ -175,7 +175,7 @@ We denote by $G[V']$ the \emph{induced subgraph} on $V'$. By removing the vertex
 \section{NP-Hardness}
 \label{sec:hardness}
 
-In this section, we show NP-hardness of the problems {\act}, even if the input instances are restricted. 
+In this section, we show NP-hardness of the problem {\act}, even if the input instances are restricted. 
 This is done by reducing from the strongly NP-hard \textsc{3-Partition} problem~\cite{garey1979computers}: 
 
 
@@ -197,7 +197,7 @@ The problem \act\ is strongly NP-complete if restricted to series-parallel graph
 Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and let $Q := 1/n \sum A$. Let $\beta := nQ + n - 1$. In order to prove NP-completeness, we construct an instance of problem \act\ with optimal objective value $\beta$, if and only if $A$ is a yes-instance of \textsc{3-Partition}. Consider the  complete bipartite graph $K_{2,4n-1}$ on the two vertex sets $\set{s, t}$ and $\set{x_1, \ldots, x_{n-1}, y_1, \ldots, y_{3n}}$. For $i \in \{1, \dots,n-1\}$, we set $w(\set{s,x_i}) := i(Q + 1)$ and $w(\set{x_i,t}) := (n - i)(Q + 1)$. For $i \in \{1,\dots,3n\}$, we set $w(\set{s,y_i}) := a_i$ and $w(\set{y_i,t}) := \beta$. 
 
 Now, assume that for the described instance, there exists a schedule $\sigma$ of value $\beta$. Note that for all $i \in \{1,\dots,n-1\}$, we have $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, hence the sum of all weights is $(n-1)(\beta + 1) + 3n\beta + (\beta - n + 1) = \beta 4n$. Because the set of active edges is spanning at each point in time, and a spanning tree of $K_{2, 4n-1}$ has $4n$ edges, this implies that all of the graphs $G_1, \dots, G_\beta$ have exactly $4n$ edges and are spanning trees. 
-For $i \in \{1,\dots,n-1\}$, consider the vertex $x_i$. Due to $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, there is exactly one $k \in [\beta]$, such that $d_k(x_i) = 2$. Furthermore, because the scheduling of the edges is nonpreemptive, and clearly $d_1(x_i) \geq 1$ and $d_\beta(x_i) \geq 1$, we can further deduce that $k$ has only the two possible values $i(Q+1)$ or $(n-i)(Q+1)$. Additionally, if there exists a $k$ such that for distinct $i, i' \in \{1,\dots,n-1\}$ one has $d_k(x_i) = d_k(x_{i'}) = 2$, then $G_k$ has a cycle, which is impossible. We conclude that there exists some $i \in \{1,\dots,n-1\}$ with $d_k(x_i) = 2$, if and only if $k \in \set{Q+1, 2(Q+1), \dots (n-1)(Q+1)}$. But this is a set of $n-1$ equidistant numbers, in $[\beta]$, such that $n$ gaps of size $Q$ are created. Using again acyclicity of $G_1, \dots, G_\beta$, it is easy to see that the scheduling of the edges $\fromto{\set{s,y_1}}{\set{s,y_{3n}}}$ implies a correct 3-partion of $A$.
+For $i \in \{1,\dots,n-1\}$, consider the vertex $x_i$. Due to $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, there is exactly one $k \in \fromto{1}{\beta}$, such that $d_k(x_i) = 2$. Furthermore, because the scheduling of the edges is nonpreemptive, and clearly $d_1(x_i) \geq 1$ and $d_\beta(x_i) \geq 1$, we can further deduce that $k$ has only the two possible values $i(Q+1)$ or $(n-i)(Q+1)$. Additionally, if there exists a $k$ such that for distinct $i, i' \in \{1,\dots,n-1\}$ one has $d_k(x_i) = d_k(x_{i'}) = 2$, then $G_k$ has a cycle, which is impossible. We conclude that there exists some $i \in \{1,\dots,n-1\}$ with $d_k(x_i) = 2$, if and only if $k \in \set{Q+1, 2(Q+1), \dots (n-1)(Q+1)}$. But this is a set of $n-1$ equidistant numbers, in the set $\fromto{1}{\beta}$, such that $n$ gaps of size $Q$ are created. Using again acyclicity of $G_1, \dots, G_\beta$, it is easy to see that the scheduling of the edges $\fromto{\set{s,y_1}}{\set{s,y_{3n}}}$ implies a correct 3-partion of $A$.
 
 On the other hand, assume $A$ is a yes-instance. Then it is easy to see that a schedule of value $\beta$ exists. (The schedule has the same properties as the schedule $\sigma$ in the first direction of the proof.)
 \qed
@@ -249,7 +249,7 @@ other moments in $[0,\beta]$.
 The induction uses the following facts and observations on the two edges $\set{u_{i-2}, u_i}$ and $\set{u_{i-1},u_i}$ 
 that are in $H_i$ but not in $H_{i-1}$:
 \begin{itemize}
-\item Graph $H_i$ is semi-connected at time $0$. (This is because we have by induction hypothesis that $H_{i-1}$ is semi-connected at $t=0$, so if $H_i$ would be fully-connected at $t=0$, this would imply $\sigma(\{u_{i-2}, u_i\}) = \sigma(\{u_{i-1}, u_i\}) = 0$. But then, because all involved edges have weight $w(e) > Q$, at time $t = Q+1$ we have a cycle, which is impossible.)
+\item Graph $H_i$ is semi-connected at time $0$. (This is because we have by induction hypothesis that $H_{i-1}$ is semi-connected at $t=0$. So if $H_i$ would be fully-connected at $t=0$, this would imply $\sigma(\{u_{i-2}, u_i\}) = \sigma(\{u_{i-1}, u_i\}) = 0$. But because all involved edges have weight $w(e) > Q$, we then have a cycle at time $t = Q+1$. This is impossible.)
 \item Since $H_{i-1}$ is semi-connected at time $0$, the edge $\{u_{i-2},u_i\}$ must be active at time $0$
 and hence must be active during $[0,(2i-2)Q]$.
 \item $H_i$ must be fully-connnected at time $\beta$. (Otherwise, $H_i$ is fully-connnected neither 
@@ -348,12 +348,11 @@ In summary, $F$ is a graph of maximum degree 2, where $u_k$ has degree 1. It fol
 \end{proof}
 
 
-\section{Positive Results}
+\section{Parameterized Complexity}
 \label{sec:positive_results}
 
 In this section, we present exact solution approaches for restricted instances, and approximation results for problem {\act}. Unfortunately, the arguments presented here do not generalize to \stact. It is an open question to find similar results for \stact. 
 
-\subsection{FPT-algorithms}
 
 \begin{theorem}
 If both the treewidth and the maximum edge weight $w(e)$ of an instance are bounded by  a constant $k$, problem {\act} can be solved in linear time. (There is an FPT-algorithm with respect to $k$). 
@@ -445,11 +444,11 @@ Therefore, the following is an algorithm to solve problem $\act$: Iterate over a
 m^3)$. \comment{I have a more detailed handwritten explanation why $\bigO(m^3)$ is the runtime here. More details needed written down here?} \comment{Also note that Roskind and Tarjan showed how to improve this to $\bigO(m^2)$ in the case of spanning tree packing \cite{STPMatroidImprovement}, but it is not so clear whether their proof can be extended to our case} \comment{Finally, I think there are also faster algorithms than Edmond's algorithm for matroid base packing, but I don't know the literature so well.} The algorithm is completed by taking the maximum of all $T'$ obtained in each of the $\bigO(k^{2k})$ iterations.
 \end{proof}
 
-\subsection{Greedy-algorithm}
+\section{Approximation}
 
 Let $(G, w)$ be an instance of {\act}, where $G  = (V, E)$. It is very natural to consider the following Greedy-algorithm:
 
-\textsc{Greedy-Algorithm}: Initialize the current time step $i \leftarrow 1$ and the available edges $A \leftarrow E$. While the algorithm has not stopped, do the following: Let $E_i$ be the set of currently active edges. If $E_i$ is spanning, do nothing and set $i \leftarrow i+1$. Otherwise, let $A' \leftarrow \set{e \in A \mid e \text{ does not close a cycle with } E_i}$. If $A' \neq \emptyset$, choose from $A'$ the edge $e$ with $w(e)$ maximal, set $\sigma(e) \leftarrow i - 1$, and update $A \leftarrow A \setminus \set{e}$ and update $E_i$. If $A'$ is empty, stop, and output $\sigma$.
+\textsc{Greedy-Algorithm}: Initialize the current time step $i \leftarrow 1$ and the available edges $A \leftarrow E$. Initialize $\sigma(e) \leftarrow - \infty$ for each edge $e$. While the algorithm has not stopped, do the following: Let $E_i = \set{e \in E : \sigma(e) \leq i - 1 < \sigma(e) + w(e)}$ be the set of currently active edges. If $E_i$ is spanning, do nothing and set $i \leftarrow i+1$. Otherwise, let $A' \leftarrow \set{e \in A \mid e \text{ does not close a cycle with } E_i}$. If $A' \neq \emptyset$, choose from $A'$ the edge $e$ with $w(e)$ maximal, set $\sigma(e) \leftarrow i - 1$, and update $A \leftarrow A \setminus \set{e}$ and update $E_i \leftarrow E_i \cup \set{e}$. If $A'$ is empty, stop, and output $\sigma$.
 
 In other words, at time step 1, we pick a maximum weight spanning tree like in Kruskal's algorithm, and in each later time step, whenever the subgraph of active edges disconnects, we choose from all edges fixing the problem the one with the largest weight.
 
