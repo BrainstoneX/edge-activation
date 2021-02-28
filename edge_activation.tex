@@ -355,15 +355,16 @@ In this section, we present exact solution approaches for restricted instances, 
 
 
 \begin{theorem}
-If both the treewidth and the maximum edge weight $w(e)$ of an instance are bounded by  a constant $k$, problem {\act} can be solved in linear time. (There is an FPT-algorithm with respect to $k$). 
+    Let $k$ be a bound on both the treewidth of the input graph and the maximum edge weight $w(e)$.
+    Problem {\act} is fixed parameter tractable with respect to $k$.
 \end{theorem}
 \begin{proof}
-Let $(G, w)$ be an instance of {\act}, such that $G = (V, E)$ has treewidth at most $k$, and $w(e) \leq k$ for all edges. Because $G$ has treewidth at most $k$, there exists a vertex $v$ of degree at most $k$. Every edge incident to $v$ has weight at most $k$. Hence the maximum value of a solution is at most $k^2$. For every $T \in [k^2]$, we construct a formula $\Phi_T$ in monadic second-order graph logic $\text{MSO}_2$, such that $\Phi_T$ is satisfiable if and only if a schedule of value $T$ exists. In fact, we introduce binary variables $x_{e,t}$ for $e \in E$ and $t \in [T]$. Then the following expression can be formulated in $\text{MSO}_2$:
+Let $(G, w)$ be an instance of {\act}, such that $G = (V, E)$ has treewidth at most $k$, and $w(e) \leq k$ for all edges. Because $G$ has treewidth at most $k$, there exists a vertex $v$ of degree at most $k$. Every edge incident to $v$ has weight at most $k$. Hence the maximum value of a solution is at most $k^2$. For every $T \in \{1,\dots,k^2\}$, we construct a formula $\Phi_T$ in monadic second-order graph logic $\text{MSO}_2$, such that $\Phi_T$ is satisfiable if and only if a schedule of value $T$ exists. In fact, we introduce binary variables $x_{e,t}$ for $e \in E$ and $t \in \{1,\dots,T\}$. Then the following expression can be formulated in $\text{MSO}_2$:
 \begin{align*}
 \exists \sigma :  E \rightarrow \fromto{0}{T} : &\forall e \in E, t \in [T]: (x_{e,t}=1) \leftrightarrow \left(\sigma(e) < t \leq \sigma(e) + w(e)\right)\\
 \land &\forall t \in [T]: \set{e \in E \mid x_{e,t} = 1} \text{ is spanning.}
 \end{align*}
-It follows from Courcelle's theorem [cite], that for each $T \in [k^2]$, the satisfiability of $\Phi_T$ can be checked in linear time. This proves the claim.
+It follows from Courcelle's theorem \cite{courcelle1990monadic}, that for each $T \in \{1,\dots,k^2\}$, the satisfiability of $\Phi_T$ can be checked in linear time. This proves the claim.
 \end{proof}
 
 \begin{theorem}
