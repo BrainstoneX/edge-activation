@@ -1,48 +1,30 @@
 
 %\documentclass[10pt,a4paper]{article}
 \documentclass[runningheads]{llncs}
+
 \usepackage[utf8]{inputenc}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
-
-
+\usepackage{amsmath,amsfonts,amssymb}
 \usepackage{thmtools}
 %\usepackage{amsthm}
 \usepackage{thm-restate}
-%\declaretheorem[name=Theorem,numberwithin=section]{thm}
-%--experiment
 
-\usepackage%[hidelinks]
-			{hyperref}
-
+\usepackage{hyperref}
 \usepackage[capitalize, noabbrev]{cleveref}
-\usepackage[autostyle=true]{csquotes}
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{enumerate}
 \usepackage{caption}
 \usepackage{subcaption}
 
+\usepackage{tikz,tikzsymbols}
+\usetikzlibrary{shapes,patterns,positioning}
+\usetikzlibrary{arrows,decorations.markings}
+\usetikzlibrary{calc}
 
-% Abstand obere Blattkante zur Kopfzeile ist 2.54cm - 15mm
-%\setlength{\topmargin}{-15mm}
-
-
-% Umgebungen für Definitionen, Sätze, usw.
-% Es werden Sätze, Definitionen etc innerhalb einer Section mit
-% 1.1, 1.2 etc durchnummeriert, ebenso die Gleichungen mit (1.1), (1.2) ..
-%\newtheorem{theorem}{Theorem}[section]
-%\newtheorem{definition}[theorem]{Definition} 
-%\newtheorem{lemma}[theorem]{Lemma}
-%\newtheorem{corollary}[theorem]{Corollary}	
-%\newtheorem{example}[theorem]{Example}
-%\newtheorem{observation}[theorem]{Observation}	
-%\newtheorem{conjecture}[theorem]{Conjecture}
-%\newtheorem{question}[theorem]{Question}			   
                   
-\numberwithin{equation}{section}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  Lasse: macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
@@ -53,214 +35,370 @@
 
 \newcommand{\bigO}{\mathcal{O}}
 \newcommand{\dotunion}{\mathbin{\dot{\cup}}}
-
-\newcommand{\act}{\textsc{(Act)}}
-\newcommand{\stact}{\textsc{(stAct)}}
-\newcommand{\activation}{\textsc{Activation}}
-\newcommand{\stactivation}{\textsc{st-Activation}}
-\newcommand{\True}{\textsc{True}}
-\newcommand{\False}{\textsc{False}}
-
-\DeclareMathOperator{\ac}{\text{A}}
-\DeclareMathOperator{\val}{\text{value}}
-\newcommand{\vall}{w}
-\DeclareMathOperator{\radius}{\text{radius}}
-
-\DeclareMathOperator{\Nout}{N^\text{out}}
-\DeclareMathOperator{\Nin}{N^\text{in}}
-\DeclareMathOperator{\dom}{dom}
-\DeclareMathOperator{\tw}{tw}
-\DeclareMathOperator{\transhull}{trans-hull}
 \DeclareMathOperator{\opt}{OPT}
-\newcommand{\optAct}{\opt_\text{ACT}}
-\newcommand{\optStAct}{\opt_\text{stACT}}
-\newcommand{\optMenger}{\opt_\text{MENGER}}
-\newcommand{\optSTP}{\opt_\text{STP}}
-\newcommand{\optDirStAct}{\opt_\text{STACT}}
-\newcommand{\optDirMenger}{\opt_\text{dir-MENGER}}
-\newcommand{\optDirAct}{\opt_\text{dir-ACT}}
-\newcommand{\optDirSTP}{\opt_\text{dir-STP}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  GJW: macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator{\ntp}{\text{\sf ntp}}
+\newcommand{\xxxNTP}{{\sc N-TreePack}}
+\newcommand{\greedy}{\text{\sf Greedy}}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\sloppy
 \begin{document}
 
-\title{Keeping a network connected using nonpreemptive edge scheduling}
-%
-%\titlerunning{Abbreviated paper title}
-% If the paper title is too long for the running head, you can set
-% an abbreviated paper title here
-%
+\title{Non-preemptive tree packing}
+\titlerunning{Non-preemptive tree packing}
+
 \author{Stefan Lendl\inst{1} \and
 Gerhard Woeginger\inst{2} \and
 Lasse Wulf\inst{3}}
-%
-\authorrunning{S. Lendl, G. Woeginger, L. Wulf}
-% First names are abbreviated in the running head.
-% If there are more than two authors, 'et al.' is used.
-%
-\institute{
-Department of Operations and Information Systems, University of Graz, Austria 
+
+\authorrunning{S. Lendl, G. Woeginger, and L. Wulf}
+\institute{Department of Operations and Information Systems, University of Graz, Austria 
 \email{stefan.lendl@uni-graz.at}\\
-\and Department of Algorithmics and Complexity, RWTH Aachen, Germany 
+\and Department of Computer Science, RWTH Aachen, Germany 
 \email{woeginger@algo.rwth-aachen.de}\\
 \and Institute of Discrete Mathematics, Graz University of Technology, Austria\\
 \email{wulf@math.tugraz.at}
 }
 %
-\maketitle              % typeset the header of the contribution
-%
+\maketitle 
+
 \begin{abstract}
-Consider the following process over time: Given a graph $G = (V,E)$ with positive integral edge weights $w$, we choose for each edge $e$ exactly one point in time $\tau_e \in [0, \infty)$. This causes $e$ to be active during $[\tau_e, \tau_e + w(e)]$. For (a) $F = V$ or (b) $F = \set{s,t}$, we introduce the problem of maximizing the time such that $F$ is connected by active edges. The problem is related to spanning tree packing, Menger's problem, and maximizing the minimum load time in nonpreemptive scheduling. We show that both (a) and (b) are NP-complete, even on instances with very restricted graph structure, or very restricted edge weights. For problem (a), we give some approximation results, and fixed-parameter-tractable results. For problem (b), we consider the relation to its relaxation, Menger's problem. 
+An instance of the non-preemptive tree packing problem consists of an undirected graph $G=(V,E)$ 
+together with a weight $w(e)$ for every edge $e\in E$.
+The goal is to activate every edge $e$ for some time interval of length $w(e)$, such that the 
+activated edges form a connected spanning subgraph of $G$ for the longest possible overall time.
+
+We derive a variety of results on this problem.
+The problem is strongly NP-hard even on graphs of treewidth~$2$, and it does not allow a polynomial
+time approximation scheme (unless P=NP).
+Furthermore, we discuss the performance of a simple greedy algorithm, and we construct and analyze
+a number of parametrized and exact algorithms.
 \end{abstract}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-\comment{Comments by Lasse}
-Suppose we have an electrical network, represented by a graph $G = (V,E)$, where each of the vertices represents a consumer or a producer, and each edge $e = \{u,v\}$ represents a power line between $u$ and $v$. However, the use of a power line $e$ is restricted by its \emph{weight} $w(e) \in \N$: We can only use it during an interval $[\tau_e, \tau_e + w(e)]$, where we may choose the \emph{activation time} $\tau_e \geq 0$ freely. In particular, we are not allowed to split this interval into multiple disjoint intervals of total length $w(e)$, i.e.\ the scheduling process is \emph{nonpreemptive}. We say that $e$ is \emph{active} during $[\tau_e, \tau_e + w(e)]$. In this paper, we consider two different problems:
-\begin{enumerate}
-\item \emph{Activation problem} \act: Keep the electrical network connected for as long as possible, i.e.\ choose the $\tau_e$ such that the subgraph of active edges is spanning for a maximal amount of time. 
-\item \emph{s-t-Activation problem} \stact: Given $s, t \in V$, keep them connected for as long as possible, i.e.\ choose the $\tau_e$ such that $s, t$ are connected by active edges for a maximal amount of time.
-\end{enumerate}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{The tree packing problem of Nash-Williams.}
+For a given undirected connected graph $G=(V,E)$ and a weight function $w:E\to\N$,
+Nash-Williams \cite{Nash-Williams1961} considered the following optimization problem:
+%%%%%%%%%%%%%%%%%%%%%%%
+\begin{align}
+\text{maximize}~~ &\sum\left\{x_T:\,\text{$T$ is a spanning tree} \right\} 
+\label{eq:NW.1} \\[0.5ex]
+\text{such that}~~&\sum\left\{x_T:\,e\in T\right\}\le w(e)\qquad\text{for every $e\in E$}
+\label{eq:NW.2} \\[0.5ex]
+                 &x\ge0,~\text{integral}
+\label{eq:NW.3} 
+\end{align}
+%%%%%%%%%%%%%%%%%%%%%%%
+Nash-Williams \cite{Nash-Williams1961} derives a min-max relation for problem
+\eqref{eq:NW.1}--\eqref{eq:NW.3} that connects it to certain cut conditions.
+Building on these results, Cunningham \cite{Cunningham1985} constructs a polynomial time 
+algorithm for the problem by reducing it to a polynomial number of maximum flow problems.
 
-We stress the point that in general, at different points in time, the set of active edges is different. It is only required that at each point in time, the subgraph of active edges is spanning (is connecting $s$ and $t$). 
+Problem \eqref{eq:NW.1}--\eqref{eq:NW.3} may also be interpreted as a scheduling problem:
+Every edge $e\in E$ is a resource that can be activated for a total of $w(e)$ time units.
+The objective now is to activate the edges in a such way that the graph remains connected 
+for the longest possible overall time. 
+Under this interpretation, the variable $x_T$ indicates the number of time units in which
+the spanning tree $T$ is used in the activation schedule.
+Figure~\ref{fig:example} contains a simple illustrating example on the three-vertex cycle.
+There are three spanning trees (that each consist of two edges), and an optimal schedule 
+uses each of these spanning trees for exactly one time unit.
+It is easy to see that in every optimal schedule, one of the three edges will be active 
+during the first and the third time slot and will be in-active during the second time slot;
+in the language of scheduling, we say that the execution of that edge is preempted 
+at time $1$ and afterwards resumed at time $2$.
+(In the schedule shown in Figure~\ref{fig:example}, edge $e_3$ is the preempted edge.)
 
-The problems \act\ and \stact\ are nonpreemptive variants of known problems. To see this, assume for a moment that we drop the condition of nonpreemptiveness, i.e.\ we allow activation of $e$ during multiple intervals, whose total length does not exceed $w(e)$. Then \stact\ becomes the problem of finding a maximum set of $s$-$t$-paths, such that for each edge, the number of paths crossing it does not exceed $w(e)$. This is called \emph{Menger's problem}. Similarily, the preemptive variant of \act\ is the problem of packing a maximum number of spanning trees into a weighted graph, i.e.\ the problem of \emph{spanning tree packing}. Both of these are classical problems and can be solved in strongly polynomial time. The first is solved by finding a maximal $s$-$t$-flow and finding a path decomposition of it, the second is solved either by matroid decomposition or flow techniques [cite]. There is a further connection to a classical problem from the area of job scheduling: The problem \act\ can be understood as a generalization of the problem of \emph{maximizing the minimum machine load time}. We can interprete this problem as an activation problem for uniform matroids, whereas problem \act\ is an activation problem for graphic matroids (details, see \cref{appendix:connection_act_job_scheduling}). Like both Menger's problem and spanning tree packing, this problem also has been considered extensively in the past [cite]. It is known to be strongly NP-complete, but to admit a PTAS [cite]. \comment{which exact papers should we cite for max-flow-min-cut, spanning tree packing, and maximizing min finish time?}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbh]
+\bigskip
+\begin{center}
+%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[scale=1.20]
+\coordinate (p1) at (-1,0);
+\coordinate (p2) at ( 1,0);
+\coordinate (p3) at ( 0,1.732);
 
-\emph{Our contribution.}
-We introduce the problems \act\ and \stact. We show that \act\ is strongly NP-complete, even if a.) the input graph is $K_{2,n}$ or if b.) the input graph is outerplanar of bandwidth 2, or c.) we have $w(e) \in \fromto{1}{6}$. Furthermore, there is no fast (7/6)-approximation algorithm assuming P $\neq$ NP, even if $w(e) \in \fromto{1}{6}$. Similarily, we show that \stact\ is NP-complete, even if a.) the treewidth of the input graph is bounded by 3, or if b.) we have $w(e) \in \set{1,2}$ for all $e$. 
-\cref{sec:positive_results} is concerned with positive results for {\act}. We give a linear time algorithm, if both the treewidth and edge weights are bounded by a constant. We describe an FPT-algorithm for the parameter of feedback edge set. We introduce a Greedy algorithm, which is a $(n-1)$-approximation. We show that the Greedy algorithm is optimal, if and only if the input graph is a cactus graph. Using techniques from extremal graph theory, we show in \cref{sec:ratio_relaxation}, that for problem \stact, the ratio to its relaxation, i.e.\ Menger's problem is unbounded.
+\foreach \x in {1,2,3} \fill (p\x) circle (0.12);
+\draw[ultra thick] (p1)--(p2)--(p3)--(p1);
+\node[] at  ( 0.0,-0.3) {\large $e_1$};
+\node[] at  ( 0.7, 1.1) {\large $e_2$};
+\node[] at  (-0.7, 1.1) {\large $e_3$};
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%
+\qquad\qquad\qquad
+%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[scale=1.00]
+\draw[ultra thick] (-0.2,0)--(6.5,0);
+\draw[ultra thick] (0,-0.2)--(0,2.2);
 
-\subsection{Definitions and Notation}
-\label{sec_notation}
+\node[] at  (0,-0.5) {\large $0$};
+\draw[ultra thick] (2,-0.2)--(2,0);
+\draw[ultra thick] (4,-0.2)--(4,0);
+\draw[ultra thick] (6,-0.2)--(6,0);
+\node[] at  (2,-0.5) {\large $1$};
+\node[] at  (4,-0.5) {\large $2$};
+\node[] at  (6,-0.5) {\large $3$};
 
-We write $\N_0 := \N \cup \set{0}$ for the set of nonnegative integers. For $a \leq b$, the term $[a, b]$ denotes the closed interval between $a$ and $b$. An instance for problem {\act} is a weighted, undirected graph $(G, w)$, where $G = (V, E)$ and $w : E \rightarrow \N$. We do not consider parallel edges. (However, it is easy to see that a pair of parallel edges can be easily modeled, by subdividing and using infinite or large enough edge weights.) A \emph{schedule} for some instance $(G, w)$ is simply a map $\sigma : E \rightarrow \N_0$, that maps each edge $e$ to its activation time $\sigma(e)$. 
+\draw[fill=gray,fill opacity=0.1,draw=black,line width=1.5pt,text opacity=1.0]
+       (0,0) rectangle (4,1) node[pos=.5] {\large$e_1$};
+\draw[fill=gray,fill opacity=0.3,draw=black,line width=1.5pt,text opacity=1.0]
+       (4,0) rectangle (6,1) node[pos=.5] {\large$e_3$};
 
-Given a schedule $\sigma$ and an edge $e$, we denote the \emph{activity interval of $e$} by $I_\sigma(e) := [\sigma(e), \sigma(e) + w(e)]$. We introduce discrete time steps: For $i \in \{1, 2, \dots\}$, the variable $E^\sigma_i := \set{e \in E : [i-1, i] \subseteq I_\sigma(e)}$ denotes the set of edges active in the $i$-th timestep, and the graph $G^\sigma_i := (V, E^\sigma_i)$ denotes the graph of active edges in the $i$-th timestep. For a vertex $v$, let $d^\sigma_i(v)$ denote the degree of $v$ in $G^\sigma_i$, i.e.\ the number of incident active edges of $v$ in the $i$-th timestep.
-Let $C(\sigma) := \set{i \in \N : E_i^\sigma \text{ is spanning in } G^\sigma_i}$. The set $C(\sigma)$ is the set of all time steps, where the objective is fulfilled by the schedule $\sigma$. Finally, we define the \emph{value} of a schedule. If $C(\sigma) = \fromto{1}{T}$ for some $T$, let $\val(\sigma) = T$, else let $\val(\sigma) = 0$. When the schedule $\sigma$ is clear from the context, we also write $I(e), E_i$, $G_i$ and $d_i(v)$ instead of $I_\sigma(e), E^\sigma_i$, $G^\sigma_i$, and $d^\sigma_i(v)$. Using this new terminology, the problem {\act} is formally defined the following way:
+\draw[fill=gray,fill opacity=0.3,draw=black,line width=1.5pt,text opacity=1.0]
+       (0,1) rectangle (2,2) node[pos=.5] {\large$e_3$};
+\draw[fill=gray,fill opacity=0.1,draw=black,line width=1.5pt,text opacity=1.0]
+       (2,1) rectangle (6,2) node[pos=.5] {\large$e_2$};
 
-\begin{quote}
-Problem {\act}: 
-
-\textbf{Input:} A tuple $(G, w)$ of a graph $G = (V,E)$ and positive integral edge weights.
-
-\textbf{Output:} $\max\set{\val(\sigma) \mid \sigma \in (\N_0)^E}$.
-\end{quote}
-
-We give a short example of the introduced concepts. Consider the instance of problem {\act} depicted in \cref{fig:introduction_examples}. One has that the optimal value of a schedule is 2. A schedule $\sigma$ of value 3 does not exist, because in such a schedule there would be distinct edges $e, e'$ with $\sigma(e) = \sigma(e') = 0$. This implies $I(e) = I(e') = [0, 2]$, hence $G_3$ is not spanning. However, note that three spanning trees can be packed into this instance.
-\begin{figure}
-     \centering
-         \includegraphics[scale=1]{img/example-act}
-         \label{fig:example_act}
-        \caption{Example instance for problem {\act}.}
-        \label{fig:introduction_examples}
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%
+\end{center}
+\caption{The three edges in the graph on the left hand side have weights $w(e_1)=w(e_2)=w(e_3)=2$.
+The schedule on the right hand side keeps the graph connected for a total of three time units.}
+\label{fig:example}
 \end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-We make use of the following graph-theoretic concepts and notations: Let $G = (V,E)$ be a graph. We sometimes write $V(G) :=  V$ and $E(G) := E$. If $V' \subseteq V$ is a subset of the vertices, the corresponding \emph{edge cut} $\delta(V')$ is the set of edges having one endpoint in $V'$ and one endpoint in $V \setminus V'$. For a vertex $v$, we let $\delta(v) := \delta(\set{v})$. 
-%If $(V_1,\dots,V_k)$ is a partition of $V$, the \emph{multicut} $\delta(V_1,\dots,V_k)$ is the set of edges with endpoints in diiferent parts of the partition. 
-We denote by $G[V']$ the \emph{induced subgraph} on $V'$. By removing the vertex $v$ from $G$, we obtain $G - v := G[V \setminus \set{v}]$. Similarily, if $E' \subseteq E$ and $e \in E$, then $G - E' := (V, E \setminus E')$, and $G - e := G - \set{e}$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{The non-preemptive version of tree packing.}
+We consider a non-preemptive version of the above tree packing problem,
+where the execution of edges must not be preempted: 
+every edge $e$ is activated at some time point $\tau(e)$ chosen by the scheduler, and then 
+remains active without interruption during the full time interval $[\tau(e),\,\tau(e)+w(e)]$.
+The objective is again to activate the edges in a such way that the graph
+remains connected for the longest possible overall time.
+The resulting combinatorial optimization problem is called \emph{non-preemptive tree packing}
+({\xxxNTP} for short), and the optimal objective value for a graph $G=(V,E)$ with edge 
+weights $w:E\to\N$ will be denoted $\ntp(G,w)$.
 
+In the example in Figure~\ref{fig:example}, every reasonable non-preemptive
+schedule will either activate two of the edges at time~$0$, or activate the three
+edges respectively at times $0,1,2$.
+As there is no way of keeping the graph connected for more than two time units, 
+the optimal objective value is $\ntp(G,w)=2$.
 
-\textbf{ Concepts currently used, but not defined: }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Contributions of this paper.}
+We analyze the computational complexity and the approximability of non-preemptive 
+tree packing, and we also provide some parametrized and exact algorithms for it.
+The complexity results are devastating:
 \begin{itemize}
-\item definition path (i.e.\ no vertex twice, some call this specifically a simple path)
-\item cactus graph
-\item Hamiltonian path/cycle
-\item complete (bipartite) graph $K_n$, $K_{n,m}$
-\item $\alpha$-approximation algorithm, Parameterized complexity, FPT-algorithm
-\item Feedback edge set
-\item treewidth
-\item bandwidth
-\item Monadic second-order graph logic $\text{MSO}_2$.
+\item {\xxxNTP} is strongly NP-hard, even on complete bipartite graphs $K_{2,n}$.
+\item {\xxxNTP} is strongly NP-hard, even on graphs of bandwidth~$2$.
 \end{itemize}
+Since complete bipartite graphs $K_{2,n}$ are series-parallel and since graphs of 
+bandwidth~$2$ are outerplanar, our results yield strong NP-hardness for essentially 
+all natural subclasses of graphs with treewidth~$2$.
+As edges of zero-weight are irrelevant for the objective value of {\xxxNTP}, NP-hardness 
+immediately propagates from graphs to supergraphs; hence our results also imply 
+strong NP-hardness for all the standard families of specially structured graphs, 
+like planar graphs, bipartite graphs, interval graphs, cographs, etc.
+The only notable exception is the class of trees, on which {\xxxNTP} is 
+straightforward to solve and uninteresting.
 
+With respect to polynomial time approximation, we introduce a simple greedy algorithm.
+This greedy algorithm has a worst case guarantee of $n-1$ on $n$-vertex graphs,
+and on cactus graphs it always succeeds in finding an optimal solution.
+We also show that for every non-cactus graph $G$, there exist edge weights $w$ so
+that for the input $(G,w)$ the greedy algorithm fails to find an optimal solution.
+We show by means of a gap-reduction that (unless P$=$NP) problem {\xxxNTP} does not
+allow a polynomial time approximation algorithm with worst case ratio strictly below $7/6$;
+this of course excludes the existence of a PTAS.
+
+Finally, we derive a number of FPT-results in the area of parametrized complexity.
+The special case of {\xxxNTP} where both the treewidth and the maximum edge weight are 
+bounded by a constant $k$ allows an FPT-algorithm whose running time is linear in $|E|$.
+(The case where only the treedwidth is bounded and the case where only the maximum 
+edge weight is bounded are NP-hard, and hence do not belong to FPT.)
+Furthermore we design an exact algorithm for {\xxxNTP} whose (exponential) 
+running time is bounded by $|E|!\cdot\text{poly}(|E|)$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Organization of the paper.}
+Section~\ref{sec:notation} provides central definitions and summarizes the notation.
+Section~\ref{sec:hardness} contains the NP-hardness results, and 
+Section~\ref{sec:inapprox} contains the in-approximability result.
+Section~\ref{sec:greedy} discusses the greedy algorithm, 
+Section~\ref{sec:parameterized} states some parametrized and exact algorithms for {\xxxNTP}, and
+Section~\ref{sec:conclusion} concludes the paper with some discussion.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Definitions and Notations}
+\label{sec:notation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We write $\N_0 := \N \cup \set{0}$ for the set of nonnegative integers. 
+For $a\le b$, the term $[a,b]$ denotes the \emph{time slot} starting at $a$ and ending at $b$. 
+For $i\ge1$, the time slot $[i-1,i]$ is often called the $i$-th time slot 
+All graphs in this paper are undirected, simple, and without loops.
+
+An instance for problem {\xxxNTP} is a weighted undirected graph $(G,w)$, where $G=(V,E)$ and $w:E\to\N$. 
+A \emph{schedule} for instance $(G,w)$ is a map $\sigma:E\to\N_0$, that maps each edge $e$ to its activation time $\sigma(e)$;
+For a schedule $\sigma$ and an edge $e$, we denote the \emph{activity interval of $e$} by $[\sigma(e),\sigma(e)+w(e)]$. 
+For $i\in\{1,2,\ldots\}$, we let $E^\sigma_i:= \set{e\in E:~ \sigma(e)\le i\le \sigma(e)+w(e)-1}$ denote 
+the set of edges that are active in the $i$-th time slot, and we let $G^\sigma_i:= (V, E^\sigma_i)$ denote 
+the graph induced by the active edges in the $i$-th time slot. 
+Finally, we define the \emph{objective value} $\ntp(\sigma)$ of schedule $\sigma$ as the number of time 
+slots $[i-1,i]$ for which $G^\sigma_i$ is connected. 
+When the schedule $\sigma$ is clear from the context, we often simply write $E_i$ and $G_i$ instead of 
+$E^\sigma_i$ and $G^\sigma_i$. 
+
+We make use of the following graph-theoretic concepts and notations: 
+Let $G=(V,E)$ be a graph. We sometimes write $V(G):=V$ and $E(G):=E$. 
+For $V'\subseteq V$, the corresponding \emph{edge cut} $\delta(V')$ is the set of edges with
+one endpoint in $V'$ and one endpoint in $V-V'$. 
+For $v\in V$, we let $\delta(v) := \delta(\set{v})$. 
+We denote by $G[V']$ the \emph{induced subgraph} on $V'$. 
+By removing the vertex $v$ from $G$, we obtain the graph $G-v=G[V-\set{v}]$. 
+Similarily, for $E'\subseteq E$ and $e\in E$ we have $G-E'=(V,E-E')$ and $G-e=G-\set{e}$.
+For all other graph-theoretic concepts used in the paper, we refer the reader to the
+text book by West \cite{WestBook}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{NP-Hardness}
 \label{sec:hardness}
-
-In this section, we show NP-hardness of the problem {\act}, even if the input instances are restricted. 
-This is done by reducing from the strongly NP-hard \textsc{3-Partition} problem~\cite{garey1979computers}: 
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this section, we establish the NP-hardness of problem {\xxxNTP} for certain families of
+highly restricted instances. 
+This is done by reducing from the strongly NP-hard \textsc{3-Partition} problem;
+see Garey \& Johnson \cite{garey1979computers}. 
+%%%%%%%%%%%%%%%%%
 \begin{quote}
-
 Problem \textsc{3-Partition}: 
-
-\textbf{Given:} A (multi-)set $A = \set{a_1, \ldots, a_{3n}} \subseteq \N$ with $Q/4 < a_i < Q/2$ for all $i$, where $Q := 1/n \sum A$. 
-
-\textbf{Question}: Is there a partition of $A$ into $n$ into triplets, such that every triplet sums up to $Q$?
-
+\\
+\textbf{Instance:} Positive integers $a_1,\ldots,a_{3n}$ with sum $\sum_{i=1}^{3n}a_i=nQ$ that satisfy 
+$Q/4<a_i<Q/2$ for all $i$.
+\\
+\textbf{Question}: Is there a partition of these $3n$ numbers into $n$ into triplets, such that in 
+every triplet the three numbers sums up to $Q$?  
 \end{quote}
+%%%%%%%%%%%%%%%%%
+In the following, we show that problem {\xxxNTP} is strongly NP-hard both for series-parallel graph 
+(Theorem~\ref{thm:hardness_complete_bipartite}) and for graphs of bandwith~2 (Theorem~\ref{thm:hardness_bandwidth}). 
+graphs with treewidth~2.
 
-In the following, we show that {\act} is strongly NP-hard for both series-parallel graph (see Theorem~\ref{thm:hardness_complete_bipartite}) and 
-outerplanar graphs of bandwith~2 (see Theorem~\ref{thm:hardness_bandwidth}), both well studied families of 
-graphs with treewdith~2.
-
+%%%%%%%%%%%%%%%%%
 \begin{theorem}
 \label{thm:hardness_complete_bipartite}
-The problem \act\ is strongly NP-complete if restricted to series-parallel graphs, even if the input graph is $K_{2,n}$.
+Problem {\xxxNTP} is strongly NP-hard, even on complete bipartite graphs $K_{2,n}$.
 \end{theorem}
+%%%%%%%%%%%%%%%%%
 \begin{proof}
-Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and let $Q := 1/n \sum A$. Let $\beta := nQ + n - 1$. In order to prove NP-completeness, we construct an instance of problem \act\ with optimal objective value $\beta$, if and only if $A$ is a yes-instance of \textsc{3-Partition}. Consider the  complete bipartite graph $K_{2,4n-1}$ on the two vertex sets $\set{s, t}$ and $\set{x_1, \ldots, x_{n-1}, y_1, \ldots, y_{3n}}$. For $i \in \{1, \dots,n-1\}$, we set $w(\set{s,x_i}) := i(Q + 1)$ and $w(\set{x_i,t}) := (n - i)(Q + 1)$. For $i \in \{1,\dots,3n\}$, we set $w(\set{s,y_i}) := a_i$ and $w(\set{y_i,t}) := \beta$. 
+Let $a_1,\ldots,a_{3n}$ be an instance of \textsc{3-Partition} as defined above. 
+Let $\beta := nQ + n - 1$. 
+We construct an instance of {\xxxNTP} on the complete bipartite graph $K_{2,4n-1}$ with bipartition
+$\set{s, t}$ and $\set{x_1, \ldots, x_{n-1}, y_1, \ldots, y_{3n}}$. 
+For $i\in\{1, \dots,n-1\}$, we set $w(\set{s,x_i}):= i(Q + 1)$ and $w(\set{x_i,t}):=(n - i)(Q + 1)$. 
+For $i\in\{1,\dots,3n\}$, we set $w(\set{s,y_i}):= a_i$ and $w(\set{y_i,t}):= \beta$. 
 
-Now, assume that for the described instance, there exists a schedule $\sigma$ of value $\beta$. Note that for all $i \in \{1,\dots,n-1\}$, we have $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$. Hence the sum of all weights is $(n-1)(\beta + 1) + 3n\beta + (\beta - n + 1) = \beta 4n$. Because the set of active edges is spanning at each point in time, and a spanning tree of $K_{2, 4n-1}$ has $4n$ edges, this implies that all of the graphs $G_1, \dots, G_\beta$ have exactly $4n$ edges and are spanning trees. 
-For $i \in \{1,\dots,n-1\}$, consider the vertex $x_i$. Due to $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$, there is exactly one $k \in \fromto{1}{\beta}$, such that $d_k(x_i) = 2$. Furthermore, because the scheduling of the edges is nonpreemptive, and clearly $d_1(x_i) \geq 1$ and $d_\beta(x_i) \geq 1$, we can further deduce that $k$ has only the two possible values $i(Q+1)$ or $(n-i)(Q+1)$. Additionally, if there exists a $k$ such that for distinct $i, i' \in \{1,\dots,n-1\}$ one has $d_k(x_i) = d_k(x_{i'}) = 2$, then $G_k$ has a cycle, which is impossible. We conclude that there exists some $i \in \{1,\dots,n-1\}$ with $d_k(x_i) = 2$, if and only if $k \in \set{Q+1, 2(Q+1), \dots (n-1)(Q+1)}$. But this is a set of $n-1$ equidistant numbers, in the set $\fromto{1}{\beta}$, such that $n$ gaps of size $Q$ are created. Using again acyclicity of $G_1, \dots, G_\beta$, it is easy to see that the scheduling of the edges $\fromto{\set{s,y_1}}{\set{s,y_{3n}}}$ implies a correct 3-partion of $A$.
+We claim that the constructed instance of {\xxxNTP} possesses a schedule with objective value $\beta$, 
+if and only if the underlying \textsc{3-Partition} instance has answer YES.
+(Only if): Assume that for the constructed {\xxxNTP} instance there exists a schedule $\sigma$ with objective value $\beta$. 
+Note that for every $i \in \{1,\dots,n-1\}$, we have $w(\set{s,x_i}) + w(\set{x_i,t}) = \beta + 1$. 
+Hence the sum of all the edge weights in the graph is $(n-1)(\beta + 1) + 3n\beta + (\beta - n + 1) = 4\beta n$. 
+As every spanning tree for $K_{2, 4n-1}$ has $4n$ edges, each of the connected graphs $G_1,\dots,G_\beta$ 
+must have exactly $4n$ edges (and must actually be a spanning tree). 
+Now consider some vertex $x_i$ with $i\in\{1,\dots,n-1\}$. 
+Since $w(\set{s,x_i}) + w(\set{x_i,t})=\beta+1$, there is exactly one $k\in\fromto{1}{\beta}$ so 
+that the edge set $E_k$ contains both edges incident to vertex $x_i$. 
+It is easy to see that either $k=i(Q+1)$ or $k=(n-i)(Q+1)$ holds, and we say that this value $k$ 
+is associated with vertex $x_i$.
+If some value $k$ is associated with two distinct vertices $x_i$ and $x_j$, then $G_k$ contains 
+a cycle; a contradiction.
+We conclude that each of the values $k\in\set{Q+1,2(Q+1),\ldots,(n-1)(Q+1)}$ is assosciated with
+exactly one of the vertices $x_1,\ldots,x_{n-1}$.
+This means that for the corresponding time slots $[k-1,k]$, vertex $s$ is connected to vertex $t$
+via the two edges that are incident to the associated vertex $x_i$.
+The remaining $\beta-n+1$ time slots form $n$ (maximal) intervals each of length $Q$.
+It is easily verified that during each such interval exactly three vertices $y_i$, $y_j$, $y_{\ell}$
+ensure the connection between $s$ and $t$, and that the weights of the three edges $\{s,y_i\}$,
+$\{s,y_j\}$, $\{s,y_{\ell}\}$ satisfy $a_i+a_j+a_{\ell}=Q$.
+Hence the corresponding triplets form a solution for the \textsc{3-Partition} instance.
 
 Vice versa, if the \textsc{3-Partition} instance has a solution, then we can build a schedule $\sigma$
 with all desired properties from it.
 \qed
 \end{proof}
 
+%%%%%%%%%%%%%%%%%
 \begin{theorem}
 \label{thm:hardness_bandwidth}
-The problem \act\ is strongly NP-complete on outerplanar graphs of bandwidth 2.
+Problem {\xxxNTP} is strongly NP-hard, even on graphs of bandwidth~$2$.
 \end{theorem}
+%%%%%%%%%%%%%%%%%
 \begin{proof}
-Given an instance $A = \fromto{a_1}{a_{3n}}$ of \textsc{3-Partition} where $Q := 1/n \sum A$, we construct an instance of problem {\act}, whose optimal objective value is $\beta := (2n - 1)Q$, if and only if $A$ is a yes-instance of \textsc{3-Partition}.
-
-The graph has $4n+1$ vertices $u_0,\ldots,u_n$ and $v_1,\ldots,v_{3n}$.
+Let $a_1,\ldots,a_{3n}$ be an instance of \textsc{3-Partition} as defined above.
+We construct an instance of {\xxxNTP} as follows.
+The graph $G$ has $4n+1$ vertices $u_0,\ldots,u_n$ and $v_1,\ldots,v_{3n}$.
 We will sometimes denote vertex $u_k$ also by the name $v_{k-n}$, for $1\le k\le n+1$;
 in particular we use $u_n=v_0$ and $u_{n-1}=v_{-1}$.
 \begin{itemize}
 \item 
-For $k=0,\ldots,n-1$,   the edge $\{u_k, u_{k+1}\}$ has weight $\vall(\{u_k, u_{k+1}\}) = 2(n-k-1)Q$.\\
-For $k=0,\ldots,n-2$,   the edge $\{u_k, u_{k+2}\}$ has weight $\vall(\{u_k, u_{k+2}\})=2(k+1)Q$.
+For $k=0,\ldots,n-1$,   the edge $\{u_k, u_{k+1}\}$ receives weight $w(\{u_k, u_{k+1}\}) = 2(n-k-1)Q$.
+\item
+For $k=0,\ldots,n-2$,   the edge $\{u_k, u_{k+2}\}$ receives weight $w(\{u_k, u_{k+2}\})=2(k+1)Q$.
 \item 
-For $k=1,\ldots,3n$,    the edge $\{v_{k-1}, v_k\}$ has weight $\vall(\{v_{k-1}, v_k\})=a_k$.\\
-For $k=-1,\ldots,3n-2$, the edge $\{v_k, v_{k+2}\}$ has weight $\vall(\{v_k, v_{k+2}\})=\beta$.  
+For $k=1,\ldots,3n$,    the edge $\{v_{k-1}, v_k\}$ has weight $w(\{v_{k-1}, v_k\})=a_k$.
+\item
+For $k=-1,\ldots,3n-2$, the edge $\{v_k, v_{k+2}\}$ has weight $w(\{v_k, v_{k+2}\})=\beta$.  
 \end{itemize}
-In the ordering $u_0,u_1,\ldots,u_n,v_1,v_2,\ldots,v_{3n}$, every edge either connects two neighboring 
+In the ordering $u_0,u_1,\ldots,u_n,v_1,v_2,\ldots,v_{3n}$, every edge either connects two adjacent 
 vertices or two vertices at distance~$2$. Hence, the constructed graph $G=(V,E)$ has bandwidth~$2$. 
-This implies that $G$ furthermore is outerplanar.
 
-We will study schedules $\sigma$ of value $\beta$. Notice that the sum of all weights in $G$ equals $\beta(|V| - 1)$. Hence, if $\sigma$ is such a schedule of value $\beta$, then each of $G^\sigma_1, \dots G^\sigma_\beta$ is a spanning tree and acyclic.
-
-In particular, we will consider the behavior of $\sigma$ on the induced subgraph $H_i := G[\fromto{u_0}{u_i}]$ for $1\le i\le n$.
+We will study schedules $\sigma$ of objective value $\beta=(2n-1)Q$. 
+As the sum of all edge weights in $G$ equals $\beta(|V|-1)$, each of the graphs 
+$G^\sigma_1, \dots G^\sigma_\beta$ is a spanning tree.
+We will discuss the behavior of $\sigma$ on the induced subgraph $H_i := G[\fromto{u_0}{u_i}]$ for $1\le i\le n$.
 Since the only connections between $H_i$ and the rest of the graph are via the two vertices $u_{i-1}$ and $u_i$,
-at any moment $t\in [0,\beta]$ in time, graph $H_i$ will consist of one or two connected components
+during any time slot $[t-1,t]$ with $1\le t\le\beta$, graph $H_i$ will consist of one or two connected components
 under schedule $\sigma$.
-If there is a single connected component, we say that $H_i$ is \emph{fully-connected} at time $t$.
+If there is a single connected component, we say that $H_i$ is \emph{fully-connected} during the $t$-th time slot.
 If there are two connected components (one containing vertex $u_{i-1}$, the other one containing 
-vertex $u_i$), we say that $H_i$ is \emph{semi-connected} at time $t$.
-Note that if $H_i$ is semi-connected at moment $t$, then the edge $\{u_{i-1}, u_{i+1}\}$ must be active at 
-that moment $t$, as there are no other edges that would be able to connect the component containing 
+vertex $u_i$), we say that $H_i$ is \emph{semi-connected} during the $t$-th time slot.
+Note that if $H_i$ is semi-connected during the $t$-th time slot, then the edge $\{u_{i-1}, u_{i+1}\}$ must be 
+active during that slot, as there are no other edges that would be able to connect the component containing 
 $u_{i-1}$ to the rest of the graph.
 
 The graph $H_1$ consists of the vertices $u_0$ and $u_1$ and of the edge $\{u_0, u_1\}$ of weight $(2n-2)Q$.
-Suppose for the sake of contradiction that $H_1$ is neither fully-connnected at $t=0$ nor at $t=\beta$:
-Then the edge $\{u_0, u_2\}$ (of value $2Q$) must be active at $t=0$ and at $t=\beta$, which is impossible.
-By symmetry, we will henceforth assume that under schedule $\sigma$ the graph $G_1$ is fully-connnected at $t=\beta$.
+Suppose for the sake of contradiction that $H_1$ is neither fully-connnected during the first time slot
+nor during the $\beta$-th time slot.
+Then the edge $\{u_0, u_2\}$ (of value $2Q$) must be contained both in $E_1$ and in $E_{\beta}$, which is impossible.
+By symmetry, we will henceforth assume that under schedule $\sigma$ the graph $G_1$ is fully-connnected 
+during the $\beta$-th time slot.
 This implies that $\{u_0, u_1\}$ is active during $[Q,\beta]$ and that $\{u_0, u_2\}$ is active during $[0,2Q]$.
 For graph $H_i$ (with $1\le i\le n$) one can show by induction that $H_i$ is semi-connected
 during the time intervals $[0,Q]$, $[2Q,3Q]$, \dots, $[(2i-2)Q,(2i-1)Q]$ and fully-connected at all
 other moments in $[0,\beta]$.
-The induction uses the following facts and observations on the two edges $\set{u_{i-2}, u_i}$ and $\set{u_{i-1},u_i}$ 
-that are in $H_i$ but not in $H_{i-1}$:
+The induction uses the following facts and observations on the two edges $\set{u_{i-2}, u_i}$ 
+and $\set{u_{i-1},u_i}$ that are in $H_i$ but not in $H_{i-1}$:
 \begin{itemize}
-\item Graph $H_i$ is semi-connected at time $0$. (This is because we have by induction hypothesis that $H_{i-1}$ is semi-connected at $t=0$. So if $H_i$ would be fully-connected at $t=0$, this would imply $\sigma(\{u_{i-2}, u_i\}) = \sigma(\{u_{i-1}, u_i\}) = 0$. But because all involved edges have weight $w(e) > Q$, we then have a cycle at time $t = Q+1$. This is impossible.)
-\item Since $H_{i-1}$ is semi-connected at time $0$, the edge $\{u_{i-2},u_i\}$ must be active at time $0$
-and hence must be active during $[0,(2i-2)Q]$.
-\item $H_i$ must be fully-connnected at time $\beta$. (Otherwise, $H_i$ is fully-connnected neither 
-at $t=0$ nor at $t=\beta$, and the edge $\{u_{i-1},u_{i+1}\}$ had to be active for $\beta$ time units.)
-\item Since $H_i$ is fully-connnected at time $\beta$, the edge $\{u_{i-1},u_i\}$ must be active at time $\beta$
-and hence must be active during $[(2i-1)Q,\beta]$.
+\item Graph $H_i$ is semi-connected during the first time slot:
+By the inductive hypothesis we have $H_{i-1}$ semi-connected during the first time slot.
+If $H_i$ would be fully-connected during the first time slot, we would get
+$\sigma(\{u_{i-2}, u_i\}) = \sigma(\{u_{i-1}, u_i\})=0$. 
+Since all involved edges have weight $w(e)>Q$, this yields a cycle at time $t=Q+1$ as the desired contradiction.
+\item Since graph $H_{i-1}$ is semi-connected at time $0$, the edge $\{u_{i-2},u_i\}$ must be active at 
+time $0$ and hence must be active during $[0,(2i-2)Q]$.
+\item Graph $H_i$ must be fully-connnected during the $\beta$-th time slot:
+Otherwise, $H_i$ is fully-connnected neither during the first time slot nor during the $\beta$-th time slot. 
+Then the edge $\{u_{i-1},u_{i+1}\}$ would have to be active for $\beta$ time units.
+\item Since $H_i$ is fully-connnected during the $\beta$-th time slot, the edge $\{u_{i-1},u_i\}$ must be 
+active during the $\beta$-th time slot, and hence must be active during the interval $[(2i-1)Q,\beta]$.
 \end{itemize}
 The induction yields for $i=n$ that the induced subgraph $H_n$ is semi-connected during the time intervals 
 $[0,Q]$, $[2Q,3Q]$, \dots, $[(2r-2)Q,(2r-1)Q]$ (that is, all the intervals of length $Q$ that start at an even multiple of $Q$)
@@ -283,11 +421,14 @@ Vice versa, if the \textsc{3-Partition} instance has a solution, then we can bui
 with all desired properties from it.
 \end{proof}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Hardness of Approximation}
 \label{sec:inapprox}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \cref{thm:hardness_complete_bipartite,thm:hardness_bandwidth} show NP-hardness, even if the structure of the input graph is heavily restriced. 
-We now show that assuming $P \neq NP$ there exists no $\alpha$-approximation algorithm for problem {\act}, for 
+We now show that assuming $P \neq NP$ there exists no $\alpha$-approximation algorithm for problem {\xxxNTP}, for 
 any $\alpha < 7/6$, even if $w(e) \in \{1,\dots,6\}$.
 %We now show hardness even if the weights $w(e)$ are restricted. 
 For this, we reduce from the Hamilton cycle problem. Akiyama, Nishizeki and Saito proved that the Hamilton cycle problem is NP-complete even for bipartite, 3-regular graphs \cite{hamilton3regularBip}. We additionally require hardness for a more restricted variant of the Hamilton cycle problem, which we call \textsc{Hamilton'}. NP-completeness of \textsc{Hamilton'} is surely known, however, we were unable to find it in the literature. We give a proof in \cref{appendix:hamilton_prime}.
@@ -296,7 +437,7 @@ For this, we reduce from the Hamilton cycle problem. Akiyama, Nishizeki and Sait
 
 Problem \textsc{Hamilton'} 
 
-\textbf{Given:} An undirected, bipartite and 4-regular graph $H$, a special edge $\set{u, z}$, such that the following three are equivalent: (i) $H$ has a Hamilton cycle; (ii) $H$ has a Hamilton cycle using the edge $\set{u, z}$; (iii) $H$ has a Hamilton path starting at $u$.
+\textbf{Instance:} An undirected, bipartite and 4-regular graph $H$, a special edge $\set{u, z}$, such that the following three are equivalent: (i) $H$ has a Hamilton cycle; (ii) $H$ has a Hamilton cycle using the edge $\set{u, z}$; (iii) $H$ has a Hamilton path starting at $u$.
 
 \textbf{Question:} Does there exist a Hamilton cycle in $H$?
 
@@ -304,225 +445,314 @@ Problem \textsc{Hamilton'}
 
 \begin{restatable}{lemma}{hamiltonPrime}
 \label{hamilton_cycle_lemma}
-\textsc{Hamilton'} is NP-complete.
+\mbox{\sc Hamilton'} is NP-complete.
 \end{restatable} 
 
-Using the above lemma, we can construct a gap reduction to show:
-
+With the help of Lemma~\ref{hamilton_cycle_lemma}, we can prove the following theorem.
 \begin{theorem}
-\label{corollary_act_no_approx}
-%The problem {\act} is NP-complete, even if $w(e) \in \fromto{1}{6}$ for all edges. Furthermore, if $P \neq NP$, there is no poly-time $\alpha$-approximation with $\alpha < 7/6$, even if $w(e) \in \fromto{1}{6}$ for all edges.
-If $P \neq NP$, there is no poly-time $\alpha$-approximation with $\alpha < 7/6$ for problem {\act}, even if $w(e) \in \fromto{1}{6}$ for all edges.
+\label{th:small-weights}
+Problem {\xxxNTP} is strongly NP-hard, even if all edges have weights in $\fromto{1}{6}$.
+In particular, it is NP-hard to decide whether there exists a schedule with objective value at least~$7$.
 \end{theorem}
 \begin{proof}
-Let $H$ be an instance of the problem \textsc{Hamilton'}. We construct in polynomial time an instance $(G, w)$ of problem {\act}, such that $w(e) \in \fromto{1}{6}$ for all edges, and such that the optimal value of a schedule is at most 7, and is equal to seven if and only if $H$ has a Hamilton cycle. This is sufficient to prove the theorem.
+Let $H$ be an instance of the problem \textsc{Hamilton'}. 
+We construct in polynomial time an instance $(G,w)$ of problem {\xxxNTP}, such that $w(e)\in\fromto{1}{6}$ 
+for all edges. 
+The objective value of any feasible schedule is at most $7$, and the optimal objective value is equal to~$7$ 
+if and only if graph $H$ has a Hamilton cycle. This is sufficient to prove the theorem.
 
 The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartite parts of $H$ be $U = \fromto{u_1}{u_k}$ and $Z = \fromto{z_1}{z_k}$, and let $\set{u_k, z_k} =: e_0$ be the special edge of the given \textsc{Hamilton'} instance. The graph $G$ consists of a copy of $H$ where every edge has weight 2, except $e_0$, which has weight 1. Furthermore, there is an additional vertex $x$, which is connected to each of $\fromto{u_1}{u_k}$ via the gadget $L$ and to each of $\fromto{z_1}{z_k}$ via the gadget $R$. Finally, there is an additional vertex $y$ connected to both $x$ and $z_k$ with an edge of weight 4.
 \begin{figure}[htpb]
      \centering
-     \begin{subfigure}[b]{0.4\textwidth}
+     \begin{subfigure}[b]{0.40\textwidth}
          \centering
-         \includegraphics[scale=1]{img/act-hamilton-cycle-a}
+         \includegraphics[scale=0.90]{img/act-hamilton-cycle-a}
          \subcaption{Reduction}
      \end{subfigure}
      \hfill
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.32\textwidth}
          \centering
-         \includegraphics[scale=1]{img/act-hamilton-cycle-b}
+         \includegraphics[scale=0.90]{img/act-hamilton-cycle-b}
          \subcaption{Gadget $L$}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.15\textwidth}
          \centering
-         \includegraphics[scale=1]{img/act-hamilton-cycle-c}
+         \includegraphics[scale=0.90]{img/act-hamilton-cycle-c}
          \subcaption{Gadget $R$}
      \end{subfigure}
-        \caption{Reduction \textsc{Hamilton'} $\rightarrow$ {\act}.}
+        \caption{Reduction \textsc{Hamilton'} $\rightarrow$ {\xxxNTP}.}
         \label{fig_act_hamilton_cycle}
 \end{figure}
 
-We first describe the properties of the gadgets $L$ and $R$. Assume $\sigma$ is a schedule of value 7. Note that the sum of all weights in $G$ is $8k - 1 + 39k + 16k + 8 = 63k + 7 = 7(|V(G) - 1|)$. Therefore, each of $G_{1}, \ldots, G_{7}$ is a tree, and in particular acyclic. By inspecting the vertices $r_1$ and $r_2$ and using acyclity of $G_2, G_6$ we see that the gadget $R$ necessarily connects $x$ and $z_i$ in $G_2$ and $G_6$, but does not connect $x$ and $z_i$ in $G_t$ for $t \neq 2,6$. Similarily, the gadget $L$ necessarily connects $x$ and $u_i$ in $G_3$ and $G_5$ and has some remaining edges, which are not restricted and behave like two parallel edges of weight 1. Analogously, $G_{t}[\set{x, y, z_k}]$ is connected if and only if $t = 4$.
+We first describe the properties of the gadgets $L$ and $R$. Assume $\sigma$ is a schedule of value 7. Note that the sum of all weights in $G$ is $8k - 1 + 39k + 16k + 8 = 63k + 7 = 7(|V(G) - 1|)$. Therefore, each of $G_{1}, \ldots, G_{7}$ is a tree, and in particular acyclic. By inspecting the vertices $r_1$ and $r_2$ and by using the acyclity of graphs $G_2$ and $G_6$, we see that the gadget $R$ necessarily connects $x$ and $z_i$ in $G_2$ and $G_6$, but does not connect $x$ and $z_i$ in $G_t$ for $t \neq 2,6$. Similarily, the gadget $L$ necessarily connects $x$ and $u_i$ in $G_3$ and $G_5$ and has some remaining edges, which are not restricted and behave like two parallel edges of weight 1. Analogously, $G_{t}[\set{x, y, z_k}]$ is connected if and only if $t = 4$.
 
-Now, suppose $H$ is a yes-instance of \textsc{Hamilton'}, i.e.\ $H$ has a Hamilton cycle $C$, which contains $e_0$. Then $H - E(C)$ is 2-regular, hence there exist pairwise disjoint matchings $M_1, \ldots, M_4$ such that $M_1 \dotunion M_2 = E(C)$ and $M_3 \dotunion M_4 = E(H) \setminus E(C)$ and $e_0 \in M_1$. Consider the following schedule: We schedule $e_0$ in $G_3$; $M_1 \setminus \set{e_0}$ in both $G_3$ and $G_4$; $M_2$ in both $G_4$ and $G_5$; $M_3$ in both $G_1, G_2$; and $M_4$ in both $G_6$ and $G_7$. We schedule the gadgets such that $U$ is connected to $x$ via the $L$'s in $G_1, G_3, G_5$ and $G_7$, and that $Z$ is connected to $x$ via $R$'s in $G_2$ and $G_6$, and that $x$ is connected to $z_k$ via $y$ in $G_4$. Now observe that the active edges in $U \cup Z$ form a matching of $H$ in $G_1, G_2, G_3, G_5, G_6$ and $G_7$ and a Hamiltonian path in $G_4$. It is easy to see that this is a valid schedule of value 7. 
+Now, suppose $H$ is a YES-instance of \textsc{Hamilton'}, i.e.\ $H$ has a Hamilton cycle $C$, which contains $e_0$. Then $H - E(C)$ is 2-regular, hence there exist pairwise disjoint matchings $M_1, \ldots, M_4$ such that $M_1 \dotunion M_2 = E(C)$ and $M_3 \dotunion M_4 = E(H)-E(C)$ and $e_0 \in M_1$. Consider the following schedule: We schedule $e_0$ in $G_3$; $M_1-\set{e_0}$ in both $G_3$ and $G_4$; $M_2$ in both $G_4$ and $G_5$; $M_3$ in both $G_1, G_2$; and $M_4$ in both $G_6$ and $G_7$. We schedule the gadgets such that $U$ is connected to $x$ via the $L$'s in $G_1, G_3, G_5$ and $G_7$, and that $Z$ is connected to $x$ via $R$'s in $G_2$ and $G_6$, and that $x$ is connected to $z_k$ via $y$ in $G_4$. Now observe that the active edges in $U \cup Z$ form a matching of $H$ in $G_1, G_2, G_3, G_5, G_6$ and $G_7$ and a Hamiltonian path in $G_4$. It is easy to see that this is a valid schedule of value 7. 
 
 On the other hand, suppose there exists a schedule $\sigma$ of value 7 for $(G, w)$.
 Recall the properties of the gadgets $L$ and $R$. Then, for $t' \in \set{1, 7}$, consider $G_{t'}$ and some $z_i$ for $i \in \fromto{1}{k-1}$. Note that for all $t \in \set{1, 3, 4, 5, 7}$ at least one of the edges in $\delta(z_i) \cap E(H)$ is active. This implies that $z_i$ has degree equal to 1 in $G_{t'}[U \cup W]$, due to the different possibilities of covering the set $[0, 1] \cup [2, 5] \cup [6, 7]$ with 4 intervals of length 2. Similarly, by considering $t' \in \set{1, 7}$, and $t \in \set{1, 3, 5, 7}$, we see that $z_k$ has degree equal to 1 in $G_{t'}[U \cup W]$ and that $e_0 \not \in E(G_{4})$. So all $z \in Z$ have degree 1 in $G_{t'}[U \cup H]$. But this implies that $G_{t'}[L']$ is connected for each copy $L'$ of $L$, otherwise $U$ is disonnected in $G_{t'}$. Hence $G_t[L']$ is connected if and only if $t \in \set{1, 3, 5, 7}$. Hence, for $u \in U$ and $t' \in \set{2, 6}$, we have that the degree of $u$ in $G_{t'}[U \cup W]$ is at least one. Consider the graph $F := G_{4}[U \cup Z]$: Due to the lower bound of the minimum degrees for $t' \in \set{1, 7}$ or $t' \in \set{2, 6}$, we have that the maximum degree in $F$ is two. We claim that the degree of $u_k$ in $F$ is equal to 1. In fact, it cannot be 0. So assume it is at least two, and consider $u_k$. We know that $e_0 \not\in E(G_4)$, so the edges adjacent to $u_k$ scheduled in $G_4$ are not $e_0$. But $u_k$ has only four adjacent edges in $H$, and we have a requirement on the minimum degree of $u_k$ for $t' \in \set{2, 6}$. We conclude $e_0 \in E(G_2)$ or $e_0 \in E(G_6)$. But now consider $z_k$. We have a requirement on the minimum degree for $t' \in \set{1, 3, 5, 7}$. Because $e_0 \in E(G_2) \cup E(G_4)$ and $w(e_0) = 1$, this is requirement is impossible to fulfill.
-In summary, $F$ is a graph of maximum degree 2, where $u_k$ has degree 1. It follows from the state of the gadgets in $G_4$, that $F$ is connected. We conclude that $F$ is a Hamilton path in $H$ starting at $u_k$. Therefore $H$ is a yes-instance of \textsc{Hamilton'}.
-
-%%Due to the different possibilities of covering the interval $[0, 7]$ with four intervals of length 2, we have that for $t' \in \set{0.5, 6.5}$, each of $w_1, \ldots w_{k-1}$ has degree 1 in $G_{t'}$. Similarly, both $y, w_k$ have degree 1 in $G_{t'}$. We conclude that $u_1, \ldots, u_k$ lie in $k$ different connected components of $G_{t'} - x$ and hence $G_{t'}$ has an edge connecting $x$ and $u_i$ for each $i$. But then, $G_{3.5}$ has none of the edges between $x$ and $u_i$, hence $G_{3.5}[Z]$ is connected, where $Z := \set{u_1, \ldots, u_k, w_1, \ldots, w_k}$.  Again, by the different possibilities of covering the interval $[0, 7]$ with subintervals, we conclude that in $G_{3.5}$, the vertices $u_k, w_k$ have degree 1, $e_0 \not\in E(G_{3.5})$, and each of $w_1, \ldots w_{k-1}$ have degree at most two. They also have degree exactly two, otherwise we find a cyle in one of $\set{G_{0.5}, \ldots, G_{6.5}} \setminus \set{G_{3.5}}$. 
+In summary, $F$ is a graph of maximum degree 2, where $u_k$ has degree 1. It follows from the state of the gadgets in $G_4$, that $F$ is connected. We conclude that $F$ is a Hamilton path in $H$ starting at $u_k$. Therefore $H$ is a YES-instance of \textsc{Hamilton'}.
 \end{proof}
 
+The proof of Theorem~\ref{th:small-weights} shows that it is NP-hard to distinguish between
+{\xxxNTP} instances with optimal objective value~$6$ and {\xxxNTP} instances with optimal objective value~$7$.
+This gap reduction yields the following corollary.
+\begin{corollary}
+\label{coro:inapproximability}
+Unless $P=NP$, problem {\xxxNTP} does not allow a polynomial time $\alpha$-approximation 
+with $\alpha<7/6$.
+\end{corollary}
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The greedy algorithm}
+\label{sec:greedy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+We introduce a simple greedy algorithm that maintains connectivity by always
+activating edges of the largest possible weight.
+Formally, we let $E_i\subseteq E$ denote the set of edges that are active during
+the $i$-th time slot $[i-1,\,i]$, and we let $F_i\subseteq E_i$ denote the set of
+edges whose activity intervals end at time $i$.
+Finally, we denote by $U_i=E-(E_1\cup E_2\cup\cdots E_i)$ the set of edges that
+have not been used and activated before time $i$.
+
+Now the {\greedy} algorithm starts its work by initializing 
+$E_0:=\emptyset$, $F_0:=\emptyset$, and $U_i:=E$.
+For $i\ge0$, the set $E_{i+1}$ for time slot $[i,\,i+1]$ is computed as follows.
+If the graph $(V,E_i-F_i)$ is a tree, we set $E_{i+1}:=E_i$.
+If the graph $(V,E_i-F_i)$ is a forest with $c$ components, we turn it into 
+a tree by adding a maximum weight subset $A\subseteq U_i$ of cardinality $c-1$;
+then we set $E_{i+1}:=(E_i-F_i)\cup A$.
+In case no such set $A$ exists, the {\greedy} algorithm terminates.
+(The set $A$ can be computed for instance by applying Kruskal's algorithm for 
+maximum spanning trees; ties are broken arbitrarily.)
+
+%%%%%%%%%%%%%%%%%
+\begin{theorem}
+\label{th:greedy.approx}
+For every graph $G=(V,E)$ on $n$ vertices and for every $w:E\to\N$, 
+the {\greedy} algorithm computes a schedule of length at least $\ntp(G,w)/(n-1)$.
+Furthermore, there exist instances on which the schedule computed by the 
+{\greedy} algorithm is a factor $\lfloor n/2\rfloor$ below the optimal objective value.
+\end{theorem}
+%%%%%%%%%%%%%%%%%
+\begin{proof}
+For the positive result, we consider the time slot $[i,\,i+1]$ at which {\greedy} terminates.
+Then the graph $(V,(E_i-F_i)\cup U_i$ is not connected.
+We consider the vertex set $C\subseteq V$ of one of the components of that graph, and the
+corresponding edge cut $\delta(C)$.
+Then the weight $w(\delta(C))=\sum_{e\in\delta(C)}w(e)$ yields a trivial upper bound for the 
+optimal objective value: 
+%%%%%%%%%%%%%%%%%
+\begin{equation}
+\label{eq:greedy}
+\ntp(G,w) ~\le~ w(\delta(C))
+\end{equation}
+%%%%%%%%%%%%%%%%%
+Since every edge set $E_j$ with $1\le j\le i$ induces a tree, we have $|E_j|=n-1$ and hence
+$|E_j\cap \delta(C)|\le n-1$.
+As all edges in the cut $\delta(C)$ have been activated and run to completion before the 
+time slot $[i,\,i+1]$, we conclude $i\ge w(\delta(C))/(n-1)$, which together with \eqref{eq:greedy}
+yields the desired approximation guarantee.
+
+For the negative result, we consider the complete graph $K_n=(V,E)$ on $n$ vertices with 
+weights $w(e)=1$ for all $e\in E$.
+A folklore result from the literature (see for instance Palmer~\cite{Palmer2001}) says that the 
+maximum number of edge-disjoint spanning trees that can be packed into $K_n$ is $\lfloor n/2\rfloor$.
+This implies $\ntp(K_n,w)=\lfloor n/2\rfloor$.
+On the other hand, if the {\greedy} algorithm chooses $E_1$ to consist of the $n-1$ edges incident
+to some common vertex $v\in V$, the objective value of the resulting schedule equals~$1$.
+\end{proof}
+
+%%%%%%%%%%%%%%%%%
+\begin{theorem}
+\label{th:greedy.cactus}
+For every connected graph $G=(V,E)$, the following two statements are equivalent.
+\begin{itemize}
+\item[(i)]  $G$ is a cactus graph.
+\item[(ii)] For every choice $w:E\to\N$ of edge weights, the {\greedy} algorithm 
+solves the {\xxxNTP} instance $(G,w)$ to optimality.
+\end{itemize}
+\end{theorem}
+%%%%%%%%%%%%%%%%%
+\begin{proof}
+We first show that (i) implies (ii).
+Since cut-vertices split an {\xxxNTP} instance into smaller instances that do not interact 
+with each other, it is sufficient to prove the statement for two-connected cactus graphs.
+Hence we will assume that $G$ is a cycle on $n$ vertices, and we let $e_1,\ldots,e_n$ 
+denote the edges in the cycle ordered by increasing weight so that 
+$w(e_1)\le w(e_2)\le\cdots\le w(e_n)$.
+It is easily seen that the optimal objective value for $(G,w)$ equals 
+$\min\{w(e_1)+w(e_2),\,w(e_3)\}$.
+As the {\greedy} algorithm activates the $n-1$ edges $e_2,\ldots,e_n$ at time~$0$ and 
+activates the final edge $e_1$ at time $w(e_2)$, it yields the optimal objective value.
+
+In order to show that (ii) implies (i), we first consider the graph $H$ on the four
+vertices $v_1,v_2,v_3.v_4$ and the edge weights $w_H$ depicted in Figure~\ref{fig:cactus}.
+As the {\greedy} algorithm at time~$0$ activates the three edges $\{v_1,v_2\}$, $\{v_1,v_4\}$, 
+$\{v_3,v_4\}$ (that carry the weights $3,2,2$, respectively), at time~$2$ there remains no 
+further possibility of connecting vertex $v_3$ to the rest of the graph; hence {\greedy} 
+generates a schedule of value~$2$.
+On the other hand, the optimal schedule results by activating the three edges $\{v_1,v_2\}$, 
+$\{v_1,v_3\}$, $\{v_3,v_4\}$ at time~$0$, by activating edge $\{v_1,v_4\}$ at time~$1$,
+and by activating edge $\{v_2,v_3\}$ at time~$2$; the corresponding optimal objective
+value is $\ntp(H,w_H)=3$.
+Hence {\greedy} fails to solve this instance $(H,w_H)$ to optimality.
+
+Now let $G=(V,E)$ be an arbitrary connected graph that is not a cactus. 
+This implies that $G$ does contain a subdivision $(V',E')$ of the four-vertex 
+graph $H=(V_H,E_H)$ in Figure~\ref{fig:cactus}.
+Let $E''\subseteq E$ be a subset of cardinality $|V-V'|$, so that the graph $(V,E'\cup E'')$
+is connected.
+We construct edge weights $w:E\to\N$ as follows.
+For every edge $e\notin E'\cup E''$ we set $w(e)=0$, and
+for every edge $e\in E''$ we set $w(e)=3$.
+Finally, we fix the weights $w(e)$ of the edges $e\in E'$ so that they emulate the 
+weights $w_H:E_H\to\N$ in the four-vertex graph $H$; if an edge $e\in E'$ belongs to the 
+subdivision of some edge $f\in E_H$, we define $w(e)=w_H(f)$.
+It is easily verified that the resulting instance $(G,w)$ satisfies $\ntp(G,w)=3$,
+whereas the {\greedy} algorithm only yields an objective value of~$2$.
+\end{proof}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbh]
+\bigskip
+\begin{center}
+\begin{tikzpicture}[scale=1.00]
+
+\coordinate (p1) at (-1.5, 0.000);
+\coordinate (p2) at ( 0.0, 1.732);
+\coordinate (p3) at ( 1.5, 0.000);
+\coordinate (p4) at ( 0.0,-1.732);
+\foreach \x in {1,...,4}{\fill (p\x) circle (0.12);}
+
+\node at ($(p1)+(-0.5, 0.00)$) {\large$v_1$};
+\node at ($(p2)+(+0.5, 0.20)$) {\large$v_2$};
+\node at ($(p3)+(+0.5,-0.30)$) {\large$v_3$};
+\node at ($(p4)+(+0.5, 0.00)$) {\large$v_4$};
+
+\draw[ultra thick] (p1)--(p2)--(p3)--(p4)--(p1)--(p3);
+\node at ($(p1)!0.5!(p2)+(-0.35, 0.1)$) {\large$3$};
+\node at ($(p1)!0.5!(p4)+(-0.45, 0.0)$) {\large$2$};
+\node at ($(p1)!0.5!(p3)+( 0.00, 0.4)$) {\large$1$};
+\node at ($(p2)!0.5!(p3)+(+0.35, 0.1)$) {\large$1$};
+\node at ($(p4)!0.5!(p3)+(+0.45, 0.0)$) {\large$2$};
+\end{tikzpicture}
+\end{center}
+\caption{An instance $(H,w_H)$ on which the {\greedy} algorithm fails.}
+\label{fig:cactus}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Parameterized Complexity}
-\label{sec:positive_results}
-
-In this section, we show that problem {\act} is fixed parameter tractable with respect to several different parameters. Note that we showed in \cref{thm:hardness_complete_bipartite,thm:hardness_bandwidth,corollary_act_no_approx}, that problem {\act} is NP-complete, even if either the treewidth or the weights are bounded by a constant. On the other hand, if both are bounded, the problem can be solved in linear time, as the following theorem shows.
-
+\label{sec:parameterized}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this section, we show that problem {\xxxNTP} is fixed parameter tractable with 
+respect to various parameters. 
+Note that we showed in \cref{thm:hardness_complete_bipartite,thm:hardness_bandwidth,th:small-weights}, 
+that problem {\xxxNTP} is NP-complete, even if either the treewidth or the weights are bounded by a constant. 
+If on the other hand treedwidth and weights both are bounded, the following theorem shows that 
+the problem can be solved in linear time.
 
 \begin{theorem}
-Let $k$ be a bound on both the treewidth of the input graph and the maximum edge weight $w(e)$. Problem {\act} is fixed parameter tractable with respect to $k$.
+Let $k$ be a bound on both the treewidth of the input graph and on the maximum edge weight.
+Problem {\xxxNTP} is fixed parameter tractable with respect to parameter $k$.
 \end{theorem}
 \begin{proof}
-Let $(G, w)$ be an instance of {\act}, such that $G = (V, E)$ has treewidth at most $k$, and $w(e) \leq k$ for all edges. Because $G$ has treewidth at most $k$, there exists a vertex $v$ of degree at most $k$. Every edge incident to $v$ has weight at most $k$. Hence the maximum value of a solution is at most $k^2$. For every $T \in \{1,\dots,k^2\}$, we construct a formula $\Phi_T$ in monadic second-order graph logic $\text{MSO}_2$, such that $\Phi_T$ is satisfiable if and only if a schedule of value $T$ exists. In fact, we introduce binary variables $x_{e,t}$ for $e \in E$ and $t \in \{1,\dots,T\}$. Then the following expression can be formulated in $\text{MSO}_2$:
+Let $(G, w)$ be an instance of {\xxxNTP}, such that $G = (V, E)$ has treewidth at most $k$, and $w(e) \leq k$ for all edges. Because $G$ has treewidth at most $k$, there exists a vertex $v$ of degree at most $k$. Every edge incident to $v$ has weight at most $k$. Hence the maximum value of a solution is at most $k^2$. For every $T \in \{1,\dots,k^2\}$, we construct a formula $\Phi_T$ in monadic second-order graph logic $\text{MSO}_2$, such that $\Phi_T$ is satisfiable if and only if a schedule of value $T$ exists. In fact, we introduce binary variables $x_{e,t}$ for $e \in E$ and $t \in \{1,\dots,T\}$. Then the following expression can be formulated in $\text{MSO}_2$:
 \begin{align*}
-\exists \sigma :  E \rightarrow \fromto{0}{T} : &\forall e \in E, t \in \{1, \dots, T\}: (x_{e,t}=1) \leftrightarrow \left(\sigma(e) < t \leq \sigma(e) + w(e)\right)\\
-\land &\forall t \in \{1, \dots, T\}: \set{e \in E \mid x_{e,t} = 1} \text{ is spanning.}
+\exists \sigma: E\to\{0,\ldots,&T\} ~~\forall e\in E ~~\forall t\in\{1,\ldots,T\}: \\
+& (x_{e,t}=1) \iff \left(\sigma(e) < t \leq \sigma(e) + w(e)\right)\\
+& \land \forall t\in\{1,\ldots,T\}: \set{e\in E \mid x_{e,t} = 1} \text{ is a spanning tree.}
 \end{align*}
-It follows from Courcelle's theorem \cite{courcelle1990monadic}, that for each $T \in \{1,\dots,k^2\}$, the satisfiability of $\Phi_T$ can be checked in linear time. This proves the claim.
+It follows from Courcelle's theorem \cite{courcelle1990monadic}, that for each $T\in\{1,\dots,k^2\}$ the 
+satisfiability of $\Phi_T$ can be checked in linear time. This proves the claim.
 \end{proof}
 
-Next, we show that problem {\act} is fixed parameter tractable with respect to the size $k$ of a feedback edge set. As the graph $G = (V,E)$ is undirected, and we can assume that it is connected, we have that $k = |E| - (n - 1)$.
+\begin{theorem}
+\label{th:exact}
+On connected graphs $G=(V,E)$, problem {\xxxNTP} can be solved in exponential time $\bigO(|E|^2\cdot|E|!)$.
+\end{theorem}
+\begin{proof}
+Call a schedule $\sigma$ of value $T$ \emph{non-dominated}, if none of the graphs 
+$G_1^\sigma, \dots, G_T^\sigma$ contains a cycle. 
+For any dominated schedule $\sigma$, it is easy to find a non-dominated $\sigma'$ with $\ntp(\sigma')\ge\ntp(\sigma)$. 
+(One just schedules some edges at a later moment in time, which is never worse.) 
+But observe that a non-dominated schedule is uniquely defined by the order $e_1, \dots, e_k$ 
+in which its edges are activated. 
+It follows that there are at most $k!$ different non-dominated schedules. 
+It is easy to see that the objective value of a single schedule can be evaluated in $\bigO(k^2)$ time. 
+\end{proof}
+
+Next, we show that problem {\xxxNTP} is fixed parameter tractable with respect to the size $k$ 
+of a feedback edge set. 
+As the graph $G=(V,E)$ is undirected and connected, we have $k=|E|-(n-1)$.
 
 \begin{theorem}
 \label{thm:FPT_feedback_edge_set}
-Let $(G, w)$ be an instance of problem {\act}.
-\begin{enumerate}[(i)]
-\item If $G$ has at most $k$ edges, problem {\act} can be solved in time $\bigO(k^2k!)$.
-\item Problem {\act} is fixed parameter tractable with respect to the size $k$ of a feedback edge set. The algorithm has running time $\bigO((k^2)!k^4n)$. 
-
-\end{enumerate}
+Problem {\xxxNTP} is fixed parameter tractable with respect to the size $k$ of a feedback edge set. 
+The algorithm has a running time of $\bigO((k^2)!k^4n)$. 
 \end{theorem}
 
 \begin{proof}
-Let $G = (V, E)$. For the proof of (i), call a schedule $\sigma$ of value $T$ \emph{non-dominated}, if none of the graphs $G_1^\sigma, \dots, G_T^\sigma$ have a cycle. If $\sigma$ is a dominated schedule, it is easy to fnd a non-dominated $\sigma'$ with $\val(\sigma') \geq \val(\sigma)$. (One just has to schedule some edges at a later time, which is never worse.) But observe that a non-dominated schedule is uniquely defined by the order $e_1, \dots, e_k$ in which its edges are activated. It follows that there are at most $k!$ different non-dominated schedules. It is easy to see that the value of a single schedule can be computed in $\bigO(k^2)$ time. This proves claim (i).
+We assume that $G$ consists of a spanning tree $T$ together with $k$ additional edges $e_1,\ldots,e_k$. 
+Let $C$ be a cycle in $G$ with at least $2k+2$ edges, if such a cycle exists. 
+Let $f_1,\ldots,f_{|C|}$ be the edges of $C$ ordered by weight, that is, $w(f_1) \leq w(f_2) \leq \dots w(f_{|C|})$. 
+We claim that any schedule $\sigma$ satisfies $\ntp(\sigma)\le w(f_{2k+2})$. 
+Indeed, we may assume that there are exactly $k$ edges in $E$ that satisfy $\sigma(e)\ne0$; 
+call these edges $e_1', \dots e'_k$. 
+In particular, at least $k+2$ edges in the set $\fromto{f_1}{f_{2k+2}}$ satisfy $\sigma(e)=0$, 
+and all of these are inactive at the time point $w(f_{2k+2}) + 1$. 
+Hence, at this time point, the cycle $C$ disintegrates into at least $k+2$ components, which need 
+to be reconnected by using the edges $e_1', \dots, e'_k$. But this is clearly impossible. 
+Hence, $\ntp(\sigma) \leq w(f_{2k+2})$. 
+As a consequence, if a cycle $C$ in $G$ has length more than $2k+2$, we can contract the heaviest 
+edges until $C$ has exactly $2k+2$ edges, and obtain an equivalent instance.
 
-For the proof of (ii), assume $G$ consists out of a spanning tree $T$, plus $k$ additional edges $e_1, \dots, e_k$. Let $C$ be a cycle in $G$ with at least $2k+2$ edges, if such a cycle exists. Let $f_1, \dots, f_{|C|}$ be the edges of $C$, ordered by weight, i.e.\ $w(f_1) \leq w(f_2) \leq \dots w(f_{|C|})$. We claim that for any schedule $\sigma$, we have $\val(\sigma) \leq w(f_{2k+2})$. Indeed, we can assume that  there are exactly $k$ edges in $E$ with the property $\sigma(e) \neq 0$. Call these edges $e_1', \dots e'_k$. In particular, from the set $\fromto{f_1}{f_{2k+2}}$, at least $k+2$ many have $\sigma(e) = 0$, and all of these are inactive at the time step $w(f_{2k+2}) + 1$. Hence, at this time step, the cycle $C$ disintegrates into at least $k+2$ components, which need to be connected using the edges $e_1', \dots, e'_k$. But this is clearly impossible. Hence, $\val(\sigma) \leq w(f_{2k+2})$. As a consequence, if a cycle $C$ in $G$ has length more than $2k+2$, we can contract the heaviest edges until $C$ has exactly $2k+2$ edges, and obtain an equivalent instance.
-
-We now describe how to obtain a kernel of size $\bigO(k^2)$. For each of $i \in \fromto{1}{k}$, let $C_i$ be the unique cycle in $T + e_i$. By the above argument, we can assume that $|C_i| \leq 2k+2$. If $e \in E$ is an arbitrary edge, it is either contained in some $C_i$, or not contained in any cycle. If $e$ is not contained in any cycle, it is very easy to handle when solving problem {\act}. Therefore, $\bigcup_{i=1}^k C_i$ is a kernel of size $\bigO(k^2)$. The running time follows from part (i).
-
-
+We now describe how to obtain a kernel of size $\bigO(k^2)$. For each of $i \in \fromto{1}{k}$, let $C_i$ be the unique cycle in $T + e_i$. By the above argument, we can assume that $|C_i| \leq 2k+2$. If $e \in E$ is an arbitrary edge, it is either contained in some $C_i$, or not contained in any cycle. If $e$ is not contained in any cycle, it is very easy to handle when solving problem {\xxxNTP}. Therefore, $\bigcup_{i=1}^k C_i$ is a kernel of size $\bigO(k^2)$. The running time follows from Theorem~\ref{th:exact}.
 \end{proof}
 
-%\begin{theorem} \label{thm_dynamic_program}
-%Let $k, T \in \N$. Let $(G, l)$ be an instance of {\act}, such that $G$ has treewidth at most $k$ and the size of an optimal solution is at most $T$. Then an optimal soultion can be computed in time $\bigO(T^{k^2}B(k+1)^{2T}n)$ (where $B(k+1)$ is the $(k+1)$-st Bell number).
-%\end{theorem}
-%\begin{corollary}
-%If both treewidth and maximum weight is bounded by $k$, the problem {\act} can be solved in time $(k+1)^{\bigO(k^3)}n$.
-%\end{corollary}
-%
-%\begin{proof}[Proof of \cref{thm_dynamic_program}]
-%Let $n := |V(G)|$. Let $\mathcal{T} = (T, \set{X_t}_{t \in V(T)})$ be a (rooted) nice tree decomposition of $G$ of width at most $k$, where w.l.o.g.\ $V(T) = \set{1, \ldots, z}$ for some $z = \bigO(kn)$. For a bag $X_i$, let $V_i$ be the union of the vertices in $X_i$ and the vertices in the bags $X_j$ corresponding to all descendents $j$ of $i$ in $T$. (The vertex $j$ is a descendent of $i$, if it has a bigger distance to the root than $i$.)
-%
-%For a bag $X_i$, consider the \enquote{alphabet}
-%\[
-%\Sigma_i := \set{S = (S^{(1)}, \ldots, S^{(t)}) \mid t \in [k+1], S_j \neq \emptyset, S \text{ is a partition of }X_i}
-%\]
-%of all possible partitions of $X_i$. By definition of the Bell number, $|\Sigma_i| = B(|X_i|)$. A partition $S$ can be alternatively seen as an equivalence relation $\tilde{S}$ on $X_i$, where two vertices in the same part are equivalent. For $S_1, S_2 \in \Sigma_i$, define $\transhull(S_1 \cup S_2)$ as the partition of $X_i$ corresponding to the transitive hull of the relation $\tilde{S_1} \cup \tilde{S_2}$. Using the Floyd-Warshall algorithm [cite], this can be computed in time $\bigO(k^3)$. 
-%
-%Let $X_i$ be a bag. Denote by $m(i)$ the number of edges in $G[X_i]$. Let $E_i := E(G[X_i]) = \fromto{e^i_1}{e^i_{m(i)}}$ be the set of edges in $G[X_i]$. Let $t \in \N$, let $S \in \Sigma_i$, and let $\sigma$ be some schedule for the activation problem. Let $G_t := G_t^\sigma = (V(G), A(t-1/2))$ be like in \cref{sec_notation}. We say that $\sigma$ is in \emph{state} $S$ at $i$ at time $t$, if for all $x, y \in X_i$: The vertices $x, y$ are in the same connected component of the graph $G_t[V_i]$ if and only if $x,y$ are in the same part of the partition $S$.
-%
-%Now, let $T'\in \fromto{0}{T}$. We give a recursive formula with values in $\set{\True, \False}$ used to decide whether there exists a valid schedule of value at least $T'$. Namely, let $i \in [z]$, $t_0, \ldots, t_{m(i)} \in \fromto{0}{T'}$, and $S_1, \ldots, S_{T'} \in \Sigma_i$. We define $B(i, t_1, \ldots, t_{m(i)}, S_1, \ldots S_{T'}) = \True$, if and only if there exists a schedule $\sigma$, which has all of the following properties:
-%\begin{itemize}
-%\item \emph{State Property:} For all $t \in \fromto{1}{T'}$: At time $t$, at $i$, $\sigma$
-% is in state $S_t$.
-%\item \emph{Connection Property:} For all $x \in V_i \setminus X_i$ and for all $t \in \fromto{1}{T'}$, there is a path from $x$ to $X_i$ in $G_t[V_i]$.
-%\item \emph{In-Bag Property:} For all $e^i_j \in E_i$, we have $\sigma(e_j) = t_j$.
-%\end{itemize}
-%If $i$ is a leaf of $T$, we have $m(i) = 0, |\Sigma_i|=1$ and it is easy to compute $B(i, \ldots)$. If $i$ is the root of $T$, we also have $m(i) = 0, |\Sigma_i| = 1$ and by inspecting $B(i, \ldots)$ we can decide whether there exists a solution of value $T'$, due to the connection property. Note that the following recursive relation for $B(i, \ldots)$ holds:
-%
-%\emph{If $i$ is an introduce node}: Then $i$ has a child in $T$, say $i+1$, we have $X_i = X_{i+1} \dotunion \set{w}$ for some vertex $w$, we have $w \not\in V_i$ and $E_i \supseteq E_{i+1}$. Recall that $E_i = \fromto{e^i_1}{e^i_{m(i)}}$. In order to simplify notation, assume that $E_{i+1} = \fromto{e^i_{p+1}}{e^i_{m(i)}}$ for some $p$, i.e.\ $w$ is adjacent to $e^i_1, \ldots, e^i_p$. For $t_1, \ldots t_p \in [T']$ and $t \in [T']$, let $C_t := \set{e \in \fromto{e^i_1}{e^i_p} : t_i \leq t < t_i + l(e^i_p)}$. Then $B(i, t_1, \ldots, t_{m(i)}, S_1, \ldots, S_{T'}) = \True$ if and only if there exist $S_1', \ldots, S'_{T'} \in \Sigma_{i+1}$, such that $B(i+1, t_{p+1}, \ldots, t_{m(i)}, S_1', \ldots, S'_{T'}) = \True$ and for all $t \in [T']$, we have $\transhull(S'_t \cup C_t) = S_t$. This can be checked in time $\bigO(k^2B(k+1)^{T})$ for each of the at most $T^{k^2 - k}B(k+1)^T$ choices of variables in $B(i, \ldots)$. 
-%
-%%-- (Note: We can improve upon this to an overall time of $\bigO(T^{k^2}B(k+1)^T)$ by iterating over all assignments of variables where $B(i+1, \ldots) = \True$ and all choices of $t_1, \ldots, t_p$.)
-%
-%\emph{If $i$ is a join node:} Then $i$ has two childs, say $i+1$ and $i+2$ in $T$, and $X_i = X_{i+1} = X_{i+2}$. Then we have $B(i, t_1, \ldots t_{m(i)}, S_1, \ldots, S_{T'}) = \True$, if and only if there exist $S_1', \ldots, S'_{T'} \in \Sigma_{i+1}$ and $S''_1, \ldots, S''_{T'} \in \Sigma_{i+2}$ such that $B(i+1, t_1, \ldots, t_{m(i)}, S_1', \ldots, S'_{T'}) = \True$ and $B(i+1, t_1, \ldots, t_{m(i)}, S_1'', \ldots, S''_{T'}) = \True$ and for all $t \in [T']$ we have $\transhull(S'_t \cup S''_t) = S_t$. This can be checked in time $\bigO(B(k+1)^{2T})$ for each of the at most $T^{k^2/2}$ choices of $t_1, \ldots t_{m(i)}$.
-%
-%\emph{If $i$ is a forget node:} Then $i$ has a child in $T$, say $i+1$, and $X_i = X_{i+1} \setminus \set{w}$ for some vertex $w \in X_{i+1}$. We have $E_{i+1} = \fromto{e^{i+1}_1}{e^{i+1}_{m(i+1)}}$. To simplify notation, assume that $E_i = \fromto{e^{i+1}_{p+1}}{e^{i+1}_{m(i+1)}}$ for some $p$. Then we have that $B(i, t_{p+1}, \ldots, t_{m(i+1)}, S_1, \ldots, S_{T'})) = \True$ if and only if there exist $t_1, \ldots t_p$ such that $B(i+1, t_1, \ldots, t_{m(i)}, S_1, \ldots, S_{T'}) = \True$ and for all $t \in [T']$ we have that the part of $S_t$ containing $w$ has size at least 2. This can be checked in time $\bigO(T^{k+1})$ for each of the at most $T^{k^2 - k}B(k+1)^T$ choices of the remaining variables.
-%
-%This completes the recursive formula. By the famous theorem of [cite], graphs of treewidth $k$ can be recognized in linear time and a nice tree decomposition of them can be constructed in linear time. We then apply a binary search for the correct value of $T'$ and run the dynamic program for each resulting value of $T'$, resulting in an overall running time of $\bigO(T^{k^2}B(k+1)^{2T})$. (Note we can assume $T \geq 2$, so some expressions simplify).
-%\end{proof}
-%
-%\begin{corollary}
-%Let $k, T \in \N$. Let $(G, l, s, t)$ be an instance of \stact, such that $G$ has treewidth at most $k$ and the size of an optimal solution is at most $T$. Then an optimal solution can be computed in time $\bigO(T^{k^2}B(k+3)^{2T}n)$ (where $B(k+3)$ is the $(k+3)$-th Bell number).
-%\end{corollary}
-%\begin{proof}
-%The algorithm is identical to the one from the previous proof, except that we set $\Sigma_i' := \Sigma_i \cup \set{s, t}$. For $T' \in \fromto{0}{T}$, we let the algorithm run and check at the end, whether $B(i, S,\dots, S) = \True$ where $i$ is the root of the nice tree decomposition and $S := \set{s, t}$. The proof of correctness  and running time is analogous to the previous proof.
-%\end{proof}
-
-The final theorem of this section shows, that problem {\act} is tractable on instances, which are in some sense close to the spanning tree packing problem. Here we assume that the graph can have an arbitrary amount of edges, however, almost all edge weights are equal to one. There are at most $k$ edges with weight not equal to one. Additionally, each of these special edges has weight at most $k$. Then, problem {\act} is fixed parameter tractable with respect to $k$.
+The final theorem of this section shows, that problem {\xxxNTP} is tractable on instances, which are in some sense close to the spanning tree packing problem. Here we assume that the graph can have an arbitrary amount of edges, however, almost all edge weights are equal to one. There are at most $k$ edges with weight not equal to one. Additionally, each of these special edges has weight at most $k$. Then, problem {\xxxNTP} is fixed parameter tractable with respect to $k$.
 
 \begin{theorem}
-Let $(G, w)$ be an instance of $\act$ on $n$ vertices and $m$ edges, such that at most $k$ edges have weight not equal to 1, and those edges have weight at most $k$. Then an optimal solution can be found in $\bigO(k^{2k}m^3)$.
+Let $(G,w)$ be an instance of {\xxxNTP} on $n$ vertices and $m$ edges, so that $m-k$ edges have weight~$1$ and the remaining $k$ edges have weight at most $k$. 
+Then an optimal solution can be found in $\bigO(k^{2k}m^3)$ time.
 \end{theorem}
 
 \begin{proof}
 Let $E' := \set{e \in E(G) : w(e) \neq 1}$. (By assumption, $w(e) \leq k$ for all $e \in E'$). If $\sigma$ is a schedule of value $T$ for $(G, w)$,  let $D_\sigma := \set{t \in \fromto{1}{T} : E_t^\sigma \cap E' \neq \emptyset}$ describe the set of points in time where some edge of $E'$ is active. Note that  if $t \not\in D_\sigma$, then $G_t$ is a spanning graph only consisting out of edges of weight 1, hence the sequence $(G_1, \dots, G_{t-1}, G_{t+1}, \dots G_T, G_t)$ also describes a valid schedule. We conclude that there always exists an optimal schedule $\sigma$ such that $D_\sigma \subseteq \fromto{1}{k^2}$. It is also not  hard to see that we can additionally require that each of $G_1, \dots, G_T$ is acyclic.
 
-Therefore, the following is an algorithm to solve problem $\act$: Iterate over all possible $k^{2k}$ choices of $(\sigma(e))_{e \in E'} \in \fromto{1}{k^2}^k$. For each fixed choice, let $E_i := \set{e \in E' : \sigma(e) = i}$ for $i \in \fromto{1}{k^2}$. If some $E_i$ has a cycle, we can immediately skip to the next choice of $(\sigma(e))_{e \in E'}$. Otherwise, let $\mathcal{F}_i := \set{F \subseteq E(G) \setminus E_i : E_i \cup F \text{ is acyclic}}$. We extend the definition of $\mathcal{F}_i$ to $i > k^2$ by setting $E_i := \emptyset$ in this case. Observe that $\mathcal{F}_i$ is a matroid. In fact, it is isomorphic to the graphic matroid of $G$ after contracting each connected component of $E_i$ to a single vertex. Then we can run
- Edmond's Matroid Partitioning algorithm \cite{edmonds1965minimum} to determine the maximal $T' \in \N_0$ such that $E(G) \setminus E'$ contains disjoint sets $F_1, \dots, F_{T'}$ such that $F_i$ is a base of $\mathcal{F}_i$ for all $i \in \fromto{1}{T'}$ (i.e.\ we solve the problem of packing as many bases as possible into a matroid). This can be done in $\bigO(
+Therefore, the following is an algorithm to solve problem {\xxxNTP}: Iterate over all possible $k^{2k}$ choices of $(\sigma(e))_{e \in E'} \in \fromto{1}{k^2}^k$. For each fixed choice, let $E_i := \set{e \in E' : \sigma(e) = i}$ for $i \in \fromto{1}{k^2}$. If some $E_i$ has a cycle, we can immediately skip to the next choice of $(\sigma(e))_{e \in E'}$. Otherwise, let $\mathcal{F}_i := \set{F \subseteq E(G)-E_i : E_i \cup F \text{ is acyclic}}$. We extend the definition of $\mathcal{F}_i$ to $i > k^2$ by setting $E_i := \emptyset$ in this case. Observe that $\mathcal{F}_i$ is a matroid. In fact, it is isomorphic to the graphic matroid of $G$ after contracting each connected component of $E_i$ to a single vertex. Then we can run
+ Edmond's Matroid Partitioning algorithm \cite{edmonds1965minimum} to determine the maximal $T' \in \N_0$ such that $E(G)-E'$ contains disjoint sets $F_1, \dots, F_{T'}$ such that $F_i$ is a base of $\mathcal{F}_i$ for all $i \in \fromto{1}{T'}$ (i.e.\ we solve the problem of packing as many bases as possible into a matroid). This can be done in $\bigO(
 m^3)$ time. Hence the claim is proven.
-
-%\comment{I have a more detailed handwritten explanation why $\bigO(m^3)$ is the runtime here. More details needed written down here?} \comment{Also note that Roskind and Tarjan showed how to improve this to $\bigO(m^2)$ in the case of spanning tree packing \cite{STPMatroidImprovement}, but it is not so clear whether their proof can be extended to our case} \comment{Finally, I think there are also faster algorithms than Edmond's algorithm for matroid base packing, but I don't know the literature so well.} The algorithm is completed by taking the maximum of all $T'$ obtained in each of the $\bigO(k^{2k})$ iterations.
 \end{proof}
 
-\section{Approximation}
 
-Let $(G, w)$ be an instance of {\act}, where $G  = (V, E)$. It is very natural to consider the following Greedy-algorithm:
-
-\textsc{Greedy-Algorithm}: Initialize the current time step $i \leftarrow 1$ and the available edges $A \leftarrow E$. Initialize $\sigma(e) \leftarrow - \infty$ for each edge $e$. While the algorithm has not stopped, do the following: Let $E_i = \set{e \in E : \sigma(e) \leq i - 1 < \sigma(e) + w(e)}$ be the set of currently active edges. If $E_i$ is spanning, do nothing and set $i \leftarrow i+1$. Otherwise, let $A' \leftarrow \set{e \in A \mid e \text{ does not close a cycle with } E_i}$. If $A' \neq \emptyset$, choose from $A'$ the edge $e$ with $w(e)$ maximal, set $\sigma(e) \leftarrow i - 1$, and update $A \leftarrow A \setminus \set{e}$ and update $E_i \leftarrow E_i \cup \set{e}$. If $A'$ is empty, stop, and output $\sigma$.
-
-In other words, at time step 1, we pick a maximum weight spanning tree like in Kruskal's algorithm, and in each later time step, whenever the subgraph of active edges disconnects, we choose from all edges fixing the problem the one with the largest weight.
-
-\begin{theorem}
-Let $(G, w)$ be an instance of problem {\act}. The Greedy algorithm returns a correct result for all weight assignments $w$, if and only if $G$ is a cactus graph.
-\end{theorem}
-\begin{proof}
-First, consider the case, where $G$ is just a single cycle. Let $e_1, \dots, e_n$ be the edges of this cycle, ordered by weight, i.e.\ $w(e_1) \leq w(e_2) \leq \dots w(e_n)$. Observe that any spanning tree of $G$ is defined by the single edge not included in it. We claim that the optimal value of a solution to {\act} is given by  $\text{OPT} = \min\set{w(e_1) + w(e_2), w(e_3)}$. In fact, we have $\text{OPT} \leq w(e_1) + w(e_2)$, because $\set{e_1, e_2}$ is a cut in $G$, and $\text{OPT} \leq w(e_3)$, because at least two of three edges $\set{e_1, e_2, e_3}$ have the property $\sigma(e) = 0$. Doing a case distinction on the cases $w(e_1) + w(e_2) \leq w(e_3)$ or $w(e_1) + w(e_2) > w(e_3)$, it is also easily seen, that in both cases, the Greedy algorithm returns a schedule af value $\min\set{w(e_1) + w(e_2), w(e_3)}$. This proves the claim, if $G$ is a cycle. But observe that this result easily generalizes to the case where $G$ is a cactus graph, because every cactus graphs consists out of cycles and trees seperated by cutvertices.
-
-Now, consider \cref{fig_greedy_fail}. Here, we have a graph $H$ on vertex set $\fromto{v_1}{v_4}$ with given edge weights $w$, such that the Greedy algorithm is not optimal. In fact, the Greedy algorithm returns a schedule of value 2, while the schedule $\sigma$ with $\sigma(\set{v_1,v_2}) = \sigma(\set{v_1,v_3}) = \sigma(\set{v_3,v_4}) = 0$ and $\sigma(\set{v_1,v_4}) = 1$ and $\sigma(\set{v_2,v_3}) = 2$ has value 3. Now, let $G$ be any graph which is not a cactus graph. By definition, there are two distinct cycles $C_1, C_2$, such that $C_1$ and $C_2$ share more than one vertex. There exists an edge $e$ contained in $C_1$, but not in $C_2$. Starting at $e$, following $C_1$ in both directions until we encounter $C_2$, we see that $G$ contains a subdivision of $H$. Hence, there exists an assignment $w : E(G) \rightarrow \N$, such that the Greedy algorithm returns an incorrect result.
-\end{proof}
-\begin{figure}[htpb]
-\centering
-\includegraphics[scale=1]{img/greedy-incorrect}
-\caption{Example of a graph, where the Greedy algorithm fails}
-\label{fig_greedy_fail}
-\end{figure}
-
-\begin{theorem}
-(i) The Greedy algorithm is an $(n-1)$-approximation for problem {\act}.
-(ii) This is tight in the following sense: There are instances, where the result of the Greedy algorithm is a factor $n/2$ worse than the optimum.
-\end{theorem}
-\begin{proof}
-For the proof of (i), let $(G, w)$ with $G = (V, E)$ be an instance of {\act}, and let $\text{OPT}$ be its optimal solution value. Consider a run of the Greedy-algorithm and let $i$ be the step in which the algorithm stops, because $A' = \emptyset$. We have that $E_i$ is not spanning, hence the graph $(V, E_i)$ has at least two components. Let $C \subseteq V$ be the vertex set of one of these components, consider the edge cut $\delta(C)$ and its weight $w(\delta(C)) := \sum_{e \in \delta(C)}w(e)$. We have that in step $i$, none of the edges of $\delta(C)$ were available, hence they were all chosen at sooner steps than step $i$. Furthermore, in each of the previous steps $j \in \fromto{1}{i-1}$, we have that $|E_j \cap \delta(C)| \leq n-1$, because a spanning tree has $n-1$ edges, hence $|E_j| = n-1$. But this implies that the number of previous steps is at least $i - 1 \geq w(\delta(C)) / (n-1)$. But note that clearly   $\text{OPT} \leq w(\delta(C))$. This proves the claim.
-
-For the proof of (ii), let $G = K_n$ be the complete graph on $n$ vertices. Fix a single vertex $x$, some small rational number $\epsilon > 0$, and consider the following edge weights: If an edge $e$ is adjacent to $x$, we let $w(e) = 1 + \epsilon$, otherwise $w(e) = 1$. The weights can be made integral by multiplication with a large integer. Now the Greedy algorithm returns a schedule of value $1 + \epsilon$. However, it is known that the maximum number of edge-disjoint spanning trees that can be packed into $K_n$ is equal to $\lfloor n/2 \rfloor$ (see \cite{SPTpackingSurvey}). This implies that $\text{OPT} = \lfloor n/2 \rfloor$ in this case, proving the claim.  
-\end{proof}
-\comment{Can we get rid of factor 1/2 in part (ii)?}
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
+\label{sec:conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{itemize}
-\item Computational complexity mostly solved: Both problems remain NP-complete if either treewidth or edge weights are bounded by a constant. If both are bounded, $\act$ can be solved in linear time. But we don't know whether $\stact$ can be solved polynomially in this case. 
-\item Understanding approximability properties is mostly open. We showed that $\act$ can not be approximated by a factor better than $7/6$ even if $w(e) \in \fromto{1}{6}$. But we don't know whether an analogous result holds for $\stact$. We also were not able to find approximation algorithms for $\act$  with $\bigO(1)$ approximation ratios or any reasonable approximation algorithm for \stact. \textbf{Conjecture:} In the general case, there exists no $\bigO(1)$-approximation algorithm for either {\act} or \stact.
-\item FPT results for {\act} could be obtained. FPT results for \stact\ still missing.
+\item Understanding approximability properties is mostly open. We showed that {\xxxNTP} can not be approximated 
+by a factor better than $7/6$ even if $w(e) \in \fromto{1}{6}$. 
+We were not able to find approximation algorithms for {\xxxNTP} with $\bigO(1)$ approximation ratios. 
+\textbf{Conjecture:} In the general case, there exists no $\bigO(1)$-approximation algorithm for {\xxxNTP}.
+\item FPT results for {\xxxNTP} could be obtained. 
 \end{itemize}
 
 
-%\begin{table}
-%\begin{tabular}{r|rrrr}
-%& $T = \bigO(1) \land \tw = \bigO(1)$ & $l = \bigO(1) \land \tw = \bigO(1)$ & $l = \bigO(1)$ & $\tw = \bigO(1)$\\
-%\hline
-%$\act$ & $\bigO(n)$ & $\bigO(n)$ & NPC & strongly NPC \\
-%$\stact$ & $\bigO(n)$ & ? & NPC & (strongly?) NPC \\
-%\end{tabular}
-%\caption{Hardness results (? = unknown)}
-%\label{table_complexity}
-%\end{table}
-%
-%\begin{table}
-%\begin{tabular}{r|rr}
-%& lower bound & upper bound \\
-%\hline
-%$\act$ & 7/6 & ?  \\
-%$\stact$ & ? & ? \\
-%\end{tabular}
-%\caption{Approximation results (? = unknown) \comment{This table not in final paper, only here for ourselves to see what's still open}}
-%\end{table}
-
 \subsubsection*{Acknowledgements.}
 
-Stefan Lendl and Lasse Wulf acknowledge the support of the Austrian Science Fund (FWF):
-W1230.
+Stefan Lendl and Lasse Wulf acknowledge the support of the Austrian Science Fund (FWF): W1230.
+Gerhard Woeginger acknowledges support by the DFG RTG 2236 ``UnRAVeL''.
 
 %
 % ---- Bibliography ----
@@ -534,14 +764,9 @@ W1230.
 \bibliography{literature}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
-
-\section{Connection to job scheduling}
-\label{appendix:connection_act_job_scheduling}
-A \emph{matroid} is defined as ...
-Problem {\act} is related to job scheduling in the following way: Let $G = (V, E)$ be a graph. The \emph{graphic matroid} of $G$ is the set system $\set{F \subseteq E \mid F \text{ is acyclic}}$. A \emph{base} in a matroid is an independent set of maximal cardinality. Hence problem {\act} has the following generalization: Given a ground set $E$, weights $w: E \rightarrow \N$, and some matroid $\mathcal{F} \subseteq 2^E$, find activation times such that for a maximal amount of time, the set of active elements comprises a base of $\mathcal{F}$. Now, let $E$ be a set of jobs, where job $e \in E$ has processing times $w(e)$. For $k \in \N$, the set system $\mathcal{F} = \set{F \subseteq E : |F| = k}$ is a matroid, the so-called the \emph{uniform matroid of rank $k$}. One can now observe that the matroid activation problem for the uniform matroid is exactly the problem of maximizing the minimum machine load time when distributing the jobs onto $k$ machines. In this way, one can see that problem {\act} is a graph-theoretic variant of the problem of maximizing the minimum machine load time.
-
-\section{Proof of \cref{hamilton_cycle_lemma}}
 
 \label{appendix:hamilton_prime}
 \hamiltonPrime*
@@ -549,13 +774,13 @@ Problem {\act} is related to job scheduling in the following way: Let $G = (V, E
 \begin{proof}
 It is known that the Hamilton cycle problem is NP-complete for bipartite, 3-regular graphs \cite{hamilton3regularBip}. So let $G = (V, E)$ be a bipartite, 3-regular graph. We construct in polynomial time a graph $H$ and an edge $\set{u,z}$, such that the described propeprties for $(H, \set{u,z})$ hold, and such that $H$ has a Hamilton cycle if and only if $G$ has a Hamilton cycle. If we can show this, we are done.
 
-The reduction is shown in \cref{fig_hamilton_cycle_lemma}. Formally, fix some vertex $x \in V$. Let $G_1$ and $G_2$ be two copies of $G$. For each vertex $v \in V \setminus \set{x}$, take a copy $A_v$ of $K_{4,4}$, remove some edge $\set{u_1, u_2}$ from $A_v$, and add edges $\set{v_1,u_1}$ and $\set{u_2,v_2}$, where $v_i$ is the copy of $v$ in $G_i$, $i = 1,2$. Finally, take two copies $A_x$ and $A'_x$ of $K_{4,4}$, remove an edge $\set{u_1,u_2}$ from $A_x$ and an edge $\set{u'_1,u'_2}$ from $A'_x$, add edges $\set{x_1,u_1}$, $\set{u_2,u'_1}$, $\set{u'_2,x_2}$, and let the special edge be given by $\set{u, z}$ with $u := u_2$, and $z := u'_1$. Clearly, $H$ is bipartite and 4-regular.
+The reduction is shown in \cref{fig_hamilton_cycle_lemma}. Formally, fix some vertex $x \in V$. Let $G_1$ and $G_2$ be two copies of $G$. For each vertex $v \in V-\set{x}$, take a copy $A_v$ of $K_{4,4}$, remove some edge $\set{u_1, u_2}$ from $A_v$, and add edges $\set{v_1,u_1}$ and $\set{u_2,v_2}$, where $v_i$ is the copy of $v$ in $G_i$, $i = 1,2$. Finally, take two copies $A_x$ and $A'_x$ of $K_{4,4}$, remove an edge $\set{u_1,u_2}$ from $A_x$ and an edge $\set{u'_1,u'_2}$ from $A'_x$, add edges $\set{x_1,u_1}$, $\set{u_2,u'_1}$, $\set{u'_2,x_2}$, and let the special edge be given by $\set{u, z}$ with $u := u_2$, and $z := u'_1$. Clearly, $H$ is bipartite and 4-regular.
 
 Let (iv) be the property that $G$ has a Hamilton cycle. We show that (i) -- (iv) are equivalent, thus proving the theorem. So assume (i) holds. It is easy to see that any Hamilton cyle in $H$ uses $\set{u,z}$, so (ii) holds. Assume (ii) holds, (iii) follows immediately. Assume (iii) holds, i.e.\ there is a Hamilton path $(w_1, \dots, w_n)$ starting at $u$. Note that if $w_2 = z$, then $w_n$ is in $A_x$. On the other hand, if $w_2$ is in $A_x$, then $w_n$ is in $A'_x$. In both cases, we can slightly modify $P$ to obtain a Hamilton cycle. Therefore, (i) holds. Finally, we show that (i) and (iv) are equivalent. If $G$ has a Hamilton cycle, we can modify it to obtain a Hamilton cycle of $H$, by switching between $G_1$ and $G_2$ after every edge of the original Hamilton cycle and inserting a Hamilton path through the copies of $K_{4,4}$ (note that $G$ has an even number of vertices, as it is 3-regular). On the other hand, if $H$ has a Hamilton cycle, it necessarily switches between $G_1$ and $G_2$ after every of its edges in $G_1$ or $G_2$, so $G$ has a Hamilton cycle.
 \end{proof}
 \begin{figure}[htpb]
 \centering
-\includegraphics[scale=1]{img/hamilton-prime}
+\includegraphics[scale=0.92]{img/hamilton-prime}
 \caption{Construction used in the proof of \cref{hamilton_cycle_lemma}.}
 \label{fig_hamilton_cycle_lemma}
 \end{figure}
