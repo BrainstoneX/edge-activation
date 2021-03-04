@@ -140,6 +140,7 @@ at time $1$ and afterwards resumed at time $2$.
 %%%%%%%%%%%%%%%%
 \qquad\qquad\qquad
 %%%%%%%%%%%%%%%%
+
 \begin{tikzpicture}[scale=1.00]
 \draw[ultra thick] (-0.2,0)--(6.5,0);
 \draw[ultra thick] (0,-0.2)--(0,2.2);
@@ -153,14 +154,14 @@ at time $1$ and afterwards resumed at time $2$.
 \node[] at  (6,-0.5) {\large $3$};
 
 \draw[fill=gray,fill opacity=0.1,draw=black,line width=1.5pt,text opacity=1.0]
-       (0,0) rectangle (4,1) node[pos=.5] {\large$e_1$};
+       (0,0) rectangle (4,1) node[pos=.5] {\large $e_1$};
 \draw[fill=gray,fill opacity=0.3,draw=black,line width=1.5pt,text opacity=1.0]
-       (4,0) rectangle (6,1) node[pos=.5] {\large$e_3$};
+       (4,0) rectangle (6,1) node[pos=.5] {\large $e_3$};
 
 \draw[fill=gray,fill opacity=0.3,draw=black,line width=1.5pt,text opacity=1.0]
-       (0,1) rectangle (2,2) node[pos=.5] {\large$e_3$};
+       (0,1) rectangle (2,2) node[pos=.5] {\large $e_3$};
 \draw[fill=gray,fill opacity=0.1,draw=black,line width=1.5pt,text opacity=1.0]
-       (2,1) rectangle (6,2) node[pos=.5] {\large$e_2$};
+       (2,1) rectangle (6,2) node[pos=.5] {\large $e_2$};
 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%
@@ -248,12 +249,12 @@ All graphs in this paper are undirected, simple, and without loops.
 An instance for problem {\xxxNTP} is a weighted undirected graph $(G,w)$, where $G=(V,E)$ and $w:E\to\N$. 
 A \emph{schedule} for instance $(G,w)$ is a map $\sigma:E\to\N_0$, that maps each edge $e$ to its activation time $\sigma(e)$;
 For a schedule $\sigma$ and an edge $e$, we denote the \emph{activity interval of $e$} by $[\sigma(e),\sigma(e)+w(e)]$. 
-For $i\in\{1,2,\ldots\}$, we let $E^\sigma_i:= \set{e\in E:~ \sigma(e)\le i\le \sigma(e)+w(e)-1}$ denote 
+For $i\in\{1,2,\ldots\}$, we let $E^\sigma_i:= \set{e\in E:~ \sigma(e)\le i - 1
+\le \sigma(e)+w(e)-1}$ denote 
 the set of edges that are active in the $i$-th time slot, and we let $G^\sigma_i:= (V, E^\sigma_i)$ denote 
-the graph induced by the active edges in the $i$-th time slot. 
+the graph on vertex set $V$ and all edges, which are active in the $i$-th time slot. 
 Finally, we define the \emph{objective value} $\ntp(\sigma)$ of schedule $\sigma$ as the number of time 
-slots $[i-1,i]$ for which $G^\sigma_i$ is connected. 
-When the schedule $\sigma$ is clear from the context, we often simply write $E_i$ and $G_i$ instead of 
+slots $[i-1,i]$ for which $G^\sigma_i$ is connected. If a schedule $\sigma$ has maximal objective value $\ntp(\sigma) = T$ among all possible schedules, we often assume that $G^\sigma_t$ is connected if and only if $t \in \fromto{1}{T}$. It is easy to see that this can be assumed without loss of generality. When the schedule $\sigma$ is clear from the context, we often simply write $E_i$ and $G_i$ instead of 
 $E^\sigma_i$ and $G^\sigma_i$. 
 
 We make use of the following graph-theoretic concepts and notations: 
@@ -401,7 +402,7 @@ Then the edge $\{u_{i-1},u_{i+1}\}$ would have to be active for $\beta$ time uni
 active during the $\beta$-th time slot, and hence must be active during the interval $[(2i-1)Q,\beta]$.
 \end{itemize}
 The induction yields for $i=n$ that the induced subgraph $H_n$ is semi-connected during the time intervals 
-$[0,Q]$, $[2Q,3Q]$, \dots, $[(2r-2)Q,(2r-1)Q]$ (that is, all the intervals of length $Q$ that start at an even multiple of $Q$)
+$[0,Q]$, $[2Q,3Q]$, \dots, $[(2n-2)Q,(2n-1)Q]$ (that is, all the intervals of length $Q$ that start at an even multiple of $Q$)
 and fully-connected during the time intervals $[Q,2Q]$, $[3Q,4Q]$, \dots, $[(2n-3)Q,(2n-2)Q]$ (that is, all the 
 intervals of length $Q$ that start at an odd time multiple of $Q$).
 
@@ -427,28 +428,39 @@ with all desired properties from it.
 \label{sec:inapprox}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\cref{thm:hardness_complete_bipartite,thm:hardness_bandwidth} show NP-hardness, even if the structure of the input graph is heavily restriced. 
-We now show that assuming $P \neq NP$ there exists no $\alpha$-approximation algorithm for problem {\xxxNTP}, for 
-any $\alpha < 7/6$, even if $w(e) \in \{1,\dots,6\}$.
+In this section, we show that for problem {\xxxNTP} it is NP-hard to decide whether there exists a schedule of objective value at least 7. Our results have the implication that problem {\xxxNTP} is strongly NP-hard and (unless P$=$NP) does not admit a polynomial time $\alpha$-approximation with $\alpha < 7/6$, even if all edges have weights in $\fromto{1}{6}$. 
 %We now show hardness even if the weights $w(e)$ are restricted. 
-For this, we reduce from the Hamilton cycle problem. Akiyama, Nishizeki and Saito proved that the Hamilton cycle problem is NP-complete even for bipartite, 3-regular graphs \cite{hamilton3regularBip}. We additionally require hardness for a more restricted variant of the Hamilton cycle problem, which we call \textsc{Hamilton'}. NP-completeness of \textsc{Hamilton'} is surely known, however, we were unable to find it in the literature. We give a proof in \cref{appendix:hamilton_prime}.
+We reduce from the following version of the Hamilton cycle problem:
 
 \begin{quote}
 
 Problem \textsc{Hamilton'} 
 
-\textbf{Instance:} An undirected, bipartite and 4-regular graph $H$, a special edge $\set{u, z}$, such that the following three are equivalent: (i) $H$ has a Hamilton cycle; (ii) $H$ has a Hamilton cycle using the edge $\set{u, z}$; (iii) $H$ has a Hamilton path starting at $u$.
+\textbf{Instance:} A bipartite, 4-regular graph $H$, and an edge $\set{u, z}$ in $H$.
 
-\textbf{Question:} Does there exist a Hamilton cycle in $H$?
+\textbf{Question:} Is there a Hamilton cycle which uses the edge $\set{u, z}$?
 
 \end{quote}
 
+There is a small technical complication: In the upcoming proof, we will require in one case that there exists a Hamilton cycle using the edge $\set{u,z}$, however, in another case we can only show that there exists a Hamilton path starting at vertex $u$. The following shows that we do not need to be concerned about the difference: An instance $(H, \set{u,z})$ of problem \textsc{Hamilton'}  is called \emph{hamilton-nice}, if $H$ either contains both a Hamilton cycle using the edge $\set{u,z}$ and a Hamilton path starting at vertex $u$, or contains none of the two.
+
 \begin{restatable}{lemma}{hamiltonPrime}
 \label{hamilton_cycle_lemma}
-\mbox{\sc Hamilton'} is NP-complete.
+\mbox{\sc Hamilton'} is NP-complete, even when restricted to the set of hamilton-nice instances.
 \end{restatable} 
 
-With the help of Lemma~\ref{hamilton_cycle_lemma}, we can prove the following theorem.
+This result is surely known, however, we were unable to find it in the literature. Using the fact that the Hamilton cycle problem is NP-complete on 3-regular, bipartite graphs, as proven by Akiyama, Nishizeki and Saito \cite{hamilton3regularBip}, the proof of \cref{hamilton_cycle_lemma} is an easy exercise (hence we omit it). We are now ready to describe the reduction from problem \textsc{Hamilton'} to problem {\xxxNTP}.
+
+\paragraph{Description of the reduction.} Given an instance $(H, \set{u,z})$ of \textsc{Hamilton'}, we define the \emph{corresponding instance} of problem {\xxxNTP} to be the weighted graph $(G, w)$ described as follows: First, let $2k$ be the number of vertices of $H$. Let $U = \fromto{u_1}{u_k}$ and $Z = \fromto{z_1}{z_k}$ denote the two parts of the bipartition of $H$, such that $u = u_k$ and $z = z_k$. A sketch of the graph $G$ is depicted in \cref{fig:act-hamilton-cycle-a}. Informally speaking, $G$ is created from a copy of $H$, two additional vertices $x, y$, the edges $\set{x,y}$ and $\set{y, z_k}$ and for each $i = 1,\dots, k$ a gadget of type $L$ connecting $x$ with $u_i$, and for each $i = 1,\dots, k$ a gadget of type $R$ connecting $x$ with $z_i$. Formally, $G$ has the vertex set 
+\[ V(G) = \set{x, y} \cup U \cup Z \cup \bigcup_{i=1}^k \fromto{v_{i1}}{v_{i4}} \cup \bigcup_{i=1}^k \set{v'_{i1}, v'_{i2}} \]
+and the following edges and edge weights:
+\begin{itemize}
+\item For every edge $e \in E(H)$, the graph $G$ also contains $e$. We set $w(e) = 2$, if $e \neq \set{u_k, z_k}$ and $w(\set{u_k, z_k}) = 1$.
+\item For every $i = 1,\dots,k$, the induced subgraph $G[\set{x, u_i, v_{i1}, v_{i2}, v_{i3}, v_{i4}}]$ is called the \emph{$i$-th gadget of type L} and has edges and edge weights as depicted in \cref{fig:act-hamilton-cycle-b}.
+\item For every $i = 1,\dots,k$, the induced subgraph $G[\set{x, z_i, v'_{i1}, v'_{i2}}]$ is called the \emph{$i$-th gadget of type R} and has edges and edge weights as depicted in \cref{fig:act-hamilton-cycle-c}.
+\item Finally, the two edges $\set{x,y}$ and $\set{y, z_k}$ have $w(\set{x,y}) = w(\set{y, z_k}) = 4$.
+\end{itemize}
+
 \begin{theorem}
 \label{th:small-weights}
 Problem {\xxxNTP} is strongly NP-hard, even if all edges have weights in $\fromto{1}{6}$.
@@ -468,18 +480,21 @@ The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartit
          \centering
          \includegraphics[scale=0.90]{img/act-hamilton-cycle-a}
          \subcaption{Reduction}
+         \label{fig:act-hamilton-cycle-a}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.32\textwidth}
          \centering
          \includegraphics[scale=0.90]{img/act-hamilton-cycle-b}
-         \subcaption{Gadget $L$}
+         \subcaption{Gadget of type $L$}
+         \label{fig:act-hamilton-cycle-b}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.15\textwidth}
          \centering
          \includegraphics[scale=0.90]{img/act-hamilton-cycle-c}
-         \subcaption{Gadget $R$}
+         \subcaption{Gadget of type $R$}
+         \label{fig:act-hamilton-cycle-c}
      \end{subfigure}
         \caption{Reduction \textsc{Hamilton'} $\rightarrow$ {\xxxNTP}.}
         \label{fig_act_hamilton_cycle}
@@ -628,17 +643,17 @@ whereas the {\greedy} algorithm only yields an objective value of~$2$.
 \coordinate (p4) at ( 0.0,-1.732);
 \foreach \x in {1,...,4}{\fill (p\x) circle (0.12);}
 
-\node at ($(p1)+(-0.5, 0.00)$) {\large$v_1$};
-\node at ($(p2)+(+0.5, 0.20)$) {\large$v_2$};
-\node at ($(p3)+(+0.5,-0.30)$) {\large$v_3$};
-\node at ($(p4)+(+0.5, 0.00)$) {\large$v_4$};
+\node at ($(p1)+(-0.5, 0.00)$) {\large $v_1$};
+\node at ($(p2)+(+0.5, 0.20)$) {\large $v_2$};
+\node at ($(p3)+(+0.5,-0.30)$) {\large $v_3$};
+\node at ($(p4)+(+0.5, 0.00)$) {\large $v_4$};
 
 \draw[ultra thick] (p1)--(p2)--(p3)--(p4)--(p1)--(p3);
-\node at ($(p1)!0.5!(p2)+(-0.35, 0.1)$) {\large$3$};
-\node at ($(p1)!0.5!(p4)+(-0.45, 0.0)$) {\large$2$};
-\node at ($(p1)!0.5!(p3)+( 0.00, 0.4)$) {\large$1$};
-\node at ($(p2)!0.5!(p3)+(+0.35, 0.1)$) {\large$1$};
-\node at ($(p4)!0.5!(p3)+(+0.45, 0.0)$) {\large$2$};
+\node at ($(p1)!0.5!(p2)+(-0.35, 0.1)$) {\large $3$};
+\node at ($(p1)!0.5!(p4)+(-0.45, 0.0)$) {\large $2$};
+\node at ($(p1)!0.5!(p3)+( 0.00, 0.4)$) {\large $1$};
+\node at ($(p2)!0.5!(p3)+(+0.35, 0.1)$) {\large $1$};
+\node at ($(p4)!0.5!(p3)+(+0.45, 0.0)$) {\large $2$};
 \end{tikzpicture}
 \end{center}
 \caption{An instance $(H,w_H)$ on which the {\greedy} algorithm fails.}
