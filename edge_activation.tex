@@ -428,7 +428,7 @@ with all desired properties from it.
 \label{sec:inapprox}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In this section, we show that for problem {\xxxNTP} it is NP-hard to decide whether there exists a schedule of objective value at least 7. Our results have the implication that problem {\xxxNTP} is strongly NP-hard and (unless P$=$NP) does not admit a polynomial time $\alpha$-approximation with $\alpha < 7/6$, even if all edges have weights in $\fromto{1}{6}$. 
+In this section, we show that for problem {\xxxNTP} it is NP-hard to decide whether there exists a schedule of objective value at least 7. Our results imply that even if all edges have weights in $\fromto{1}{6}$, problem {\xxxNTP} is strongly NP-hard and  does not admit a polynomial time $\alpha$-approximation with $\alpha < 7/6$ (unless P$=$NP).
 %We now show hardness even if the weights $w(e)$ are restricted. 
 We reduce from the following version of the Hamilton cycle problem:
 
@@ -460,39 +460,25 @@ and the following edges and edge weights:
 \item For every $i = 1,\dots,k$, the induced subgraph $G[\set{x, z_i, v'_{i1}, v'_{i2}}]$ is called the \emph{$i$-th gadget of type R} and has edges and edge weights as depicted in \cref{fig:act-hamilton-cycle-c}.
 \item Finally, the two edges $\set{x,y}$ and $\set{y, z_k}$ have $w(\set{x,y}) = w(\set{y, z_k}) = 4$.
 \end{itemize}
-
-\begin{theorem}
-\label{th:small-weights}
-Problem {\xxxNTP} is strongly NP-hard, even if all edges have weights in $\fromto{1}{6}$.
-In particular, it is NP-hard to decide whether there exists a schedule with objective value at least~$7$.
-\end{theorem}
-\begin{proof}
-Let $H$ be an instance of the problem \textsc{Hamilton'}. 
-We construct in polynomial time an instance $(G,w)$ of problem {\xxxNTP}, such that $w(e)\in\fromto{1}{6}$ 
-for all edges. 
-The objective value of any feasible schedule is at most $7$, and the optimal objective value is equal to~$7$ 
-if and only if graph $H$ has a Hamilton cycle. This is sufficient to prove the theorem.
-
-The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartite parts of $H$ be $U = \fromto{u_1}{u_k}$ and $Z = \fromto{z_1}{z_k}$, and let $\set{u_k, z_k} =: e_0$ be the special edge of the given \textsc{Hamilton'} instance. The graph $G$ consists of a copy of $H$ where every edge has weight 2, except $e_0$, which has weight 1. Furthermore, there is an additional vertex $x$, which is connected to each of $\fromto{u_1}{u_k}$ via the gadget $L$ and to each of $\fromto{z_1}{z_k}$ via the gadget $R$. Finally, there is an additional vertex $y$ connected to both $x$ and $z_k$ with an edge of weight 4.
 \begin{figure}[htpb]
      \centering
      \begin{subfigure}[b]{0.40\textwidth}
          \centering
-         \includegraphics[scale=0.90]{img/act-hamilton-cycle-a}
+         \includegraphics[scale=1]{img/act-hamilton-cycle-a}
          \subcaption{Reduction}
          \label{fig:act-hamilton-cycle-a}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.32\textwidth}
          \centering
-         \includegraphics[scale=0.90]{img/act-hamilton-cycle-b}
+         \includegraphics[scale=1]{img/act-hamilton-cycle-b-simplified}
          \subcaption{Gadget of type $L$}
          \label{fig:act-hamilton-cycle-b}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.15\textwidth}
          \centering
-         \includegraphics[scale=0.90]{img/act-hamilton-cycle-c}
+         \includegraphics[scale=1]{img/act-hamilton-cycle-c}
          \subcaption{Gadget of type $R$}
          \label{fig:act-hamilton-cycle-c}
      \end{subfigure}
@@ -500,25 +486,85 @@ The reduction is depicted in \cref{fig_act_hamilton_cycle}. Let the two bipartit
         \label{fig_act_hamilton_cycle}
 \end{figure}
 
-We first describe the properties of the gadgets $L$ and $R$. Assume $\sigma$ is a schedule of value 7. Note that the sum of all weights in $G$ is $8k - 1 + 39k + 16k + 8 = 63k + 7 = 7(|V(G) - 1|)$. Therefore, each of $G_{1}, \ldots, G_{7}$ is a tree, and in particular acyclic. By inspecting the vertices $r_1$ and $r_2$ and by using the acyclity of graphs $G_2$ and $G_6$, we see that the gadget $R$ necessarily connects $x$ and $z_i$ in $G_2$ and $G_6$, but does not connect $x$ and $z_i$ in $G_t$ for $t \neq 2,6$. Similarily, the gadget $L$ necessarily connects $x$ and $u_i$ in $G_3$ and $G_5$ and has some remaining edges, which are not restricted and behave like two parallel edges of weight 1. Analogously, $G_{t}[\set{x, y, z_k}]$ is connected if and only if $t = 4$.
+The main idea of the hardness proof is to prove that the gadgets impose restrictions in such a way, that in any schedule of objective value 7, the active edges during the 4th time slot form a Hamilton path (starting at vertex $u_k$) in $H$. Let $\sigma$ be some schedule for $(G, w)$ of objective value 7 and consider the $i$-th gadget of type $L$. Observe that during any time slot $[t-1, t]$ with $1 \leq t \leq 7$, the gagdet will consist of one or two connected components under schedule $\sigma$. If there is a single connected component, we say that this gadget is \emph{fully-connected} during the $t$-th time slot. If there are two connected components, we say that this gadget is \emph{semi-connected} during the $t$-th time slot. It is easy to see that $x$ and $u_i$ lie in different components in the latter case. In the same matter, during the $t$-th time slot, a gadget of type $R$ is either fully-connected or semi-connected with $x$ and $z_i$ in different components. Likewise, the induced subgraph $G[\set{x, y, z_k}]$ is either fully-connected, or semi-connected with $x$ and $z_k$ in different components.
 
-Now, suppose $H$ is a YES-instance of \textsc{Hamilton'}, i.e.\ $H$ has a Hamilton cycle $C$, which contains $e_0$. Then $H - E(C)$ is 2-regular, hence there exist pairwise disjoint matchings $M_1, \ldots, M_4$ such that $M_1 \dotunion M_2 = E(C)$ and $M_3 \dotunion M_4 = E(H)-E(C)$ and $e_0 \in M_1$. Consider the following schedule: We schedule $e_0$ in $G_3$; $M_1-\set{e_0}$ in both $G_3$ and $G_4$; $M_2$ in both $G_4$ and $G_5$; $M_3$ in both $G_1, G_2$; and $M_4$ in both $G_6$ and $G_7$. We schedule the gadgets such that $U$ is connected to $x$ via the $L$'s in $G_1, G_3, G_5$ and $G_7$, and that $Z$ is connected to $x$ via $R$'s in $G_2$ and $G_6$, and that $x$ is connected to $z_k$ via $y$ in $G_4$. Now observe that the active edges in $U \cup Z$ form a matching of $H$ in $G_1, G_2, G_3, G_5, G_6$ and $G_7$ and a Hamiltonian path in $G_4$. It is easy to see that this is a valid schedule of value 7. 
-
-On the other hand, suppose there exists a schedule $\sigma$ of value 7 for $(G, w)$.
-Recall the properties of the gadgets $L$ and $R$. Then, for $t' \in \set{1, 7}$, consider $G_{t'}$ and some $z_i$ for $i \in \fromto{1}{k-1}$. Note that for all $t \in \set{1, 3, 4, 5, 7}$ at least one of the edges in $\delta(z_i) \cap E(H)$ is active. This implies that $z_i$ has degree equal to 1 in $G_{t'}[U \cup W]$, due to the different possibilities of covering the set $[0, 1] \cup [2, 5] \cup [6, 7]$ with 4 intervals of length 2. Similarly, by considering $t' \in \set{1, 7}$, and $t \in \set{1, 3, 5, 7}$, we see that $z_k$ has degree equal to 1 in $G_{t'}[U \cup W]$ and that $e_0 \not \in E(G_{4})$. So all $z \in Z$ have degree 1 in $G_{t'}[U \cup H]$. But this implies that $G_{t'}[L']$ is connected for each copy $L'$ of $L$, otherwise $U$ is disonnected in $G_{t'}$. Hence $G_t[L']$ is connected if and only if $t \in \set{1, 3, 5, 7}$. Hence, for $u \in U$ and $t' \in \set{2, 6}$, we have that the degree of $u$ in $G_{t'}[U \cup W]$ is at least one. Consider the graph $F := G_{4}[U \cup Z]$: Due to the lower bound of the minimum degrees for $t' \in \set{1, 7}$ or $t' \in \set{2, 6}$, we have that the maximum degree in $F$ is two. We claim that the degree of $u_k$ in $F$ is equal to 1. In fact, it cannot be 0. So assume it is at least two, and consider $u_k$. We know that $e_0 \not\in E(G_4)$, so the edges adjacent to $u_k$ scheduled in $G_4$ are not $e_0$. But $u_k$ has only four adjacent edges in $H$, and we have a requirement on the minimum degree of $u_k$ for $t' \in \set{2, 6}$. We conclude $e_0 \in E(G_2)$ or $e_0 \in E(G_6)$. But now consider $z_k$. We have a requirement on the minimum degree for $t' \in \set{1, 3, 5, 7}$. Because $e_0 \in E(G_2) \cup E(G_4)$ and $w(e_0) = 1$, this is requirement is impossible to fulfill.
-In summary, $F$ is a graph of maximum degree 2, where $u_k$ has degree 1. It follows from the state of the gadgets in $G_4$, that $F$ is connected. We conclude that $F$ is a Hamilton path in $H$ starting at $u_k$. Therefore $H$ is a YES-instance of \textsc{Hamilton'}.
+\begin{lemma}
+\label{lemma:gadgets_properties}
+Let $(G, w)$ be the instance as described above. If there is a schedule of objective value 7 for $(G, w)$, then with respect to this schedule:
+\begin{enumerate}[(i)]
+\item A gadget of type $R$ is fully-connected during time slots 2 and 6, and semi-connected during each of the remaining 5 time slots.
+\item A gadget of type $L$ is fully-connected during time slots 3 and 5. Furthermore, for every choice of two distinct values $t_1, t_2 \in \set{1,2,4,6,7}$, it is possible to schedule the edges of the gadget in such a way, that it is fully-connected during the time slots $3, 5, t_1, t_2$ and semi-connexted during each of the remaining 3 time slots.
+\item The induced subgraph $G[\set{x, y, z_k}]$ is fully-connected during time slot 4, and semi-connected during each of the remaining 6 time slots.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+ Note that the sum of all edge weights in $G$ is $8k - 1 + 32k + 16k + 8 = 56k + 7 = 7(|V(G) - 1|)$. Therefore, each of $G_{1}, \ldots, G_{7}$ is a tree, and in particular acyclic. For the proof of (i), consider in the $i$-th gadget of type $R$ the vertex $v'_{i1}$. There is exactly one time slot $[t-1, t]$ during which both edges incident to $v'_{i1}$ are active, and we have $t = 2$ or $t = 6$. Analogously, there is exactly one time slot $[t'-1, t']$ during which both edges incident to $v'_{i2}$ are active, and we have $t' = 2$ or $t' = 6$. But if $t = t'$, then $G_t$ has a cycle; a contradiction. Therefore, $\set{t, t'} = \set{2, 6}$ and claim (i) follows. It is easily seen that claims (ii) and (iii) can be proven in the same manner. 
 \end{proof}
 
-The proof of Theorem~\ref{th:small-weights} shows that it is NP-hard to distinguish between
-{\xxxNTP} instances with optimal objective value~$6$ and {\xxxNTP} instances with optimal objective value~$7$.
-This gap reduction yields the following corollary.
+\begin{lemma}
+\label{lemma:inapprox-if}
+Let $(H, \set{u, z})$ be an instance of \textsc{Hamilton'}, and let $(G, w)$ be the corresponding {\xxxNTP} instance. If $H$ contains a Hamilton cycle using the edge $\set{u, z}$, then there is a schedule with objective value 7 for $(G, w)$.
+\end{lemma}
+\begin{proof}
+Let $e_0 := \set{u, z} = \set{u_k, z_k}$. There is a Hamilton cycle $C$ using $e_0$. Then $H - E(C)$ is 2-regular, hence there exist pairwise disjoint matchings $M_1, \ldots, M_4$ such that $M_1 \dotunion M_2 = E(C)$ and $M_3 \dotunion M_4 = E(H)-E(C)$ and $e_0 \in M_1$. We describe a schedule $\sigma$ with objective value 7:
+\begin{itemize}
+\item All gagdets of type $R$ are fully-connected during time slots 2 and 6, and semi-connected otherwise.
+\item All gadgets of type $L$ are fully-connected during time slots 1, 3, 5, and 7, and semi-connected otherwise.
+\item The subgraph $G[\set{x, y, z_k}]$ is fully-connected during time slot 4, and semi-connected otherwise.
+\item All edges $e \in M_1 - \set{e_0}$ have activity interval $[2, 4]$. The edge $e_0$ has activity interval $[2, 3]$.
+\item All edges $e \in M_2$ have activity interval $[3, 5]$.
+\item All edges $e \in M_3$ have activity interval $[0, 2]$.
+\item All edges $e \in M_4$ have activity interval $[5, 7]$.
+\end{itemize}
+It is now easy to see that the active edges in $H$ form a matching of $H$ during the time slots 1,2,3,5,6, and 7, and form a Hamilton path of $H$ during the time slot 4. Indeed, all of the graphs $G^\sigma_1, \dots G^\sigma_7$. are connected, so $\sigma$ has objective value 7, as claimed.
+\end{proof}
+
+\begin{lemma}
+\label{lemma:inapprox-only-if}
+Let $(H, \set{u, z})$ be an instance of \textsc{Hamilton'}, and let $(G, w)$ be the corresponding {\xxxNTP} instance. If $(G, w)$ has a schedule of length 7, then $H$ contains a Hamilton path starting at vertex $u$.
+\end{lemma}
+\begin{proof}
+ So assume there exists a schedule $\sigma$ of objective value 7. For a vertex $v \in U \cup Z$, and $t \in \fromto{1}{7}$, let $d_t(v) := |\delta(v) \cap E(H) \cap E_t|$ denote the number of incident edges of $v$, which are both in $E(H)$ and active during the $t$-th time slot. The strategy of the proof will be to repeatedly deduce some conditions for $d_t(v)$. Let $e_0 := \set{u, z} = \set{u_k, z_k}$.
+
+First, recall \cref{lemma:gadgets_properties}. Consider a vertex $z \in Z$. We know that for each $t \in \set{1, 3, 5, 7}$ in the $t$-th time slot all gadgets of type $R$ and also $G[\set{x,y,z_k}]$ are semi-connected. This implies $d_1(z), d_3(z), d_5(z), d_7(z) \geq 1$.  Note that the four edges in $\delta(z) \cap E(H)$ each have weight at most 2 (in the case $z \neq z_k$ we have four times weight 2, and for $z = z_k$ we have three times weight 2, and $e_0$ has weight 1). So consider the process of arraging four intervals of length at most 2 in the interval $[0, 7]$ in such a way, that each of the timeslots $[0,1], [2,3], [4,5], [6,7]$ is covered. Due to the properties of this process, one sees that the case $d_1(z) > 1$ or $d_7(z) > 1$ is actually impossible. Hence, $d_1(z) = d_7(z) = 1$. The same argument shows that $e_0 \not\in E_4$.
+
+Next, consider the graph $G_1$ of active edges in time slot 1. We know that  $d_1(z) = 1$ for $z \in Z$. But this implies that the induced subgraph $G_1[U \cup Z]$ has $k$ connected components. Because $G_1$ is connected, and because all the gadgets of type $R$ and $G[\set{x, y, z_k}]$ are semi-connected, this implies that every single gadget of type $L$ is actually fully-connected. The same argument holds for time slot 7. In total, together with \cref{lemma:gadgets_properties}, we have that a gadget of type $L$ is fully-connected during the $t$-th time slot, if and only if $t \in \set{1, 3, 5, 7}$. This in turn implies that for $u \in U$, one has $d_2(u), d_4(u), d_6(u) \geq 1$. The two facts $d_2(u) \geq 1$ and $d_6(u) \geq 1$ together imply $d_4(u) \leq 2$, due to the process described previously. Likewise, for $z \in Z$, the two facts $d_1(z) = 1$ and $d_7(z) = 1$ together imply $d_4(z) \leq 2$.
+
+Finally, we claim $d_4(u_k) = 1$. In fact, $d_4(u_k) = 0$ is impossible, because gadgets of type $L$ are semi-connected during time slot 4. For the sake of contradiction, assume $d_4(u_k) > 1$. We know that $d_2(u_k) \geq 1, d_6(u_k) \geq 1$ and $e_0 \not\in E_4$ and $w(e_0) = 1$. So our assumption $d_4(u_k) > 1$ is only possible if $e_0 \in E_2$ or $e_0 \in E_6$. But for the vertex $z_k$, we also know $d_1(z_k), d_3(z_k), d_5(z_k), d_7(z_k) \geq 1$. This is a contradiction to $e_0 \in E_2 \cup E_6$, hence our assumption was wrong and $d_4(u_k) = 1$.
+
+In summary, during time slot 4, all gadgets of type $L$ and $R$ are semi-connected. We also have $d_4(u) \leq 2$ for $u \in U$, and $d_4(z) \leq 2$ for $z \in Z$ and $d_4(u_k) = 1$. However, $G_4$ is connected. Therefore, the induced subgraph $G_4[U \cup Z]$ is a Hamilton path in $H$ starting at $u_k$.
+\end{proof}
+
+We remark, that one can make a small improvement, so that the graph $(G, w)$ actually only uses edges with weights in $\fromto{1}{6}$ instead of $\fromto{1}{7}$. Details are shown in . In summary, combining \cref{hamilton_cycle_lemma,lemma:inapprox-only-if,lemma:inapprox-if}, we get:
+
+\begin{theorem}
+\label{th:small-weights}
+Problem {\xxxNTP} is strongly NP-hard, even if all edges have weights in $\fromto{1}{7}$.
+In particular, it is NP-hard to decide whether there exists a schedule with objective value at least~$7$.
+\end{theorem}
+
 \begin{corollary}
 \label{coro:inapproximability}
 Unless $P=NP$, problem {\xxxNTP} does not allow a polynomial time $\alpha$-approximation 
 with $\alpha<7/6$.
 \end{corollary}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Small objective values}
+\label{sec:small-objective}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In \cref{sec:inapprox}, we showd that it is NP-hard to decide whether a schedule of objective value at least 7 exists. In contrast, we show in this section that in can be decided in polynomial time, whether a schedule of objective value 3 exists.
 
+
+\begin{theorem}
+Given an instance $(G, w)$ of {\xxxNTP} on $m$ edges, it can be decided in $\bigO(m^3)$ time, whether $\ntp(G, w) \geq 3$.
+\end{theorem}
+\begin{proof}
+Let $G = (V, E)$. If we only want to know whether $\ntp(G, w) \geq 3$, then every edge of weight $w(e) > 3$ behaves just like an edge of weight $w(e) = 3$. Hence we assume $w(e) \in \set{1,2,3}$ for all edges. Let for $k = 1,2,3$ the edges of weight $k$ be denoted by $E'_k = \set{e \in E \mid w(e) = k}$. In a schedule of objective value 3, we can assume that an edge of weight 3 is scheduled during $[0, 3]$. We can also interpret an edge of length 2 as being a pair of two different edges of weight 1: One of these edges always gets scheduled in time slot $[1, 2]$, and for the other edge, the scheduler can choose whether to schedule it either during $[0, 1]$ or during $[2, 3]$. For $t = 1,2,3$, we consider the matroid of edges that can be scheduled during the $t$-th time slot. Formally, let $H_3$ be the graph resulting from $G$ after contracting the edge set $E'_3$, and let $H_{23}$ be the graph resulting from $G$ after contracting the edge set $E'_2 \cup E'_3$. Consider the matroids $\mathcal{F}_1 = \mathcal{F}_3 := \set{F \subseteq E'_1 \cup E'_2 \mid F \text{ is acyclic in }H_3}$ and $\mathcal{F}_2 := \set{F \subseteq E'_1 \mid F \text{ is acyclic in }H_{23}}$. By the properties of this construction, we have that $\ntp(G, w) \geq 3$ if and only if there exists $E'' \subseteq E'_1 \cup E'_2$ and a partition $P_1 \dotunion P_2 \dotunion P_3 = E''$ of $E''$, such that $P_i$ is a base of the matroid $\mathcal{F}_i$ for $i=1,2,3$. This can be checked using for example Edmond's matroid partitioning algorithm \cite{edmonds1965minimum} in $\bigO(m^3)$ time.
+
+Using a similar argument, the question, whether $\ntp(G, w) \geq 2$ can easily be reduced to Nash-Williams tree packing problem. The question, whether $\ntp(G, w) \geq 1$ is trivial.
+\end{proof}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -782,22 +828,28 @@ Gerhard Woeginger acknowledges support by the DFG RTG 2236 ``UnRAVeL''.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
-
-\label{appendix:hamilton_prime}
-\hamiltonPrime*
-
-\begin{proof}
-It is known that the Hamilton cycle problem is NP-complete for bipartite, 3-regular graphs \cite{hamilton3regularBip}. So let $G = (V, E)$ be a bipartite, 3-regular graph. We construct in polynomial time a graph $H$ and an edge $\set{u,z}$, such that the described propeprties for $(H, \set{u,z})$ hold, and such that $H$ has a Hamilton cycle if and only if $G$ has a Hamilton cycle. If we can show this, we are done.
-
-The reduction is shown in \cref{fig_hamilton_cycle_lemma}. Formally, fix some vertex $x \in V$. Let $G_1$ and $G_2$ be two copies of $G$. For each vertex $v \in V-\set{x}$, take a copy $A_v$ of $K_{4,4}$, remove some edge $\set{u_1, u_2}$ from $A_v$, and add edges $\set{v_1,u_1}$ and $\set{u_2,v_2}$, where $v_i$ is the copy of $v$ in $G_i$, $i = 1,2$. Finally, take two copies $A_x$ and $A'_x$ of $K_{4,4}$, remove an edge $\set{u_1,u_2}$ from $A_x$ and an edge $\set{u'_1,u'_2}$ from $A'_x$, add edges $\set{x_1,u_1}$, $\set{u_2,u'_1}$, $\set{u'_2,x_2}$, and let the special edge be given by $\set{u, z}$ with $u := u_2$, and $z := u'_1$. Clearly, $H$ is bipartite and 4-regular.
-
-Let (iv) be the property that $G$ has a Hamilton cycle. We show that (i) -- (iv) are equivalent, thus proving the theorem. So assume (i) holds. It is easy to see that any Hamilton cyle in $H$ uses $\set{u,z}$, so (ii) holds. Assume (ii) holds, (iii) follows immediately. Assume (iii) holds, i.e.\ there is a Hamilton path $(w_1, \dots, w_n)$ starting at $u$. Note that if $w_2 = z$, then $w_n$ is in $A_x$. On the other hand, if $w_2$ is in $A_x$, then $w_n$ is in $A'_x$. In both cases, we can slightly modify $P$ to obtain a Hamilton cycle. Therefore, (i) holds. Finally, we show that (i) and (iv) are equivalent. If $G$ has a Hamilton cycle, we can modify it to obtain a Hamilton cycle of $H$, by switching between $G_1$ and $G_2$ after every edge of the original Hamilton cycle and inserting a Hamilton path through the copies of $K_{4,4}$ (note that $G$ has an even number of vertices, as it is 3-regular). On the other hand, if $H$ has a Hamilton cycle, it necessarily switches between $G_1$ and $G_2$ after every of its edges in $G_1$ or $G_2$, so $G$ has a Hamilton cycle.
-\end{proof}
 \begin{figure}[htpb]
 \centering
-\includegraphics[scale=0.92]{img/hamilton-prime}
-\caption{Construction used in the proof of \cref{hamilton_cycle_lemma}.}
-\label{fig_hamilton_cycle_lemma}
+\includegraphics[scale=1]{img/act-hamilton-cycle-b}
+\caption{An improved version of a gadget of type $L$ avoids edges of weight 7.}
+\label{fig_hamilton_cycle_improved}
 \end{figure}
+
+%\label{appendix:hamilton_prime}
+%\hamiltonPrime*
+%
+%\begin{proof}
+%It is known that the Hamilton cycle problem is NP-complete for bipartite, 3-regular graphs \cite{hamilton3regularBip}. So let $G = (V, E)$ be a bipartite, 3-regular graph. We construct in polynomial time a graph $H$ and an edge $\set{u,z}$, such that the described propeprties for $(H, \set{u,z})$ hold, and such that $H$ has a Hamilton cycle if and only if $G$ has a Hamilton cycle. If we can show this, we are done.
+%
+%The reduction is shown in \cref{fig_hamilton_cycle_lemma}. Formally, fix some vertex $x \in V$. Let $G_1$ and $G_2$ be two copies of $G$. For each vertex $v \in V-\set{x}$, take a copy $A_v$ of $K_{4,4}$, remove some edge $\set{u_1, u_2}$ from $A_v$, and add edges $\set{v_1,u_1}$ and $\set{u_2,v_2}$, where $v_i$ is the copy of $v$ in $G_i$, $i = 1,2$. Finally, take two copies $A_x$ and $A'_x$ of $K_{4,4}$, remove an edge $\set{u_1,u_2}$ from $A_x$ and an edge $\set{u'_1,u'_2}$ from $A'_x$, add edges $\set{x_1,u_1}$, $\set{u_2,u'_1}$, $\set{u'_2,x_2}$, and let the special edge be given by $\set{u, z}$ with $u := u_2$, and $z := u'_1$. Clearly, $H$ is bipartite and 4-regular.
+%
+%Let (iv) be the property that $G$ has a Hamilton cycle. We show that (i) -- (iv) are equivalent, thus proving the theorem. So assume (i) holds. It is easy to see that any Hamilton cyle in $H$ uses $\set{u,z}$, so (ii) holds. Assume (ii) holds, (iii) follows immediately. Assume (iii) holds, i.e.\ there is a Hamilton path $(w_1, \dots, w_n)$ starting at $u$. Note that if $w_2 = z$, then $w_n$ is in $A_x$. On the other hand, if $w_2$ is in $A_x$, then $w_n$ is in $A'_x$. In both cases, we can slightly modify $P$ to obtain a Hamilton cycle. Therefore, (i) holds. Finally, we show that (i) and (iv) are equivalent. If $G$ has a Hamilton cycle, we can modify it to obtain a Hamilton cycle of $H$, by switching between $G_1$ and $G_2$ after every edge of the original Hamilton cycle and inserting a Hamilton path through the copies of $K_{4,4}$ (note that $G$ has an even number of vertices, as it is 3-regular). On the other hand, if $H$ has a Hamilton cycle, it necessarily switches between $G_1$ and $G_2$ after every of its edges in $G_1$ or $G_2$, so $G$ has a Hamilton cycle.
+%\end{proof}
+%\begin{figure}[htpb]
+%\centering
+%\includegraphics[scale=0.92]{img/hamilton-prime}
+%\caption{Construction used in the proof of \cref{hamilton_cycle_lemma}.}
+%\label{fig_hamilton_cycle_lemma}
+%\end{figure}
 
 \end{document}
