@@ -417,7 +417,7 @@ The induction yields for $i=n$ that the induced subgraph $H_n$ is semi-connected
 $[0,Q]$, $[2Q,3Q]$, \dots, $[(2n-2)Q,(2n-1)Q]$ (that is, all the intervals of length $Q$ that start at an 
 even multiple of $Q$)
 and fully-connected during the time intervals $[Q,2Q]$, $[3Q,4Q]$, \dots, $[(2n-3)Q,(2n-2)Q]$ (that is, all the 
-intervals of length $Q$ that start at an odd time multiple of $Q$).
+intervals of length $Q$ that start at an odd multiple of $Q$).
 
 Next, consider the subgraph $G'$ that is induced by the $3n+2$ vertices $v_{-1}=u_{n-1}$, $v_0=u_n$ and 
 $v_1,\ldots,v_{3n}$.
@@ -899,7 +899,7 @@ The resulting kernel satisfies $|V|\le k+1$ and $|E|\le2k$.
 \end{proof}
 
 The last theorem of this section shows that problem {\xxxNTP} is tractable on instances that in 
-a certain sense are close to the preemptive spanning tree packing problem \eqref{eq:NW.1}--\eqref{eq:NW.3}. 
+a certain sense are close to the preemptive tree packing problem \eqref{eq:NW.1}--\eqref{eq:NW.3}. 
 %%%%%%%%%%%%%%%%%%
 \begin{theorem}
 Let $(G,w)$ be an instance of {\xxxNTP} on $m$ edges, so that $m-k$ edges have weight~$1$ and 
@@ -917,7 +917,7 @@ We introduce another schedule $\pi$, where the edge set $E_t$ is scheduled in th
 slot $[T-1, T]$ instead of the $t$-th time slot, and all edges activated during $[t, T]$ are activated 
 one time unit earlier instead. Formally, schedule $\pi$ is such that
 %%%%%%%%%%%%%%%%%%
-\[(G^\pi_1,\dots, G^\pi_T) = (G^\sigma_1, \dots G^\sigma_{t-1}, G^\sigma_{t+1}, \dots, G^\sigma_T, G^\sigma_t) \]
+\[(G^\pi_1,\dots, G^\pi_T) = (G^\sigma_1, \dots G^\sigma_{t-1}, G^\sigma_{t+1}, \dots, G^\sigma_T, G^\sigma_t). \]
 %%%%%%%%%%%%%%%%%%
 Observe that $\pi$ is also a schedule of objective value $T$. 
 We conclude that there always exists an optimal schedule $\sigma$ so that $D_\sigma \subseteq \fromto{1}{k^2}$. 
@@ -928,8 +928,8 @@ Iterate over all possible $k^{2k}$ choices of $(\sigma(e))_{e \in E'} \in \fromt
 For each fixed choice, the only edges left to schedule are edges of weight one. 
 This can be done optimally the following way: 
 For $t = 1,\dots, k^2$, let $W_t = \set{e \in E' : \sigma(e) < t \leq \sigma(e) + w(e)}$ be the set of edges in $E'$, which are active during the $t$-th time slot. 
-If some $W_t$ has a cycle, we can immediately skip to the next choice of $(\sigma(e))_{e \in E'}$. 
-Otherwise, consider the matroid $\mathcal{F}_t = \set{F \subseteq E(G)-W_t : W_t \cup F \text{ is acyclic}}$. 
+If some $W_t$ has a cycle, we immediately skip to the next choice of $(\sigma(e))_{e \in E'}$. 
+Otherwise, consider the matroid $\mathcal{F}_t = \set{F \subseteq E(G)-E' : W_t \cup F \text{ is acyclic}}$. 
 We extend the definition of $\mathcal{F}_t$ to $t > k^2$ by setting $W_t = \emptyset$ in this case. 
 The matroid $\mathcal{F}_t$ is isomorphic to the graphic matroid of $G$ after contracting each connected 
 component of $W_t$ to a single vertex. 
