@@ -245,7 +245,7 @@ Section~\ref{sec:conclusion} concludes the paper with some discussion.
 We write $\NN_0= \NN \cup \set{0}$ for the set of nonnegative integers. 
 For $a\le b$, the term $[a,b]$ denotes the \emph{time slot} starting at $a$ and ending at $b$. 
 For $t\ge1$, the time slot $[t-1,t]$ is often called the $t$-th time slot or time slot $t$.
-Every graph $G=(V,E)$ in this paper is undirected and without loops.
+Every graph $G=(V,E)$ in this paper is simple, undirected and without loops.
 For $V'\subseteq V$, the \emph{edge cut} $\delta(V')$ is the set of edges with one endpoint 
 in $V'$ and one endpoint in $V-V'$; for $v\in V$, we write $\delta(v) = \delta(\set{v})$.
 We denote by $G[V']$ the \emph{induced subgraph} on $V'$.
@@ -321,7 +321,7 @@ with objective value $\beta$.
 Note that for every $i \in \{1,\dots,n-1\}$, we have $w(\set{x_i,a}) +w(\set{x_i,b}) = \beta+1$. 
 Hence the sum of all the edge weights in the graph is $(n-1)(\beta+1) +3n\beta +(\beta-n+1) = 4\beta n$. 
 As every spanning tree for $K_{2, 4n-1}$ has $4n$ edges, each of the connected graphs $G_1,\dots,G_\beta$ 
-must have exactly $4n$ edges (and must actually be a spanning tree). 
+must have exactly $4n$ edges (and must actually be a spanning tree). This implies that the activity interval of every edge is contained in $[0, \beta]$.
 Now consider some vertex $x_i$ with $i\in\{1,\dots,n-1\}$. 
 Since $w(\set{x_i,a}) + w(\set{x_i,b})=\beta+1$, there is exactly one $k\in\fromto{1}{\beta}$ so 
 that the edge set $E_k$ contains both edges incident to vertex $x_i$. 
@@ -340,7 +340,7 @@ $\{y_j,a\}$, $\{y_{\ell},a\}$ satisfy $q_i+q_j+q_{\ell}=Q$.
 Hence the corresponding triplets form a solution for the \textsc{3-Partition} instance.
 
 (If) Now assume that the \textsc{3-Partition} instance has a solution. 
-For $1\le i\le n-1$, we activate edge $set{x_i,a}$ at time~$0$ and edge $\set{x_i,b}$ at time $i(Q+1)-1$.
+For $1\le i\le n-1$, we activate edge $\set{x_i,a}$ at time~$0$ and edge $\set{x_i,b}$ at time $i(Q+1)-1$.
 For $1\le i\le n$, we activate edge $\set{y_i,b}$ at time $0$; finally, the edges $\set{y_i,a}$ are
 grouped into triplets according to the solution of the \textsc{3-Partition} instance and scheduled
 as indicated in the proof of the (only if) part.
@@ -375,7 +375,7 @@ vertices or two vertices at distance~$2$. Hence, the constructed graph $G=(V,E)$
 
 We will study schedules $\sigma$ of objective value $\beta$. 
 As the sum of all edge weights in $G$ equals $\beta(|V|-1)$, each of the graphs 
-$G^\sigma_1, \dots G^\sigma_\beta$ is a spanning tree.
+$G^\sigma_1, \dots G^\sigma_\beta$ is a spanning tree and the activity interval of every edge is contained in $[0, \beta]$.
 We will discuss the behavior of $\sigma$ on the induced subgraph $H_i = G[\fromto{u_0}{u_i}]$ for $1\le i\le n$.
 Since the only connections between $H_i$ and the rest of the graph are via the two vertices $u_{i-1}$ and $u_i$,
 during any time slot $[t-1,t]$ with $1\le t\le\beta$, graph $H_i$ will consist of one or two connected components
@@ -431,8 +431,9 @@ $[0,Q]$, $[2Q,3Q]$, \dots, $[(2n-2)Q,(2n-1)Q]$ is by using the edges $\{v_{k-1},
 weight $q_k$.
 As this groups the numbers $q_1,\ldots,q_{3n}$ into $n$ groups with sum $Q$, we get a solution
 for the instance of \textsc{3-Partition}.
-Vice versa, if the \textsc{3-Partition} instance has a solution, then we can build a schedule $\sigma$
-with all desired properties from it.
+
+Vice versa, if the \textsc{3-Partition} instance has a solution, then we  build a schedule $\sigma$
+of objective value $\beta$: For $k=0,\ldots,n-1$, we activate edge $\set{u_k, u_{k+1}}$ at time $(2k+1)Q$. For $k=0,\ldots,n-2$, we activate edge $\set{u_k, u_{k+2}}$ at time $0$. For $k=-1,\ldots,3n-2$, we activate edge $\set{v_k, v_{k+2}}$ at time $0$. Finally, the edges $\set{v_{k-1},v_k}$ are grouped into triplets and scheduled as described in the other direction of the proof.
 \qed
 \end{proof}
 
@@ -465,13 +466,13 @@ into a corresponding instance of problem {\xxxNTP}.
 \begin{lemma}
 \label{le:Ham-to-Ham}
 There is a polynomial time algorithm that takes an instance $H'$ of {\xxxHAM} as input and outputs 
-a 4-regular bipartite graph $H=(V_H,E_H)$ together with a so-called special edge $\{u,z\}\in E_H$,
+a 4-regular bipartite graph $H$ together with a so-called special edge $\{u,z\}\in E(H)$,
 so that the following holds:
 \begin{enumerate}[(i)]
 \item If $H'$ is a YES-instance of {\xxxHAM}, then the new graph $H$ contains a Hamilton cycle 
 that traverses the special edge $\{u,z\}$.
 \item If $H'$ is a NO-instance of {\xxxHAM}, then the new graph $H$ has no Hamilton path
-starting in vertex $v$. 
+starting in vertex $u$. 
 \qed
 \end{enumerate}
 \end{lemma}
@@ -490,11 +491,11 @@ V(G) =  \set{x, y} \cup U \cup Z
 %%%%%%%%%%%%%%%%%
 Furthermore, the graph $G$ has the following edges and edge weights:
 \begin{itemize}
-\item For every edge $e\in E_H$, the graph $G$ also contains $e$. 
+\item For every edge $e\in E(H)$, the graph $G$ also contains $e$. 
 We set $w(e) = 2$, if $e \neq \set{u_k, z_k}$ and $w(\set{u_k, z_k}) = 1$.
-\item For every $i = 1,\dots,k$, the induced subgraph $G[\set{x, u_i, v_{i1}, v_{i2}, v_{i3}, v_{i4}}]$ 
+\item For every $i = 1,\dots,k$, the induced subgraph $L_i = G[\set{x, u_i, v_{i1}, v_{i2}, v_{i3}, v_{i4}}]$ 
 is called the \emph{$i$-th gadget of type L} and has edges and edge weights as depicted in \cref{fig:act-hamilton-cycle}.
-\item For every $i = 1,\dots,k$, the induced subgraph $G[\set{x, z_i, v'_{i1}, v'_{i2}}]$ is called the 
+\item For every $i = 1,\dots,k$, the induced subgraph $R_i = G[\set{x, z_i, v'_{i1}, v'_{i2}}]$ is called the 
 \emph{$i$-th gadget of type R} and has edges and edge weights as depicted in \cref{fig:act-hamilton-cycle}.
 \item Finally, the two edges $\set{x,y}$ and $\set{y, z_k}$ have $w(\set{x,y}) = w(\set{y, z_k}) = 4$.
 \end{itemize}
@@ -511,7 +512,7 @@ is called the \emph{$i$-th gadget of type L} and has edges and edge weights as d
 Assume that $(G, w)$ allows some schedule $\sigma$ of objective value 7. 
 During any time slot $[t-1,t]$ with $1\le t\le7$, the $i$-th gadget of type $L$ will 
 consist of either one or two connected components under schedule $\sigma$. 
-If there is a single connected component, we say that this gadget is \emph{fully-connected} during the $t$-th time slot. If there are two connected components, we say that this gadget is \emph{semi-connected} during the $t$-th time slot. It is easy to see that $x$ and $u_i$ lie in different components in the latter case. In the same matter, during the $t$-th time slot, a gadget of type $R$ is either fully-connected or semi-connected with $x$ and $z_i$ in different components. Likewise, the induced subgraph $G[\set{x, y, z_k}]$ is either fully-connected, or semi-connected with $x$ and $z_k$ in different components.
+If there is a single connected component, we say that $L_i$ is \emph{fully-connected} during the $t$-th time slot. If there are two connected components (one containing  $x$, and one containing $u_i$), we say that $L_i$ is \emph{semi-connected} during the $t$-th time slot. In the same matter, during the $t$-th time slot, gadget $R_i$ is either fully-connected or semi-connected with $x$ and $z_i$ in different components. Likewise, the induced subgraph $G[\set{x, y, z_k}]$ is either fully-connected, or semi-connected with $x$ and $z_k$ in different components.
 
 \begin{lemma}
 \label{lemma:gadgets_properties}
@@ -519,18 +520,17 @@ Let $(G,w)$ be the instance described above.
 Every schedule of objective value 7 for $(G, w)$ satisfies the following.
 \begin{enumerate}[(i)]
 \item A gadget of type $R$ is fully-connected during time slots 2 and 6, and 
-semi-connected during each of the remaining five time slots 1, 3, 4, 5, and 7.
-\item There exist $t_1,t_2 \in \set{1,2,4,6,7}$ with $t_1\ne t_2$, such that every gadget 
-of type $L$ is fully-connected during each of the four time slots $3,5,t_1$, and $t_2$, 
+semi-connected during each of the remaining five time slots.
+\item For each $i=1,\dots,k$, there are $t_1,t_2 \in \set{1,2,4,6,7}$ with $t_1\ne t_2$, such that the gadget $L_i$ is fully-connected during time slots $3,5,t_1, t_2$, 
 and semi-connected during each of the remaining three time slots.
 \item The induced subgraph $G[\set{x, y, z_k}]$ is fully-connected during time slot 4, 
-and semi-connected during each of the remaining six time slots 1, 2, 3, 5, 6, and 7.
+and semi-connected during each of the remaining six time slots.
 \end{enumerate}
 \end{lemma}
 \begin{proof}
 Note that the sum of all edge weights in $G$ is $8k-1 +32k +16k +8 = 56k+7 = 7(|V(G)|-1)$. 
-Therefore, each of $G_1,\ldots,G_7$ is a tree, and in particular is acyclic. 
-For the proof of (i), consider the vertex $v'_{i1}$ in the $i$-th gadget of type $R$. 
+This implies that each of the graphs $G_1,\ldots,G_7$ is a tree (in particular, it is acyclic) and that the activity interval of each edge is contained in $[0, \beta]$.
+For the proof of (i), consider the vertex $v'_{i1}$ in the gadget $R_i$. 
 There is exactly one time slot $[t-1, t]$ during which both edges incident to $v'_{i1}$ are active, 
 and we have $t=2$ or $t=6$. 
 Analogously, there is exactly one time slot $[t'-1, t']$ during which both edges incident to 
@@ -542,8 +542,8 @@ Claims (ii) and (iii) can be proven in the same manner.
 
 \begin{lemma}
 \label{lemma:lasse-if}
-Let $(H, \set{u, z})$ be an instance of {\xxxHAM}, and let $(G, w)$ be the corresponding {\xxxNTP} instance. 
-If $H$ contains a Hamilton cycle using the edge $\set{u, z}$, then there is a schedule with objective value 7 for $(G, w)$.
+Let the graph $H$ and the special edge $\set{u,z}$ be as described in \cref{le:Ham-to-Ham}, and let $(G, w)$ be the corresponding {\xxxNTP} instance. 
+If $H$ contains a Hamilton cycle which uses the special edge, then $\ntp(G, w) \geq 7$.
 \end{lemma}
 \begin{proof}
 Let $e_0 = \set{u, z} = \set{u_k, z_k}$. There is a Hamilton cycle $C$ using $e_0$. Then $H-E(C)$ is 2-regular, hence there exist pairwise disjoint matchings $M_1, \ldots, M_4$ such that $M_1 \dotunion M_2 = E(C)$ and $M_3 \dotunion M_4 = E_H-E(C)$ and $e_0 \in M_1$. We describe a schedule $\sigma$ with objective value 7:
@@ -564,20 +564,19 @@ As all of the graphs $G^\sigma_1,\ldots,G^\sigma_7$ are connected, schedule $\si
 
 \begin{lemma}
 \label{lemma:lasse-only-if}
-Let $(H, \set{\tilde{u}, \tilde{z}})$ be an instance of {\xxxHAM}, and let $(G, w)$ be the corresponding {\xxxNTP} instance. If $(G, w)$ has a schedule of length 7, then $H$ contains a Hamilton path starting at vertex $\tilde{u}$.
+Let the graph $H$ and the special edge $\set{u,z}$ be as described in \cref{le:Ham-to-Ham}, and let $(G, w)$ be the corresponding {\xxxNTP} instance. If $\ntp(G, w) \geq 7$, then $H$ contains a Hamilton path starting at vertex $u$.
 \end{lemma}
 \begin{proof}
 So assume there exists a schedule $\sigma$ of objective value 7. 
-For a vertex $v \in U \cup Z$, and $t \in \fromto{1}{7}$, let $d_t(v) = |\delta(v) \cap E_H \cap E_t|$ denote the number of incident edges of $v$, which are both in $E_H$ and active during the $t$-th time slot. The strategy of the proof will be to repeatedly deduce some conditions for $d_t(v)$. 
-Let $e_0 = \set{\tilde{u}, \tilde{z}} = \set{u_k, z_k}$.
+For a vertex $v \in U \cup Z$, and $t \in \fromto{1}{7}$, let $d_t(v) = |\delta(v) \cap E(H) \cap E_t|$ denote the number of incident edges of $v$, which are both in $E(H)$ and active during the $t$-th time slot. The strategy of the proof will be to repeatedly deduce some conditions for $d_t(v)$. 
+Let $e_0 = \set{u, z} = \set{u_k, z_k}$ be the special edge.
 
-First, recall \cref{lemma:gadgets_properties}. Consider a vertex $z \in Z$. We know that for each $t \in \set{1, 3, 5, 7}$ in the $t$-th time slot all gadgets of type $R$ and also $G[\set{x,y,z_k}]$ are semi-connected. This implies $d_1(z), d_3(z), d_5(z), d_7(z) \geq 1$.  Note that the four edges in $\delta(z) \cap E_H$ each have weight at most 2 (in the case $z \neq z_k$ we have four times weight 2, and for $z = z_k$ we have three times weight 2, and $e_0$ has weight 1). So consider the process of arranging four intervals of length at most 2 in the interval $[0, 7]$ in such a way, that each of the time slots $[0,1], [2,3], [4,5], [6,7]$ is covered by at least one interval. Due to the properties of this process, one sees that the case $d_1(z) > 1$ or $d_7(z) > 1$ is actually impossible. Hence, $d_1(z) = d_7(z) = 1$. The same argument shows that $e_0 \not\in E_4$.
+First, recall \cref{lemma:gadgets_properties}. Consider vertex $z_i$ for some $i \in \fromto{1}{k}$. We know that for each $t \in \set{1, 3, 5, 7}$ in the $t$-th time slot both the gadget $R_i$ and $G[\set{x,y,z_k}]$ are semi-connected. But of course at least one edge incident to $z_i$ must be active during the $t$-th time slot. Hence $d_1(z_i), d_3(z_i), d_5(z_i), d_7(z_i) \geq 1$.  Note that the four edges in $\delta(z_i) \cap E(H)$ each have weight at most 2 (in the case $i \neq k$ we have four times weight 2, and for $i = k$ we have three times weight 2, and $w(e_0) = 1$). For the sake of contradiction, assume $d_1(z_i) > 1$. Then from the four edges in $\delta(z_i) \cap E(H)$ at least two are scheduled at time $0$. This is a contradiction to  $d_3(z_i), d_5(z_i), d_7(z_i) \geq 1$. Hence $d_1(z_i) = 1$. By the same argument, $d_7(z_i) = 1$. A similar argument shows that $e_0 \not\in E_4$.
 
-Next, consider the graph $G_1$ of active edges in time slot 1. We know that  $d_1(z) = 1$ for $z \in Z$. But this implies that the induced subgraph $G_1[U \cup Z]$ has $k$ connected components. Because $G_1$ is connected, and because all the gadgets of type $R$ and $G[\set{x, y, z_k}]$ are semi-connected during this time slot, this implies that every single gadget of type $L$ is actually fully-connected. The same argument holds for time slot 7. In total, together with \cref{lemma:gadgets_properties}, we have that a gadget of type $L$ is fully-connected during the $t$-th time slot, if and only if $t \in \set{1, 3, 5, 7}$. This in turn implies that for $u \in U$, one has $d_2(u), d_4(u), d_6(u) \geq 1$. The two facts $d_2(u) \geq 1$ and $d_6(u) \geq 1$ together imply $d_4(u) \leq 2$, due to the process described previously. Likewise, for $z \in Z$, the two facts $d_1(z) = 1$ and $d_7(z) = 1$ together imply $d_4(z) \leq 2$.
+Next, consider the graph $G_1$ of active edges in time slot 1. We know that  $d_1(z_i) = 1$ for all $i= 1,\dots, k$. Hence the induced (acyclic) subgraph $G_1[U \cup Z]$ has $k$ edges, and has exactly $k$ connected components. Because $G_1$ is connected, and because all the gadgets of type $R$ and $G[\set{x, y, z_k}]$ are semi-connected during time slot 1, this implies that every single gadget of type $L$ is actually fully-connected during time slot 1. The same argument holds for time slot 7. In total, together with \cref{lemma:gadgets_properties}, we have that a gadget of type $L$ is fully-connected during the $t$-th time slot, if and only if $t \in \set{1, 3, 5, 7}$. This in turn implies that for all $i = 1,\dots, k$, one has $d_2(u_i), d_4(u_i), d_6(u_i) \geq 1$. The two facts $d_2(u_i) \geq 1$ and $d_6(u_i) \geq 1$ together imply $d_4(u_i) \leq 2$. Likewise, for all $i = 1,\dots,k$, the two facts $d_1(z_i) = 1$ and $d_7(z_i) = 1$ together imply $d_4(z_i) \leq 2$.
 
 Finally, we claim $d_4(u_k) = 1$. In fact, $d_4(u_k) = 0$ is impossible, because gadgets of type $L$ are semi-connected during time slot 4. For the sake of contradiction, assume $d_4(u_k) > 1$. We know that $d_2(u_k) \geq 1, d_6(u_k) \geq 1$ and $e_0 \not\in E_4$ and $w(e_0) = 1$. So our assumption $d_4(u_k) > 1$ is only possible if $e_0 \in E_2$ or $e_0 \in E_6$. But for the vertex $z_k$, we also know $d_1(z_k), d_3(z_k), d_5(z_k), d_7(z_k) \geq 1$. This is a contradiction to $e_0 \in E_2 \cup E_6$, hence our assumption was wrong and $d_4(u_k) = 1$.
-
-In summary, during time slot 4, all gadgets of type $L$ and $R$ are semi-connected. We also have $d_4(u) \leq 2$ for $u \in U$, and $d_4(z) \leq 2$ for $z \in Z$ and $d_4(u_k) = 1$. However, $G_4$ is connected. These facts together imply that the induced subgraph $G_4[U \cup Z]$ is a Hamilton path in $H$ starting at $u_k = \tilde{u}$.
+In summary, during time slot 4, all gadgets of type $L$ and $R$ are semi-connected. We also have for all $i=1,\dots,k$ that $d_4(u_i) \leq 2$ and $d_4(z_i) \leq 2$. Also, $d_4(u_k) = 1$. However, $G_4$ is connected. These facts together imply that the induced subgraph $G_4[U \cup Z]$ is a Hamilton path in $H$ starting at $u_k = u$.
 \qed
 \end{proof}
 
@@ -666,12 +665,12 @@ We introduce three matroids:
 \begin{itemize}
 \item The matroid $\mathcal{F}_1$ has the ground set $W_1\cup W_2$. 
 A set $F\subseteq W_1\cup W_2$ is independent in $\mathcal{F}_1$, if and only if $F$ is acyclic in graph $H_3$.
-\item The matroid $\mathcal{F}_2$ has the ground set $W_2$.
-A set $F\subseteq W_2$ is independent in $\mathcal{F}_2$, if and only if $F$ is acyclic in graph $H_{23}$.
+\item The matroid $\mathcal{F}_2$ has the ground set $W_1$.
+A set $F\subseteq W_1$ is independent in $\mathcal{F}_2$, if and only if $F$ is acyclic in graph $H_{23}$.
 \item The matroid $\mathcal{F}_3$ has ground set $W_1\cup W_2$, and coincides with $\mathcal{F}_1$.
 \end{itemize}
 It is easily seen that $\ntp(G,w)\ge3$ holds, if and only if there exist three pairwise disjoint subsets
-$S_1,S_2,S_3$ of $E$, such that $S_t$ forms a base of the matroid $\mathcal{F}_i$ for $i=1,2,3$.
+$S_1,S_2,S_3$ of $E$, such that $S_t$ forms a base of the matroid $\mathcal{F}_t$ for $t=1,2,3$.
 This can be checked in $\bigO(m^3)$ time by using Edmond's matroid partitioning algorithm \cite{edmonds1965minimum}.
 \qed
 \end{proof}
@@ -922,21 +921,21 @@ one time unit earlier instead. Formally, schedule $\pi$ is such that
 %%%%%%%%%%%%%%%%%%
 Observe that $\pi$ is also a schedule of objective value $T$. 
 We conclude that there always exists an optimal schedule $\sigma$ so that $D_\sigma \subseteq \fromto{1}{k^2}$. 
-It is also not hard to see that we can additionally require that each of $G_1, \dots, G_T$ is acyclic.
+Due to \cref{le:structure}, we can additionally require that each of $G_1, \dots, G_T$ is acyclic.
 
 Therefore, the following is an algorithm to solve problem {\xxxNTP}: 
 Iterate over all possible $k^{2k}$ choices of $(\sigma(e))_{e \in E'} \in \fromto{1}{k^2}^k$. 
 For each fixed choice, the only edges left to schedule are edges of weight one. 
 This can be done optimally the following way: 
-Let $E_i = \set{e \in E' : \sigma(e) = i}$ for $i \in \fromto{1}{k^2}$. 
-If some $E_i$ has a cycle, we can immediately skip to the next choice of $(\sigma(e))_{e \in E'}$. 
-Otherwise, consider the matroid $\mathcal{F}_i = \set{F \subseteq E(G)-E_i : E_i \cup F \text{ is acyclic}}$. 
-We extend the definition of $\mathcal{F}_i$ to $i > k^2$ by setting $E_i = \emptyset$ in this case. 
-The matroid $\mathcal{F}_i$ is isomorphic to the graphic matroid of $G$ after contracting each connected 
-component of $E_i$ to a single vertex. 
+For $t = 1,\dots, k^2$, let $W_t = \set{e \in E' : \sigma(e) < t \leq \sigma(e) + w(e)}$ be the set of edges in $E'$, which are active during the $t$-th time slot. 
+If some $W_t$ has a cycle, we can immediately skip to the next choice of $(\sigma(e))_{e \in E'}$. 
+Otherwise, consider the matroid $\mathcal{F}_t = \set{F \subseteq E(G)-W_t : W_t \cup F \text{ is acyclic}}$. 
+We extend the definition of $\mathcal{F}_t$ to $t > k^2$ by setting $W_t = \emptyset$ in this case. 
+The matroid $\mathcal{F}_t$ is isomorphic to the graphic matroid of $G$ after contracting each connected 
+component of $W_t$ to a single vertex. 
 Now we run Edmond's Matroid Partitioning algorithm \cite{edmonds1965minimum} to determine the 
-maximal $T'\in\NN_0$ such that $E(G)-E'$ contains disjoint sets $F_1, \dots, F_{T'}$ such that $F_i$ 
-is a base of $\mathcal{F}_i$ for all $i \in \fromto{1}{T'}$ (that is, we solve the problem of packing as 
+maximal $T'\in\NN_0$ such that $E(G)-E'$ contains disjoint sets $F_1, \dots, F_{T'}$ such that $F_t$ 
+is a base of $\mathcal{F}_t$ for all $t \in \fromto{1}{T'}$ (that is, we solve the problem of packing as 
 many bases as possible into a matroid). 
 As Edmond's Matroid Partitioning algorithm runs in $\bigO(m^3)$ time, the claimed time complexity follows.
 \qed
