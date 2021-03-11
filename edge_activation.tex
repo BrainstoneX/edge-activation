@@ -546,7 +546,7 @@ Let $e_0 = \set{u, z} = \set{u_k, z_k}$. There is a Hamilton cycle $C$ using $e_
 \end{itemize}
 It is easy to see that the active edges in $H$ form a matching of $H$ during the time slots 1,2,3,5,6, and 7, 
 and form a Hamilton path of $H$ during the time slot 4. 
-As all of the graphs $G^\sigma_1,\ldots,G^\sigma_7$ are connected, schedule $\sigma$ indeed has objective value 7. 
+All of the graphs $G^\sigma_1,\ldots,G^\sigma_7$ are connected, hence $\ntp(\sigma) = 7$. 
 \qed
 \end{proof}
 
@@ -657,7 +657,7 @@ The complexity of deciding whether $\ntp(G,w)\ge\beta$ remains open for $\beta\i
 \section{The Greedy Algorithm}
 \label{sec:greedy}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-We introduce a simple greedy algorithm that maintains connectivity by always
+We introduce a greedy algorithm that maintains connectivity by always
 activating edges of the largest possible weight.
 Formally, we let $F_t\subseteq E_t$ denote the set of edges whose activity intervals 
 end at time $t$.
