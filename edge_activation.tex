@@ -524,9 +524,21 @@ semi-connected during each of the remaining five time slots.
 \item For each $i=1,\dots,k$, there are $t_1,t_2 \in \set{1,2,4,6,7}$ with $t_1\ne t_2$, such that the gadget $L_i$ is fully-connected during time slots $3,5,t_1, t_2$, 
 and semi-connected during each of the remaining three time slots.
 \item The induced subgraph $G[\set{x, y, z_k}]$ is fully-connected during time slot 4, 
-and semi-connected during each of the remaining six time slots. \qed
+and semi-connected during each of the remaining six time slots.
 \end{enumerate}
 \end{lemma}
+\begin{proof}
+Note that the sum of all edge weights in $G$ is $8k-1 +32k +16k +8 = 56k+7 = 7(|V(G)|-1)$. 
+This implies that each of the graphs $G_1,\ldots,G_7$ is a tree (in particular, it is acyclic) and that the activity interval of each edge is contained in $[0, \beta]$.
+For the proof of (i), consider the vertex $v'_{i1}$ in the gadget $R_i$. 
+There is exactly one time slot $[t-1, t]$ during which both edges incident to $v'_{i1}$ are active, 
+and we have $t=2$ or $t=6$. 
+Analogously, there is exactly one time slot $[t'-1, t']$ during which both edges incident to 
+$v'_{i2}$ are active, and we have $t' = 2$ or $t' = 6$. 
+As $t=t'$ yields the contradiction that $G_t$ has a cycle, we conclude $\set{t,t'}=\set{2,6}$ and (i) follows. 
+Claims (ii) and (iii) can be proven in the same manner. 
+\qed
+\end{proof}
 
 \begin{lemma}
 \label{lemma:lasse-if}
@@ -584,10 +596,25 @@ A minor modification yields the following corollary.
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{restatable}{corollary}{weightsOneToSix}
 \label{coro:small-weights}
-Problem {\xxxNTP} is strongly NP-hard, even if all edge weights are in $\fromto{1}{6}$. \qed
+Problem {\xxxNTP} is strongly NP-hard, even if all edge weights are in $\fromto{1}{6}$.
 \end{restatable}
+\begin{proof}
+Edges of weight~$7$ only show up in the gadget of type $L$.
+Figure~\ref{fig_hamilton_cycle_improved} shows a modified version of this gadget that emulates 
+the edges of weight~$7$ by edges with weights in $\fromto{1}{6}$.
+One easily verifies that the functionality of the gadget remains the same and that in particular
+Lemma~\ref{lemma:gadgets_properties} still holds true.
+\qed
+\end{proof}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htpb]
+\centering
+\includegraphics[scale=1.1]{img/act-hamilton-cycle-b}
+\caption{The modified version of the type $L$ gadget without edges of weight $7$.}
+\label{fig_hamilton_cycle_improved}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 As it is NP-hard to distinguish between {\xxxNTP} instances with optimal objective value~$6$ 
 and {\xxxNTP} instances with optimal objective value~$7$, we also get the following 
@@ -721,116 +748,10 @@ For every connected graph $G=(V,E)$, the following two statements are equivalent
 \begin{enumerate}[(i)]
 \item $G$ is a cactus graph.
 \item For every choice $w:E\to\NN_0$ of edge weights, the {\greedy} algorithm 
-solves the {\xxxNTP} instance $(G,w)$ to optimality. \qed
+solves the {\xxxNTP} instance $(G,w)$ to optimality.
 \end{enumerate}
 \end{theorem}
 %%%%%%%%%%%%%%%%%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Parameterized Complexity}
-\label{sec:parameterized}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In this section, we show that problem {\xxxNTP} is fixed parameter tractable with 
-respect to various parameters. 
-Note that Theorems~\ref{thm:hardness_complete_bipartite} and \ref{th:value=7} imply the NP-hardness 
-of problem {\xxxNTP}, even if either the treewidth or the edge weights are bounded by a constant. 
-
-\begin{restatable}{theorem}{fptBoundedWeightAndTW}
-\label{th:fpt_weights_and_tw_bounded}
-If both the treewidth and the maximum edge weight of the input graph $G = (V, E)$ are bounded, problem {\xxxNTP} allows for an FPT-algorithm whose running time is linear in $|E|$. \qed
-\end{restatable}
-
-\begin{restatable}{theorem}{exactAlgoExponential}
-\label{th:exact}
-On input graphs $G=(V,E)$, problem {\xxxNTP} is solvable in exponential time $\bigO(|E|^2\cdot|E|!)$. \qed
-\end{restatable}
-
-\begin{restatable}{theorem}{fptFeedbackEdge}
-\label{thm:FPT_feedback_edge_set}
-Problem {\xxxNTP} is fixed parameter tractable with respect to the size $k$ of a feedback edge set. 
-There is a kernel with $\bigO(k)$ vertices and edges. \qed
-\end{restatable}
-
-
-The last theorem of this section shows that problem {\xxxNTP} is tractable on instances that in 
-a certain sense are close to the preemptive tree packing problem \eqref{eq:NW.1}--\eqref{eq:NW.3}. 
-%%%%%%%%%%%%%%%%%%
-\begin{restatable}{theorem}{fptAlmostAllWeightOne}
-\label{th:fpt_almost_all_weight_one}
-Let $(G,w)$ be an instance of {\xxxNTP} on $m$ edges, so that $m-k$ edges have weight~$1$ and 
-the remaining $k$ edges have weight at most $k$. 
-Then an optimal solution can be found in $\bigO(k^{2k}m^3)$ time. \qed
-\end{restatable}
-%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection*{Acknowledgements.}
-Stefan Lendl and Lasse Wulf acknowledge the support of the Austrian Science Fund (FWF): W1230.
-Gerhard Woeginger acknowledges support by the DFG RTG 2236 ``UnRAVeL''.
-
-%
-% ---- Bibliography ----
-%
-% BibTeX users should specify bibliography style 'splncs04'.
-% References will then be sorted and formatted in the correct style.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\bibliographystyle{splncs04}
-\bibliography{literature}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\appendix
-
-\section{Some omitted proofs}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
-\paragraph{\textbf{Proof of \cref{lemma:gadgets_properties}.}}
-Note that the sum of all edge weights in $G$ is $8k-1 +32k +16k +8 = 56k+7 = 7(|V(G)|-1)$. 
-This implies that each of the graphs $G_1,\ldots,G_7$ is a tree (in particular, it is acyclic) and that the activity interval of each edge is contained in $[0, \beta]$.
-For the proof of (i), consider the vertex $v'_{i1}$ in the gadget $R_i$. 
-There is exactly one time slot $[t-1, t]$ during which both edges incident to $v'_{i1}$ are active, 
-and we have $t=2$ or $t=6$. 
-Analogously, there is exactly one time slot $[t'-1, t']$ during which both edges incident to 
-$v'_{i2}$ are active, and we have $t' = 2$ or $t' = 6$. 
-As $t=t'$ yields the contradiction that $G_t$ has a cycle, we conclude $\set{t,t'}=\set{2,6}$ and (i) follows. 
-Claims (ii) and (iii) can be proven in the same manner. 
-\qed
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\weightsOneToSix*
-\paragraph{\textbf{Proof of \cref{coro:small-weights}.}}
-Edges of weight~$7$ only show up in the gadget of type $L$.
-Figure~\ref{fig_hamilton_cycle_improved} shows a modified version of this gadget that emulates 
-the edges of weight~$7$ by edges with weights in $\fromto{1}{6}$.
-One easily verifies that the functionality of the gadget remains the same and that in particular
-Lemma~\ref{lemma:gadgets_properties} still holds true.
-\qed
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[htpb]
-\centering
-\includegraphics[scale=1.1]{img/act-hamilton-cycle-b}
-\caption{The modified version of the type $L$ gadget without edges of weight $7$.}
-\label{fig_hamilton_cycle_improved}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbh]
 \begin{center}
@@ -859,7 +780,7 @@ Lemma~\ref{lemma:gadgets_properties} still holds true.
 \label{fig:cactus}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{\textbf{Proof of \cref{th:greedy.cactus}.}}
+\begin{proof}
 We first show that (i) implies (ii).
 Since cut-vertices split an {\xxxNTP} instance into smaller instances that do not interact 
 with each other, it is sufficient to prove the statement for two-connected cactus graphs.
@@ -897,14 +818,24 @@ subdivision of some edge $f\in E_H$, we define $w(e)=w_H(f)$.
 It is easily verified that the resulting instance $(G,w)$ satisfies $\ntp(G,w)=3$,
 whereas the {\greedy} algorithm only yields an objective value of~$2$.
 \qed
+\end{proof}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Proofs of the Theorems from \cref{sec:parameterized}}
+\section{Parameterized Complexity}
+\label{sec:parameterized}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this section, we show that problem {\xxxNTP} is fixed parameter tractable with 
+respect to various parameters. 
+Note that Theorems~\ref{thm:hardness_complete_bipartite} and \ref{th:value=7} imply the NP-hardness 
+of problem {\xxxNTP}, even if either the treewidth or the edge weights are bounded by a constant. 
 
-%\fptBoundedWeightAndTW*
-\paragraph{\textbf{Proof of \cref{th:fpt_weights_and_tw_bounded}.}}
+\begin{restatable}{theorem}{fptBoundedWeightAndTW}
+\label{th:fpt_weights_and_tw_bounded}
+If both the treewidth and the maximum edge weight of the input graph $G = (V, E)$ are bounded, problem {\xxxNTP} allows for an FPT-algorithm whose running time is linear in $|E|$. 
+\end{restatable}
+\begin{proof}
 As the graph $G=(V,E)$ has treewidth at most $k$, there is a vertex $v\in V$ of degree at most $k$.
 As every edge incident to $v$ has weight at most $k$, we conclude $\ntp(G,w)\le k^2$. 
 For every $T=1,\ldots,k^2$, we construct a formula $\Phi_T$ in monadic second-order 
@@ -921,22 +852,27 @@ The following statement can be formulated in $\text{MSO}_2$ by routine methods:
 Now Courcelle's theorem \cite{courcelle1990monadic} implies that the satisfiability of $\Phi_T$ 
 can be checked in linear time for every $T=1,\ldots,k^2$.
 \qed
+\end{proof}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\exactAlgoExponential*
-\paragraph{\textbf{Proof of \cref{th:exact}.}}
+\begin{restatable}{theorem}{exactAlgoExponential}
+\label{th:exact}
+On input graphs $G=(V,E)$, problem {\xxxNTP} is solvable in exponential time $\bigO(|E|^2\cdot|E|!)$. 
+\end{restatable}
+\begin{proof}
 By Lemma~\ref{le:structure}, we may assume that in an optimal schedule $\sigma$ of length $T$ 
 all graphs $G_1^\sigma, \dots, G_T^\sigma$ are trees.
 As these trees are uniquely determined by the ordering in which $\sigma$ activates the edges,
 we only need to check and evaluate $|E|!$ cases.
 Each case is easily checked and evaluated in $\bigO(|E|^2)$ time.
 \qed
+\end{proof}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\fptFeedbackEdge*
-\paragraph{\textbf{Proof of \cref{thm:FPT_feedback_edge_set}}.}
+\begin{restatable}{theorem}{fptFeedbackEdge}
+\label{thm:FPT_feedback_edge_set}
+Problem {\xxxNTP} is fixed parameter tractable with respect to the size $k$ of a feedback edge set. 
+There is a kernel with $\bigO(k)$ vertices and edges. 
+\end{restatable}
+\begin{proof}
 Note that the input graph $G=(V,E)$ satisfies $|E|\le|V|-1+k$.
 We first prove an auxiliary observation on the largest edge weight $w_{\max}$ in the graph:
 We claim that $|V|\ge k+2$ implies $\ntp(G,w)\le w_{\max}$. 
@@ -952,12 +888,20 @@ As long as $|V|\ge k+2$ holds, we contract an edge with largest edge weight.
 Note that the contraction maintains the inequality $|E|\le|V|-1+k$.
 The resulting kernel satisfies $|V|\le k+1$ and $|E|\le2k$.
 \qed
+\end{proof}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%\fptAlmostAllWeightOne*
-\paragraph{\textbf{Proof of \cref{th:fpt_almost_all_weight_one}}.}
+The last theorem of this section shows that problem {\xxxNTP} is tractable on instances that in 
+a certain sense are close to the preemptive tree packing problem \eqref{eq:NW.1}--\eqref{eq:NW.3}. 
+%%%%%%%%%%%%%%%%%%
+\begin{restatable}{theorem}{fptAlmostAllWeightOne}
+\label{th:fpt_almost_all_weight_one}
+Let $(G,w)$ be an instance of {\xxxNTP} on $m$ edges, so that $m-k$ edges have weight~$1$ and 
+the remaining $k$ edges have weight at most $k$. 
+Then an optimal solution can be found in $\bigO(k^{2k}m^3)$ time.
+\end{restatable}
+%%%%%%%%%%%%%%%%%%
+\begin{proof}
 Let $E'=\set{e\in E: w(e)\ne1}$. 
 For a schedule $\sigma$ of objective value $T$, we denote by $D_\sigma= \set{t: E_t^\sigma\cap E'\ne\emptyset}$ 
 the set of time slots $[t-1,t]$ during which at least one edge of $E'$ is active. 
@@ -989,6 +933,11 @@ is a base of $\mathcal{F}_t$ for all $t \in \fromto{1}{T'}$ (that is, we solve t
 many bases as possible into a matroid). 
 As Edmond's Matroid Partitioning algorithm runs in $\bigO(m^3)$ time, the claimed time complexity follows.
 \qed
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1016,5 +965,31 @@ What is the complexity of {\xxxNTP}, if all edge weights are in $\{1,2\}$?
 ~(Q3) The problem of deciding whether $\ntp(G,w)\ge\beta$ is polynomially solvable for 
 every $\beta\le3$ and NP-hard for every $\beta\ge7$.
 What is the complexity of this question for $\beta\in\{4,5,6\}$?
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection*{Acknowledgements.}
+Stefan Lendl and Lasse Wulf acknowledge the support of the Austrian Science Fund (FWF): W1230.
+Gerhard Woeginger acknowledges support by the DFG RTG 2236 ``UnRAVeL''.
+
+%
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{splncs04}
+\bibliography{literature}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
 
 \end{document}
