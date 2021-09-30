@@ -478,10 +478,16 @@ starting in vertex $u$.
 \end{lemma}
 %%%%%%%%%%%%%%%%%
 
+\begin{figure}[htpb]
+\centering
+ \includegraphics[scale=1.1]{img/act-hamilton-cycle-a}
+\caption{Sketch of the {\xxxNTP} instance $(G, w)$ obtained from the 4-regular graph $H$.}
+\label{fig:reduction-overview}
+\end{figure}
 Now let $H$ be a 4-regular bipartite graph as described in Lemma~\ref{le:Ham-to-Ham}.
 Let $U=\fromto{u_1}{u_k}$ and $Z=\fromto{z_1}{z_k}$ denote the two parts in the bipartition of $H$, 
 and let $\{u_k,z_k\}$ be its special edge.
-We create an instance $(G,w)$ of {\xxxNTP} from $H$. 
+We create an instance $(G,w)$ of {\xxxNTP} from $H$. An informal sketch of this instance $(G,w)$ is depicted in \cref{fig:reduction-overview}. Formally, it is described the following way:
 The graph $G$ has the vertex set 
 %%%%%%%%%%%%%%%%%
 \[ 
@@ -497,7 +503,7 @@ We set $w(e) = 2$, if $e \neq \set{u_k, z_k}$ and $w(\set{u_k, z_k}) = 1$.
 is called the \emph{$i$-th gadget of type L} and has edges and edge weights as depicted in \cref{fig:act-hamilton-cycle}.
 \item For every $i = 1,\dots,k$, the induced subgraph $R_i = G[\set{x, z_i, v'_{i1}, v'_{i2}}]$ is called the 
 \emph{$i$-th gadget of type R} and has edges and edge weights as depicted in \cref{fig:act-hamilton-cycle}.
-\item Finally, the two edges $\set{x,y}$ and $\set{y, z_k}$ have $w(\set{x,y}) = w(\set{y, z_k}) = 4$.
+\item Finally, the two edges $\set{x,y}$ and $\set{y, z_k}$ have $w(\set{x,y}) = w(\set{y, z_k}) = 4$. The induced subgraph $G[\set{x,y,z_k}]$ is called the \emph{gadget $C$}.
 \end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htpb]
@@ -509,10 +515,10 @@ is called the \emph{$i$-th gadget of type L} and has edges and edge weights as d
 \label{fig:act-hamilton-cycle}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-Assume that $(G, w)$ allows some schedule $\sigma$ of objective value 7. 
+Now assume that $(G, w)$ allows some schedule $\sigma$ of objective value 7. 
 During any time slot $[t-1,t]$ with $1\le t\le7$, the $i$-th gadget of type $L$ will 
 consist of either one or two connected components under schedule $\sigma$. 
-If there is a single connected component, we say that $L_i$ is \emph{fully-connected} during the $t$-th time slot. If there are two connected components (one containing  $x$, and one containing $u_i$), we say that $L_i$ is \emph{semi-connected} during the $t$-th time slot. In the same matter, during the $t$-th time slot, gadget $R_i$ is either fully-connected or semi-connected with $x$ and $z_i$ in different components. Likewise, the induced subgraph $G[\set{x, y, z_k}]$ is either fully-connected, or semi-connected with $x$ and $z_k$ in different components.
+If there is a single connected component, we say that $L_i$ is \emph{fully-connected} during the $t$-th time slot. If there are two connected components (one containing  $x$, and one containing $u_i$), we say that $L_i$ is \emph{semi-connected} during the $t$-th time slot. In the same matter, during the $t$-th time slot, gadget $R_i$ is either fully-connected or semi-connected with $x$ and $z_i$ in different components. Likewise, the gadget $C$ is either fully-connected, or semi-connected with $x$ and $z_k$ in different components.
 
 \begin{lemma}
 \label{lemma:gadgets_properties}
@@ -523,7 +529,7 @@ Every schedule of objective value 7 for $(G, w)$ satisfies the following.
 semi-connected during each of the remaining five time slots.
 \item For each $i=1,\dots,k$, there are $t_1,t_2 \in \set{1,2,4,6,7}$ with $t_1\ne t_2$, such that the gadget $L_i$ is fully-connected during time slots $3,5,t_1, t_2$, 
 and semi-connected during each of the remaining three time slots.
-\item The induced subgraph $G[\set{x, y, z_k}]$ is fully-connected during time slot 4, 
+\item The gadget $C$ is fully-connected during time slot 4, 
 and semi-connected during each of the remaining six time slots.
 \end{enumerate}
 \end{lemma}
@@ -550,7 +556,7 @@ Let $e_0 = \set{u, z} = \set{u_k, z_k}$. There is a Hamilton cycle $C$ using $e_
 \begin{itemize}
 \item All gadgets of type $R$ are fully-connected during time slots 2 and 6, and semi-connected otherwise.
 \item All gadgets of type $L$ are fully-connected during time slots 1, 3, 5, and 7, and semi-connected otherwise.
-\item The subgraph $G[\set{x, y, z_k}]$ is fully-connected during time slot 4, and semi-connected otherwise.
+\item The gadget $C$ is fully-connected during time slot 4, and semi-connected otherwise.
 \item All edges $e \in M_1 - \set{e_0}$ have activity interval $[2, 4]$. The edge $e_0$ has activity interval $[2, 3]$.
 \item All edges $e \in M_2$ have activity interval $[3, 5]$.
 \item All edges $e \in M_3$ have activity interval $[0, 2]$.
@@ -573,7 +579,7 @@ Let $e_0 = \set{u, z} = \set{u_k, z_k}$ be the special edge.
 
 First, recall \cref{lemma:gadgets_properties}. Consider vertex $z_i$ for some $i \in \fromto{1}{k}$. We know that for each $t \in \set{1, 3, 5, 7}$ in the $t$-th time slot both the gadget $R_i$ and $G[\set{x,y,z_k}]$ are semi-connected. But of course at least one edge incident to $z_i$ must be active during the $t$-th time slot. Hence $d_1(z_i), d_3(z_i), d_5(z_i), d_7(z_i) \geq 1$.  Note that the four edges in $\delta(z_i) \cap E(H)$ each have weight at most 2 (in the case $i \neq k$ we have four times weight 2, and for $i = k$ we have three times weight 2, and $w(e_0) = 1$). For the sake of contradiction, assume $d_1(z_i) > 1$. Then from the four edges in $\delta(z_i) \cap E(H)$ at least two are scheduled at time $0$. This is a contradiction to  $d_3(z_i), d_5(z_i), d_7(z_i) \geq 1$. Hence $d_1(z_i) = 1$. By the same argument, $d_7(z_i) = 1$. A similar argument shows that $e_0 \not\in E_4$.
 
-Next, consider the graph $G_1$ of active edges in the first time slot. We know that  $d_1(z_i) = 1$ for all $i= 1,\dots, k$. Hence the induced subgraph $G_1[U \cup Z]$ is acyclic, has $k$ edges, and therefore has $k$ connected components. But because $G_1$ is connected, and because all the gadgets of type $R$ and $G[\set{x, y, z_k}]$ are semi-connected during time slot 1, this implies that every single gadget of type $L$ is actually fully-connected during time slot 1. The same argument holds for time slot 7. In total, together with \cref{lemma:gadgets_properties}, we have that a gadget of type $L$ is fully-connected during the $t$-th time slot, if and only if $t \in \set{1, 3, 5, 7}$. This in turn implies that for all $i = 1,\dots, k$, one has $d_2(u_i), d_4(u_i), d_6(u_i) \geq 1$. The two facts $d_2(u_i) \geq 1$ and $d_6(u_i) \geq 1$ together imply $d_4(u_i) \leq 2$. Likewise, for all $i = 1,\dots,k$, the two facts $d_1(z_i) = 1$ and $d_7(z_i) = 1$ together imply $d_4(z_i) \leq 2$.
+Next, consider the graph $G_1$ of active edges in the first time slot. We know that  $d_1(z_i) = 1$ for all $i= 1,\dots, k$. Hence the induced subgraph $G_1[U \cup Z]$ on $2k$ vertices is acyclic, has $k$ edges, and therefore has $k$ connected components. But because $G_1$ is connected, and because all the gadgets of type $R$ and $G[\set{x, y, z_k}]$ are semi-connected during time slot 1, this implies that every single gadget of type $L$ is actually fully-connected during time slot 1. The same argument holds for time slot 7. In total, together with \cref{lemma:gadgets_properties}, we have that a gadget of type $L$ is fully-connected during the $t$-th time slot, if and only if $t \in \set{1, 3, 5, 7}$. This in turn implies that for all $i = 1,\dots, k$, one has $d_2(u_i), d_4(u_i), d_6(u_i) \geq 1$. The two facts $d_2(u_i) \geq 1$ and $d_6(u_i) \geq 1$ together imply $d_4(u_i) \leq 2$. Likewise, for all $i = 1,\dots,k$, the two facts $d_1(z_i) = 1$ and $d_7(z_i) = 1$ together imply $d_4(z_i) \leq 2$.
 
 Finally, we claim $d_4(u_k) = 1$. In fact, $d_4(u_k) = 0$ is impossible, because gadgets of type $L$ are semi-connected during time slot 4. For the sake of contradiction, assume $d_4(u_k) > 1$. We know that $d_2(u_k) \geq 1, d_6(u_k) \geq 1$ and $e_0 \not\in E_4$ and $w(e_0) = 1$. So our assumption $d_4(u_k) > 1$ is only possible if $e_0 \in E_2$ or $e_0 \in E_6$. But for the vertex $z_k$, we also know $d_1(z_k), d_3(z_k), d_5(z_k), d_7(z_k) \geq 1$. This is a contradiction to $e_0 \in E_2 \cup E_6$, hence our assumption was wrong and $d_4(u_k) = 1$.
 In summary, during time slot 4, all gadgets of type $L$ and $R$ are semi-connected. We also have for all $i=1,\dots,k$ that $d_4(u_i) \leq 2$ and $d_4(z_i) \leq 2$. Also, $d_4(u_k) = 1$. However, $G_4$ is connected. These facts together imply that the induced subgraph $G_4[U \cup Z]$ is a Hamilton path in $H$ starting at $u_k = u$.
