@@ -931,14 +931,14 @@ For a schedule $\sigma$ of objective value $T$, we denote by $D_\sigma= \set{t: 
 the set of time slots $[t-1,t]$ during which at least one edge of $E'$ is active. 
 For every $t\le T$ with $t\notin D_\sigma$, graph $G_t=(V,E_t)$ is a connected graph in which 
 all edges have weight 1.  
-We introduce another schedule $\pi$, where the edge set $E_t$ is scheduled in the last time 
+For each such $t$ with $t \not\in D_\sigma$, we introduce another schedule $\pi$, where the edge set $E_t$ is scheduled in the last time 
 slot $[T-1, T]$ instead of the $t$-th time slot, and all edges activated during $[t, T]$ are activated 
 one time unit earlier instead. Formally, schedule $\pi$ is such that
 %%%%%%%%%%%%%%%%%%
 \[(G^\pi_1,\dots, G^\pi_T) = (G^\sigma_1, \dots G^\sigma_{t-1}, G^\sigma_{t+1}, \dots, G^\sigma_T, G^\sigma_t). \]
 %%%%%%%%%%%%%%%%%%
 Observe that $\pi$ is also a schedule of objective value $T$. 
-We conclude that there always exists an optimal schedule $\sigma$ so that $D_\sigma \subseteq \fromto{1}{k^2}$. 
+By repeating this procedure often enough, we conclude that there always exists an optimal schedule $\sigma$ so that $D_\sigma \subseteq \fromto{1}{k^2}$. 
 Due to \cref{le:structure}, we can additionally require that each of $G_1, \dots, G_T$ is acyclic.
 
 Therefore, the following is an algorithm to solve problem {\xxxNTP}: 
