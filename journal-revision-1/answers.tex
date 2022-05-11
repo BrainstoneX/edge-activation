@@ -1,0 +1,286 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{a4,amsfonts,amssymb,amsmath,latexsym,supertabular}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[normalem]{ulem} 
+\usepackage[arrow,matrix]{xy}
+\usepackage{subfigure}
+\usepackage[section]{placeins}
+
+\usepackage{multirow}
+
+\usepackage[USenglish]{babel}
+% \selectlanguage{\USenglish}
+
+\def\textfraction{.01}
+\def\topfraction{.99}
+\def\bottomfraction{.99}
+\def\floatpagefraction{.99}
+
+\setlength{\textheight}{23.8cm}
+\addtolength{\oddsidemargin}{-0.5cm}
+\setlength{\textwidth}{16.0cm}
+\setlength{\parskip}{1.0ex plus 0.5ex minus 0.7ex}
+\setlength{\parindent}{0em}
+\setlength{\voffset}{-1.1cm}
+
+
+
+\newcommand{\Cal}[1]{{\mathcal {#1}}}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\usepackage{mathtools}
+
+\usepackage{enumerate}
+
+\usepackage{hyperref}
+
+\newcommand{\cU}{\mathcal{U}}
+\newcommand{\X}{\mathcal{X}}
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\marc}[1]{\textcolor{blue}{#1}}
+\newcommand{\stefan}[1]{\textcolor{orange}{#1}}
+\newcommand{\lasse}[1]{\textcolor{Plum}{#1}}
+\newcommand{\todo}[1]{\textcolor{red}{#1}}
+
+\begin{document}
+
+\section*{Answers to the Reviewers}
+
+\textit{We thank the three reviewers for their constructive and helpful feedback. We have aimed to make changes to our paper that account for all of the points raised. We respond to each of the reviewers' comments individually, and our responses are written in italics below. All the changes made to the paper are highlighted in blue.}
+
+\section*{Editor}
+
+
+I have received the reports from our advisers on your manuscript, "Non-preemptive tree packing", which you submitted to Algorithmica.
+
+Based on the advice received, I have decided that your manuscript could be reconsidered for publication should you be prepared to incorporate major revisions.
+When preparing your revised manuscript, you are asked to carefully consider the reviewer comments which are attached, and submit a list of responses to the comments. Your list of responses should be uploaded as a file in addition to your revised manuscript.
+
+
+\textit{We thank the editor for the opportunity to revise the paper. As can be seen below, all points were carefully addressed.}
+
+
+\section*{Reviewer 1}
+
+
+This paper studies the non-preemptive tree packing problem in which the input is an undirected edge-weighted graph $G$ and the goal is to activate every edge $e$ of $G$ for some time interval of length $w(e)$ such that the activated edges keep $G$ connected for the longest possible time. The weights of edges and time intervals are positive integers. It is shown that this problem is strongly NP-hard even on graphs of treewidth 2, and it does not admit a PTAS. It is also shown that the problem is NP-hard even if the optimal objective value (the time interval that G is connected) is at least 7. Moreover, a polynomial-time algorithm is presented for the case where optimal objective value is at most 3.
+
+\textbf{Major comments}
+
+This paper is a collection of nice results on the same problem and deserves publication. There are two major issues that I want the authors to address:
+
+\begin{itemize}
+
+\item[1.] The presentation of the paper needs to be improved. Many technical terms are used without being defined, for example, bandwidth, outerplanar graphs, series-parallel graphs, strongly NP-hard; for someone who is not familiar with this concepts it might be hard to follow the arguments in the paper. Below I provided a collection of minor comments; this is just a sample and do not cover all required changes. I recommend the authors to edit and proof-read the paper carefully.
+
+\item[2.] Lemma 1 is used (in many places) without being proved. The proof is left as an easy task to the reader but it is hard for me to verify this lemma. A solid proof of this lemma is important because it is at the heard of Theorems 4, 8, 9, 10.
+The statement of the lemma also need to be reworded. Although it is one sentence, it makes two claims
+
+\begin{itemize}
+
+\item[(i)] If ntp = $T$ (the $T$ intervals are not necessarily connected) then you can shift/exchange activation times to get the same ntp but with continuous/consecutive intervals.
+
+\item[(ii)] We can make the connected graph (during the above interval) to be a spanning tree.
+
+\end{itemize}
+
+Both above claims need proof.
+
+\item[3.] The following is a semi-major issue: Again Lemma 2 is used without being proved. Please provide a solid proof for this lemma.
+
+\end{itemize}
+
+
+
+
+\textbf{Minor comments}
+
+\begin{itemize}
+
+\item A linear program is introduced at the beginning of the paper while its parameter $x_T$ has not been introduced until later. It would be better to introduce $x_T$ before or immediately after the linear program. 
+Also, the linear program that is introduced here, has not been used anywhere else in the paper. I would recommend to remove this linear program (which mainly distracts and confuses the reader) but instead state the problem in a few sentences with simple words.
+
+\item At some point in the intro (where you introduced the problem) it has to be clarified whether the goal is to have a connected graph $G$ or a spanning tree of $G$. For example if we activate all edges of the graph in Fig 1 at the same time, do we get a valid answer within an interval of length 2? 
+
+\item page 2, lines 40-41: What if we activate two edges at time 1?
+
+\item page 3, line 43: Is $t$ integer?
+
+\item page 3, line 49: induced subgraph of $G$ by $V'$
+
+\item page 3, line 49: by removing a vertex $v$ from $G$
+
+\item page 3, line 53: Here integer weights are considered. It would be better to say something about real weights, and whether or not it has been studied earlier. Are there some previous works on real weights?
+
+\item page 4, line 7: Shouldn't $t$ be at least $\sigma(e)$, because $e$ activates at time $\sigma(e)$? Why it is $t \geq \sigma(e)+1$?
+
+\item page 4, line 11: You refer to "the number of time slots" here; maybe clarify that the time slots (in which $G$ is connected) need not be continuous/consecutive.
+
+\item page 4, line 31: Better to rewrite as "such that the numbers in every triplet sum up to $Q$".
+
+\item page 4, line 33-35: Here the authors mentioned series-parallel (rep. outerplanar) graphs, while the following theorems use $K_{2,\ell}$ and (rep. graphs of bandwith 2). Maybe clarify that $K_{2,\ell}$ is series-parallel and bandwidth 2 is outerplanar.
+
+\item page 4, line 53: "every edge is contained in $[0, \beta]$" Here Lemma 1 is used without being referred to.
+
+\item page 4, line 55: "It is easy to see that", why? please clarify.
+
+\item page 7, lines 27-28: I think it is necessary to mention the details/proof here even if this is done by routine arguments? What do you mean by routine arguments? This is a journal paper (with no page limit) so please clarify and add necessary details.
+
+\item page 7, line 33: "so-called special edge $\{u, z\}$" What is this edge? What is special about this edge? Where it was introduced? any reference? 
+
+\item page 7, line 55: "also" does not fit here
+
+\item page 8, fig 3: Labels are large; better to have them of the same size as the main text.
+
+\item page 10, line 10: ??
+
+\item page 12: Please clarify the connection of matroids to connectivity of the final graph G in time interval $[0,3]$.
+
+\item page 12, line 43: "It is easily seen" Please clarify the argument with valid reasoning.
+
+\item Page 13, line 39: folklore result [8]: There is a very simple counting argument for this claim. Please mention this counting argument in 1-2 sentences. Perhaps it is not necessary to mention a reference for this.
+
+\item page 13: Theorem 6: The statement of this theorem is a bit unusual. Please rephrase, or maybe just say that greedy solves the problem only on cactus graphs.
+
+\end{itemize}
+
+
+\section*{Reviewer 2}
+
+The authors introduce a Non-preemptive Tree packing problem, where given an edge-weighted graph $G$, the goal is to find a schedule for the edges or to assign each edge to a start time (the edge belongs to $G$ only during the timeslot [start time+1, start time+its weight]) such that $G$ remains connected for the longest possible overall time. They obtain several hardness and algorithmic results:
+
+\begin{itemize}
+\item NP-hard in $K_{2,n}$: a simple reduction from 3-PARTITION
+\item NP-hard on graphs of bandwidth 2: again a simple reduction from 3-PARTITION
+\item NP-hard to decide if there is a schedule of value $\geq 7$: a more interesting reduction from Hamilton cycle in 3-regular graphs
+
+\item Polytime for objective value $\geq 3$: using a very simple scheme of 3-matroid partitioning    
+\item $(n-1)$-approximation using a greedy strategy which activates the edges of the largest possible weight
+\item Optimal in cactus graphs using the same greedy strategy
+\item Exact FPT algorithm with parameter treewidth + maximum edge weight/feedback edge set size/ $k$, where $m-k$ edges have weight 1 and $k$ edges have weight at most $k$
+\end{itemize}
+
+\textbf{Major comments}
+\begin{itemize}
+
+\item What is the real-life application or motivation behind this problem? 
+\item I have found the hardness results interesting enough, it might be possible to find more non-trivial algorithmic results in generalized settings 
+\item can one obtain an $O(1)$ approximation in the general case? On the other hand, even in the simple case of 1-2 edge weights, the problem is not well-researched
+\item Page 2: " or activate the three edges...0,1,2" Don't you have to activate two edges at time 0 to make the graph connected during $[0,1]$?
+\item Lemma 1: use a different symbol than $T$, which was used before to denote a tree
+\item It would be better to justify the choice of the parameters for the parameterized algorithms, especially for the last two results which look fairly artificial
+\item Are there any connection between machine scheduling and the problem studied, especially is it possible to use results from the wealth of literature on scheduling?
+\item LP rounding has become very handy for approximating scheduling problems. Is it possible to use LP rounding to obtain improved results?
+\item What is the best approximation possible in planar, bipartite graphs? 
+\end{itemize}
+
+
+
+
+
+\section*{Reviewer 3}
+
+The paper presents a novel problem, in which a graph with integral edge-weights
+is given, and the task is to create longest possible schedule of time slots. In
+each time slot some edges must be selected such that the subgraph induced by
+the selected edges is connected. Additionally, each edge must be selected
+during an interval of consecutive time slots, and the interval cannot be longer
+than is the edge's capacity.
+
+The problem is presented as a non-preemptive version of the tree-packing
+problem, in which the goal is to maximize the number of selected spanning
+trees, provided that the weight of an edge is the upper bound on the number of
+trees in which the edge may occur (i.e. the edge does not need to be selected
+in consecutive time steps). 
+
+Both these problems have a number of motivations from different areas: they may
+be seen as a packing problems in graphic spaces, or scheduling problems where
+the connectivity is a structurally rich global constraint, or in the setting of
+so called time-varying graphs and so on. It is unfortunate that the authors
+don't provide a broader context for the research, and limit themselves to the
+technical contribution. This feeling that the paper is a slightly expanded
+technical conference paper, is prevailing also in other parts of the paper.
+
+The technical contribution is in investigating the hardness of the problem.
+Compared to the original tree-packing problem, which is polynomial-time
+solvable, adding the non-preemptiveness constraint makes the problem much
+harder.  In particular, the authors show that it is NP-hard even on complete
+bipartite graphs $K_{2,n}$, and on graphs with bandwidth 2. Also, it is NP-hard to
+decide whether the optimal value is at least 7, which immediately yields the
+lower bound 7/6 in the approximation ratio (unless P=NP). These results are
+complemented with some positive results: whether the optimal value is at least 3
+can be decided in polynomial time. The natural greedy algorithm has
+approximation ratio linear in the size of the graph, and the problem is FPT if
+parameterized by treewidth and maximal edge weight.
+
+The proofs use standard techniques, the NP-hardness is proven by reduction from
+(a variant of) partition, and Hamiltonicity. The edge weights play crucial role
+in the analysis: on one hand, heavy edges can be scheduled from the beginning
+without loss of generality, on the other hand, the overall sum of weights
+provides upper bounds on the length of the schedule.  The FPT result is a
+consequence of Courcelle's theorem.
+
+Overall, the paper provides a detailed picture of the complexity of an
+interesting problem which features global connectivity requirements over time.
+Studying this type of constraints may be of interest in several research
+areas.
+
+\textbf{Major comments}
+
+The paper is well written, and the presented technical parts are well
+explained.  Apart from the lack of broader context in the introduction, there
+are also some places with omitted proofs. This practice would be understandable
+in a conference paper, but in a journal contribution it is debatable. In
+particular:
+
+\begin{itemize}
+
+\item I agree that Lemma 1 is trivial, but since it is the first technical
+  statement of the paper, which is extensively used later, I believe it would
+  help the reader to get familiar with the model if a proof was presented. If
+  you decide not to prove it, then at least rename it to "Observation", "Fact",
+  or similar.
+
+\item I would definitely add the proof of Lemma 2. Again, it can be agreed that it
+  is not the most involved or thrilling part of the paper, and the reader
+  should be able to fill in the details, but I believe that the level of
+  details omitted in the proof is too high for a journal paper.
+
+\item Similar situation is in Theorem 7, albeit there I am not sure whether the
+  full formulation of the "spanning tree" predicate in MSO would actually
+  increase the readability. However, at least some reference to a general
+  source of those "routine methods" would be nice; the aim is to make it
+  possible also for readers from different areas to check the correctness of
+  the proofs.
+ 
+\end{itemize}
+
+\textbf{Minor comments}
+
+\begin{itemize}
+
+\item The text before Theorem 1 should be reformulated. As such, it seems that
+Theorem 1 is made obsolete by Theorem 2 (since outerplanar graphs are
+series-parallel).  However, Theorem 1 gives the NP-hardness specifically for
+K(2,n), and Theorem 2 for graphs with bandwidth 2 (again, graphs with bandwidth
+2 are outerplanar, but outerplanar graphs in general have unbounded bandwidth).
+Also K(2,n) has unbounded bandwidth so the theorems are indeed independent.
+
+
+\item p2.  l46: the problems are computationally hard, but "devastating" is maybe
+            an overstatement
+\item p10. l10: ?? should be Table 1
+\item p10. l47: Don't start the first sentence of the proof with "So".
+\item Theorem 7: If both treewidth and edge weights are bounded, then the algorithm
+  is actually polynomial. It's FPT algorithm with respect to those parameters.
+\item p15. l56: I see what you mean by "close to preemptive", but the reason here is 
+  that (most of) the edges can be used only one time unit.
+  
+\end{itemize}
+
+\end{document}
