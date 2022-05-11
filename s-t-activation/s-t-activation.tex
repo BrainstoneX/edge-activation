@@ -239,6 +239,40 @@ Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and $Q := 
 Reduction from \textsc{3-Partition}. Let $A = \fromto{a_1}{a_{3n}}$ be an instance of \textsc{3-Partition} and let $Q := 1/n \sum A$, such that $a_i \leq p(n)$ for a suitable polynomial $p$. We can assume that $n$ is odd (otherwise, let $a_{3n+1} = a_{3n + 2} := 1$ and $a_{3n + 3} :=  Q - 2$) and each $a_i$ is odd (otherwise, let $a_i' := 2a_i + 1$). Then $Q$ is also odd. Now, consider the same reduction as in \cref{lemma_st_act_strongly_np_hard}, where we substitute an edge of weight $2k - 1$ by the gadget $G_k$. If a schedule of value $n^2Q$ exists, we need to use each gadget to its full extent, and therefore \cref{lemma_gadget} (iii) is applicable. Making use of \cref{lemma_gadget}, the rest of the proof is analogous to \cref{lemma_st_act_strongly_np_hard}.
 \end{proof}
 
+\section{Proof sketch that integrality gap for tree packing is at most log(n)}
+The proof is from Anders Martinsson who mentioned it to me in private conversation after hearing a talk about non-preemptive tree packing.
+
+The following lemma uses random scheduling of the edges and implies that the integrality gap of non-preemptive tree packing is at most $\log n$.
+
+\begin{lemma}
+There is $c > 0$ such that the following holds: Let $(G, w)$ be an instance of the non-preemptive tree packing problem, and let $k$ be the weight of a minimum weight cut. If $T = ck\log n$ and every edge is scheduled uniformly at random in the interval $[0, T]$, then with probability at least 1/2 the graph is connected for at least $T/4$ time slots.
+\end{lemma}
+\begin{proof}
+(ToDo: Need to specify what exactly is meant by scheduling an edge uniformly randomly in $[0,T]$. What we want is that for every time slot and edge $e$, the edge is active during this time slot with probability $w(e)/T$. Observe that choosing the start point randomly in $[0, T-w(e)]$ does not have this property. Choosing the starting point randomly in $[-w(e), T-w(e)]$ is probably a good way to go - guarantees at least $w(e)/(3T)$.)
+
+We are going to use the fact that the number of different minimum weight cuts is at most $O(n^2)$. In fact, this  is a well-known fact which follows from Karger's contraction algorithm (we sketch the argument for convenience).
+As the graph has a min-cut of size $k$, it follows that if we are in the $i$-th step of Karger's algorithm where $n' = n-i$ vertices remain, then every vertex has minimum (weighted) degree $k$. Therefore the probability of success is at least $1 - k/(kn'/2)$.
+
+The probability that a fixed minimum weight cut survives the contraction procedure is therefore
+\[\prod_{i=0}^{n-3} (1 - \frac{2}{n-i}) = {n \choose 2}^{-1}.
+\]
+For different minimum cuts these are disjoint events and therefore there are at most ${n \choose 2} = \Theta(n^2)$ different minimum weight cuts.
+
+This argument can be extended: Let $\alpha \geq 1$ and let $C$ be a cut of weight $\alpha k$. The probability that $C$ survives the contraction algorithm can be shown to be at least $n^{-c_0\alpha}$ for some constant $c_0 > 0$. Therefore there are at most $n^{c_0\alpha}$ cuts of weight $k\alpha$. Details for the proof of this known fact be found in the attached lecture notes.
+
+In the following argument, consider a fixed time slot $i \in \fromto{1}{T}$. Given a fixed cut $C$ of weight $k\alpha$, 
+we observe that $C$ disconnects the graph during time slot $i$ if and only if none of its edges are active at time slot $i$. An edge is active at time slot $i$ with probability at least $w(e)/(3T)$ and the edges are scheduled independent of each other.
+ Therefore the probability that $C$ is disconnected at time slot $i$ is at most 
+\[
+\prod_{e \in C}(1-\frac{w(e)}{3T}) \leq \prod_{e \in C} e^{-w(e)/(3T)} = e^{-w(C)/(3T)} = e^{-\alpha/(3c \log n)}.
+\]
+There are at most $n^{c_0\alpha}$ cuts of weight $k\alpha$. It follows by union-bound that the probability that at least one cut of size $k\alpha$ disconnects the graph at time step $i$ is at most 
+\[ n^{c_0\alpha} e^{-\alpha/(3c \log n)} = e^{-\alpha c_0/(3c)}.\]
+Using again union-bound, we see that the probability that there exists some cut which is disconnected during time slot $i$ is at most
+\[\int_{\alpha=1}^\infty e^{- c_0/(3c)\alpha} \, d\alpha =  \frac{3c}{c_0}e^{-c_0/(3c)}.\]
+If the constant $c$ is small enough, we see that the right-hand side of this expression can be made to be smaller than 1/2. In this case, for every time slot we have that the probability that the graph during this time slot is connected is at least 1/2. Therefore the expected number of time slots where the graph is connected is at least $T/2$. By Markov's inequality, we finally get
+\[P(\text{Connected for at least $T/4$ time slots}) \geq 1/2.\]   
+\end{proof}
 
 \section{Possible idea relaxation ratio undirected}
 
