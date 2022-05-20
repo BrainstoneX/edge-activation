@@ -43,6 +43,8 @@
 \DeclareMathOperator{\ntp}{\text{\sf ntp}}
 \newcommand{\greedy}{\text{\sf Greedy}}
 
+\newcommand{\lasse}[1]{\textcolor{blue}{#1}}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -200,7 +202,7 @@ The complexity results are devastating:
 \item {\xxxNTP} is strongly NP-hard, even on complete bipartite graphs $K_{2,n}$. 
 \item {\xxxNTP} is strongly NP-hard, even on graphs of bandwidth~$2$.
 \end{itemize}
-Since complete bipartite graphs $K_{2,n}$ are series-parallel and since graphs of 
+\lasse{(A problem is \emph{strongly NP-hard} if it stays NP-hard even if all its numerical parameters are bounded by a polynomial.)} Since complete bipartite graphs $K_{2,n}$ are series-parallel and since graphs of 
 bandwidth~$2$ are outerplanar, our results yield strong NP-hardness for essentially 
 all natural subclasses of graphs with treewidth~$2$.
 As edges of zero-weight are irrelevant for the objective value of {\xxxNTP}, NP-hardness 
@@ -245,6 +247,7 @@ Section~\ref{sec:parameterized} states some parameterized and exact algorithms f
 \section{Preliminaries}
 \label{sec:notation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 We write $\NN_0= \NN \cup \set{0}$ for the set of nonnegative integers. 
 For $a\le b$, the term $[a,b]$ denotes the \emph{time slot} starting at $a$ and ending at $b$. 
 For $t\ge1$, the time slot $[t-1,t]$ is often called the $t$-th time slot or time slot $t$.
@@ -253,30 +256,91 @@ For $V'\subseteq V$, the \emph{edge cut} $\delta(V')$ is the set of edges with o
 in $V'$ and one endpoint in $V-V'$; for $v\in V$, we write $\delta(v) = \delta(\set{v})$.
 We denote by $G[V']$ the \emph{induced subgraph} on $V'$.
 By removing the vertex $v$ from $G$, we obtain the graph $G-v=G[V-\set{v}]$.
-Similarly, for $E'\subseteq E$ and $e\in E$ we have $G-E'=(V,E-E')$ and $G-e=G-\set{e}$.
-For all other graph-theoretic concepts used in the paper, we refer the reader to the
+Similarly, for $E'\subseteq E$ and $e\in E$ we have $G-E'=(V,E-E')$ and $G-e=G-\set{e}$. For all other graph-theoretic concepts used in the paper, we refer the reader to the
 text book by West \cite{WestBook}.
+
+\subsection{Formal Problem Definition}
 
 An instance for problem {\xxxNTP} is a weighted graph $(G,w)$, where $G=(V,E)$ and $w:E\to\NN_0$. 
 A \emph{schedule} for instance $(G,w)$ is a map $\sigma:E\to\NN_0$, that maps each edge $e$ to 
 its activation time $\sigma(e)$.
 For a schedule $\sigma$ and an edge $e$, the \emph{activity interval of $e$} is $[\sigma(e),\sigma(e)+w(e)]$. 
-For $t\ge1$, we let $E^\sigma_t= \set{e\in E:~ \sigma(e)+1 \le t \le \sigma(e)+w(e)}$ denote 
+For $t\ge1$, we let 
+\[E^\sigma_t= \set{e\in E:~ \sigma(e)+1 \le t \le \sigma(e)+w(e)}\]
+ denote 
 the set of edges that are active in the $t$-th time slot, and we let $G^\sigma_t=(V,E^\sigma_t)$ 
 denote the graph on vertex set $V$ with all the edges that are active in the $t$-th time slot. 
 Finally, we define the \emph{objective value} $\ntp(\sigma)$ of schedule $\sigma$ as the number of time 
-slots $[t-1,t]$ for which $G^\sigma_t$ is connected. 
-When the schedule $\sigma$ is clear from the context, we often simply write $E_t$ and $G_t$ instead of 
+slots $[t-1,t]$ for which $G^\sigma_t$ is connected. When the schedule $\sigma$ is clear from the context, we often simply write $E_t$ and $G_t$ instead of 
 $E^\sigma_t$ and $G^\sigma_t$. 
-The following statement can be shown by a simple exchange argument.
-%%%%%%%%%%%%%%%%%
+
+ \lasse{We clarify two points in this definition: 
+First, this set of time slots does not encessarily need to be a set of consecutive time slots. Formally, if $C(\sigma) = \set{t : G^\sigma_t \text{ is connected}}$ denotes the set of time slots where the graph is connected by schedule $\sigma$, then $\ntp(\sigma) = |C(\sigma)|$. Second, there can be of course a time slot $t$, where $G^\sigma_t$ is connected and contain more edges than a spanning tree, that is, the set of active edges contains a cycle. By our definition, such a time slot also increases $\ntp(\sigma)$ by one.
+At first glance, it seems like these are important details in the definition of $\ntp(\sigma)$.  However, this is not the case -- the next lemma shows that one can always assume without loss of generality that an optimal schedule connects the graph for a continuous time interval and does it so by using only spanning trees.}
+
+
+
+
+\subsection{\lasse{General Insights}}
+
 \begin{lemma}
 \label{le:structure}
-For every instance $(G,w)$ of {\xxxNTP} with $\ntp(G,w)=T$, there exists an optimal schedule $\sigma$ 
-for which the graphs $G^\sigma_1,\ldots,G^\sigma_T$ (in the first $T$ time slots) are trees.
-\qed
+For every instance $(G,w)$ of {\xxxNTP} with $\ntp(G,w)=\beta$, there exists an optimal schedule $\sigma$ 
+\lasse{which makes the graph connected for the first $\beta$ consecutive time slots (that is $C(\sigma) = \fromto{1}{\beta}$)} and additionally the graphs $G^\sigma_1,\ldots,G^\sigma_\beta$ are \lasse{spanning} trees.
 \end{lemma}
+
+\begin{proof}
+\lasse{
+Let $G = (V,E)$. We proceed in two steps: First, we prove that one can always make the schedule connected, then we prove that one can always turn the graphs $G^\sigma_1,\ldots,G^\sigma_\beta$ into spanning trees.
+}
+
+\lasse{
+For the first step, assume that $\sigma : E \rightarrow \NN_0$ is an optimal schedule with $\ntp(\sigma) = \beta$, but $\sigma$ is not connected during all of the first $\beta$ time slots.
+ Then let $s$ be the smallest integer for which $G^\sigma_s$ is disconnected.
+  This corresponds to the $s$-th time slot $[s-1,s]$. By our assumption we have $1 \leq s \leq \beta$. We now partition the edge set $E$ into two sets. The set $E_A$ contains all edges $e$ with $\sigma(e) < s-1$ and the set $E_B$ contains all edges $e$ with $\sigma(e) \geq s-1$. Now consider the new schedule $\sigma'$ defined by
+\[
+\sigma'(e) = \begin{cases} \sigma(e) &;\text{ if } e \in E_A\\
+\sigma(e) - 1&;\text{ if } e \in E_B.
+\end{cases}
+\]
+In other words, $\sigma'$ is created from $\sigma$ by scheduling all edges of $E_B$ one time unit earlier. 
+Because the edges in $E_A$ connect the graph in $\sigma$ for all time slots $1,\ldots,s-1$, we immediately see that also all the graphs $G_1^{\sigma'},\ldots,G^{\sigma'}_{s-1}$ are connected. 
+Furthermore, for every $t \geq s$, we claim that $E^{\sigma'}_t \supseteq E^\sigma_{t+1}$. 
+Indeed, if some edge $e$ is contained in $E^\sigma_{t+1}$, then there are two cases: 
+If $e \in E_B$, then it is scheduled one time unit earlier in the schedule $\sigma'$ and hence it is also contained in $E^{\sigma'}_t$. 
+In the other case, if $e \in E_A$, then by definition we have $\sigma(e) < s-1$. 
+But together with the assumption $e \in E^\sigma_{t+1}$, nonpreemptiveness implies that $e \in E^\sigma_t$. 
+Because $\sigma(e) = \sigma'(e)$ we also have $e \in E^{\sigma'}_t$. This proves the claim. In total, we have that if $G^\sigma_{t+1}$ is conneted, then so is $G^{\sigma'}_{t}$ for all $t \geq s$. This proves that $\ntp(\sigma') \geq \ntp(\sigma)$.
+ If the new schedule $\sigma'$ still does not connect the graph for the first continuous $\beta$ time slots, we can again repeat this procedure, until we arrive at a schedule with the desired property.
+}
+
+\lasse{
+For the second step, assume that $\sigma$ is a schedule which already connects the graph for the first $\beta$ time slots (that is $C(\sigma) = \fromto{1}{\beta}$), but not all of the graphs $G^\sigma_1,\dots,G^\sigma_\beta$ are spanning trees. 
+Then let $s$ be the smallest integer such that $G^\sigma_s$ contains a cycle.
+ Because $G^\sigma_{s-1}$ does not contain a cycle, there is some edge $e^\star$ on the cycle, which is activated for the first time in the $s$-th time slot $[s-1, s]$, that is $\sigma(e^\star) = s-1$. 
+Consider the new schedule $\sigma'$ which results from $\sigma$ by scheduling the edge $e^\star$ one time unit later, that is $\sigma'(e^\star) = \sigma(e^\star) + 1$ and $\sigma'(e) = \sigma(e)$ for all other edges. 
+Because $e^\star$ was closing a cycle in $G^\sigma_s$, we have that $G^{\sigma'}_s = G^\sigma_s - e^\star$ is still connected.
+ Because the only change in the new schedule $\sigma'$ in comparison to the old schedule $\sigma$ is that we increased the activation time of $e^\star$ by one, we obtain that $\ntp(\sigma') \geq \ntp(\sigma)$.} 
+
+\lasse{
+In summary, the preceeding argument shows that if we select a schedule $\sigma$ with the property that $\sum_{e \in E}\sigma(e)$ is maximal among all the schedules that keep the graph connected for the first consecutive $\beta$ time units, then all the graphs $G^\sigma_1,\dots,G^\sigma_\beta$ are spanning trees. This proves the lemma. \qed
+}
+\end{proof}
+
+\lasse{The ideas presented in \cref{le:structure} also provide a formal proof that the problem {\xxxNTP} is indeed a nonpreemptive variant of Nash-Williams tree packing problem. Indeed, consider the problem of keeping the weighted graph $(G, w)$ connected, but in the case where edge preemption is allowed. We claim this problem is equivalent to Nash-Williams tree packing problem. Indeed, if $(T_1,\dots,T_\beta)$ is a sequence of $\beta$ spanning trees, then we can schedule in the $i$-th time slot exactly the edges of the $i$-th tree $T_i$ (this is not a problem, because preemption is allowed). On the other hand, if we can find a schedule that keeps the graph connected for $\beta$ time units, we can in the same manner as in the proof of \cref{le:structure} transform the schedule such a way that all the graphs of active edges in the first $\beta$ time slots are spanning trees. Therefore we see that it is possible to pack $\beta$ spanning trees in this instance.  }
+
 %%%%%%%%%%%%%%%%%
+
+\subsection{\lasse{Graph Classes}}
+
+\lasse{Throughout the paper, we discuss different graph classes and their behavior with respect to non-preemptive tree packing. 
+The \emph{treewidth} of a graph is a popular parameter in the area of parameterized algorithms and measures in some sense how close the graph is to a tree. It can be defined as the minimum integer $k > 0$ such that $G$ is subgraph of a $k$-tree \cite{bodlaender1998partial}. A $k$-tree is constructed by starting with a $(k +1)$-clique and then repeatedly
+connecting a new vertex to all vertices of an existing $k$-clique.
+Two popular subclasses of treewidth-2 graphs are series-parallel graphs and outerplanar graphs. An undirected graph $G$ is \emph{series-parallel}, if there exist two vertices $s,t$ in $G$, such that $G$ has a series-parallel decomposition with respect to the source $s$ and the sink $t$ (see for example \cite[p. 22]{bodlaender1998partial} for details).  A graph is \emph{outerplanar} if it has a planar drawing where all the vertices belong to the outer face. Every outerplanar graph is subgraph of a series-parallel graph  \cite{bodlaender1998partial}.
+The \emph{bandwidth} of a graph is the minimum width of a linear arrangement, where a linear arrangement of a graph is a labeling which assigns to each vertex $v$ a distinct integer $f(v)$ and the width of a linear arrangement is $\max\set{|f(v)-f(u)| : \set{u,v} \in E}$. Graphs of bandwidth 2 are outerplanar. }
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -461,7 +525,7 @@ Problem {\xxxHAM}
 The reduction is done in two steps.
 The first step transforms an instance $H'$ of {\xxxHAM} into a new 4-regular graph $H$ 
 with the properties described in Lemma~\ref{le:Ham-to-Ham}.
-As this transformation is done by routine arguments, we omit the details.
+\lasse{(Roughly speaking, we transform $H'$ into a graph $H$ where the existence of a Hamilton path and a Hamilton cycle are equivalent, because we require a Hamilton cycle for one direction of the reduction, but can only show the existence of a Hamilton path in the other direction.)}
 The second step then transforms the 4-regular graph $H$ from Lemma~\ref{le:Ham-to-Ham}
 into a corresponding instance of problem {\xxxNTP}.
 
@@ -469,16 +533,20 @@ into a corresponding instance of problem {\xxxNTP}.
 \begin{lemma}
 \label{le:Ham-to-Ham}
 There is a polynomial time algorithm that takes an instance $H'$ of {\xxxHAM} as input and outputs 
-a 4-regular bipartite graph $H$ together with a so-called special edge $\{u,z\}\in E(H)$,
+a 4-regular bipartite graph $H$ together with an edge $\{u,z\}\in E(H)$ \lasse{(which we call the \emph{special edge})},
 so that the following holds:
 \begin{enumerate}[(i)]
 \item If $H'$ is a YES-instance of {\xxxHAM}, then the new graph $H$ contains a Hamilton cycle 
 that traverses the special edge $\{u,z\}$.
 \item If $H'$ is a NO-instance of {\xxxHAM}, then the new graph $H$ has no Hamilton path
 starting in vertex $u$. 
-\qed
 \end{enumerate}
 \end{lemma}
+\begin{proof}
+\lasse{
+The algorithm selects an arbitrary vertex $x \in V(H')$ and constructs the new graph $H$ in the following way:
+}
+\end{proof}
 %%%%%%%%%%%%%%%%%
 
 \begin{figure}[htpb]
@@ -862,7 +930,7 @@ of problem {\xxxNTP}, even if either the treewidth or the edge weights are bound
 If both the treewidth and the maximum edge weight of the input graph $G = (V, E)$ are bounded, problem {\xxxNTP} allows for an FPT-algorithm whose running time is linear in $|E|$. 
 \end{restatable}
 \begin{proof}
-As the graph $G=(V,E)$ has treewidth at most $k$, there is a vertex $v\in V$ of degree at most $k$.
+As the graph $G=(V,E)$ has treewidth at most $k$, there is a vertex $v\in V$ of degree at most $k$ \lasse{(note that we use here the property that $G$ is a simple graph, that is, it has no parallel edges.)}.
 As every edge incident to $v$ has weight at most $k$, we conclude $\ntp(G,w)\le k^2$. 
 For every $T=1,\ldots,k^2$, we construct a formula $\Phi_T$ in monadic second-order 
 graph logic $\text{MSO}_2$, so that $\Phi_T$ is satisfiable if and only if there exists a schedule 
