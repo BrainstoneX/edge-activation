@@ -93,29 +93,26 @@ a number of parameterized and exact algorithms.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{The tree packing problem of Nash-Williams.}
 For a given undirected connected graph $G=(V,E)$ and a weight function $w:E\to\NN$,
-Nash-Williams \cite{Nash-Williams1961} considered the following optimization problem:
+Nash-Williams \cite{Nash-Williams1961} considered \lasse{the optimization problem of packing as many spanning trees as possible into the graph, such that for every edge $e \in E$, it gets used in at most $w(e)$ spanning trees. For example, consider \cref{fig_spt_example}, where $G$ is a complete grap on three vertices, and $w(e) = 2$ for all edges. The optimal solution packs three spanning trees. It is not possible to pack more spanning trees, because every edge already is used twice.} 
 %%%%%%%%%%%%%%%%%%%%%%%
-\begin{align}
-\text{maximize}~~ &\sum\left\{x_T:\,\text{$T$ is a spanning tree} \right\} 
-\label{eq:NW.1} \\[0.5ex]
-\text{such that}~~&\sum\left\{x_T:\,e\in T\right\}\le w(e)\qquad\text{for every $e\in E$}
-\label{eq:NW.2} \\[0.5ex]
-                 &x\ge0,~\text{integral}
-\label{eq:NW.3} 
-\end{align}
+\begin{figure}[htpb]
+\centering
+\includegraphics[scale=1]{img/stp-example}
+\caption{\lasse{An instance of Nash-Williams spanning tree packing problem. The optimal solution packs three spanning trees, as indicated on the right.}}
+\label{fig_spt_example}
+\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%
-Nash-Williams \cite{Nash-Williams1961} derives a min-max relation for problem
-\eqref{eq:NW.1}--\eqref{eq:NW.3} that connects it to certain cut conditions.
+Nash-Williams \cite{Nash-Williams1961} derives a min-max relation for the problem that connects it to certain cut conditions.
 Building on these results, Cunningham \cite{Cunningham1985} constructs a polynomial time 
 algorithm for the problem by reducing it to a polynomial number of maximum flow problems.
 Barahona \cite{Barahona1995} presents another algorithm with a better time complexity.
 
-Problem \eqref{eq:NW.1}--\eqref{eq:NW.3} may also be interpreted as a scheduling problem:
+the tree packing problem may also be interpreted as a scheduling problem:
 Every edge $e\in E$ is a resource that can be activated for a total of $w(e)$ time units.
 The objective now is to activate the edges in such a way that the graph remains connected 
 for the longest possible overall time. 
-Under this interpretation, the variable $x_T$ indicates the number of time units in which
-the spanning tree $T$ is used in the activation schedule.
+%Under this interpretation, the variable $x_T$ indicates the number of time units in which
+%the spanning tree $T$ is used in the activation schedule.
 Figure~\ref{fig:example} contains a simple illustrating example on the three-vertex cycle.
 There are three spanning trees (that each consist of two edges), and an optimal schedule 
 uses each of these spanning trees for exactly one time unit.
@@ -250,12 +247,12 @@ Section~\ref{sec:parameterized} states some parameterized and exact algorithms f
 
 We write $\NN_0= \NN \cup \set{0}$ for the set of nonnegative integers. 
 For $a\le b$, the term $[a,b]$ denotes the \emph{time slot} starting at $a$ and ending at $b$. 
-For $t\ge1$, the time slot $[t-1,t]$ is often called the $t$-th time slot or time slot $t$.
+For \lasse{an integer} $t\ge1$, the time slot $[t-1,t]$ is often called the $t$-th time slot or time slot $t$.
 Every graph $G=(V,E)$ in this paper is simple, undirected and without loops. We write $V(G) = V$ and $E(G) = E$.
 For $V'\subseteq V$, the \emph{edge cut} $\delta(V')$ is the set of edges with one endpoint 
 in $V'$ and one endpoint in $V-V'$; for $v\in V$, we write $\delta(v) = \delta(\set{v})$.
-We denote by $G[V']$ the \emph{induced subgraph} on $V'$.
-By removing the vertex $v$ from $G$, we obtain the graph $G-v=G[V-\set{v}]$.
+We denote by $G[V']$ the \emph{induced subgraph} \lasse{of $G$ by} $V'$.
+By removing \lasse{a} vertex $v$ from $G$, we obtain the graph $G-v=G[V-\set{v}]$.
 Similarly, for $E'\subseteq E$ and $e\in E$ we have $G-E'=(V,E-E')$ and $G-e=G-\set{e}$. For all other graph-theoretic concepts used in the paper, we refer the reader to the
 text book by West \cite{WestBook}.
 
@@ -274,9 +271,15 @@ Finally, we define the \emph{objective value} $\ntp(\sigma)$ of schedule $\sigma
 slots $[t-1,t]$ for which $G^\sigma_t$ is connected. When the schedule $\sigma$ is clear from the context, we often simply write $E_t$ and $G_t$ instead of 
 $E^\sigma_t$ and $G^\sigma_t$. 
 
- \lasse{We clarify two points in this definition: 
-First, this set of time slots does not encessarily need to be a set of consecutive time slots. Formally, if $C(\sigma) = \set{t : G^\sigma_t \text{ is connected}}$ denotes the set of time slots where the graph is connected by schedule $\sigma$, then $\ntp(\sigma) = |C(\sigma)|$. Second, there can be of course a time slot $t$, where $G^\sigma_t$ is connected and contain more edges than a spanning tree, that is, the set of active edges contains a cycle. By our definition, such a time slot also increases $\ntp(\sigma)$ by one.
-At first glance, it seems like these are important details in the definition of $\ntp(\sigma)$.  However, this is not the case -- the next lemma shows that one can always assume without loss of generality that an optimal schedule connects the graph for a continuous time interval and does it so by using only spanning trees.}
+ \lasse{We clarify a few points in this definition: 
+First, this set of time slots does not encessarily need to be a set of consecutive time slots. Formally, if $C(\sigma) = \set{t : G^\sigma_t \text{ is connected}}$ denotes the set of time slots where the graph is connected by schedule $\sigma$, then $\ntp(\sigma) = |C(\sigma)|$. Second, there can be of course a time slot $t$, where $G^\sigma_t$ is connected and contain more edges than a spanning tree, that is, the set of active edges contains a cycle. 
+By our definition, such a time slot also increases $\ntp(\sigma)$ by one. 
+At first glance, it seems like these are important details in the definition of $\ntp(\sigma)$.  However, this is not the case -- the next lemma shows that one can always assume without loss of generality that an optimal schedule connects the graph for a continuous time interval and does it so by using only spanning trees. }
+
+\lasse{
+Finally, in this paper we only consider weight functions $w : E \rightarrow \NN_0$ with integral values. 
+If rational weights are considered instead, it is easy to see that by multiplying with the smallest common denominator one gets an equivalent integral problem. If real-valued weights are considered, all our hardness proofs of course propagate. Furthermore, it can be shown that  \cref{le:structure} still holds true in a similar way, and the problem remains to be contained in the class NP. We choose to omit the technical details.
+}
 
 
 
@@ -349,7 +352,7 @@ The \emph{bandwidth} of a graph is the minimum width of a linear arrangement, wh
 \label{sec:hardness}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 In this section, we establish the NP-hardness of problem {\xxxNTP} for certain families of
-highly restricted graphs. 
+highly restricted graphs (\cref{fig_easy_graphs}). 
 All proofs are done by reductions from the strongly NP-hard \textsc{3-Partition} problem;
 see Garey \& Johnson \cite{garey1979computers}. 
 %%%%%%%%%%%%%%%%%
@@ -359,13 +362,18 @@ Problem \textsc{3-Partition}:
 \textbf{Instance:} Positive integers $q_1,\ldots,q_{3n}$ with sum $\sum_{i=1}^{3n}q_i=nQ$ that satisfy 
 $Q/4<q_i<Q/2$ for all $i$.
 \\
-\textbf{Question}: Is there a partition of these $3n$ numbers into $n$ into triplets, such that in 
-every triplet the three numbers sum up to $Q$?  
+\textbf{Question}: Is there a partition of these $3n$ numbers into $n$ into triplets, such that \lasse{the numbers in} 
+every triplet sum up to $Q$?  
 \end{quote}
 %%%%%%%%%%%%%%%%%
-In the following, we show that {\xxxNTP} is strongly NP-hard both for series-parallel 
-graphs (Theorem~\ref{thm:hardness_complete_bipartite}) and for outerplanar graphs 
-(Theorem~\ref{thm:hardness_bandwidth}). 
+In the following, we show that {\xxxNTP} is strongly NP-hard for \lasse{complete bipartite graphs $K_{2,\ell}$} (Theorem~\ref{thm:hardness_complete_bipartite}). \lasse{As the graph $K_{2,\ell}$ has unbounded bandwidth, one could hope that the problem becomes easy for graphs of bandwidth 2. But as we show in Theorem~\ref{thm:hardness_bandwidth}, also there the problem stays strongly NP-hard. As the graph $K_{2,\ell}$ is series-parallel and bandwidth-2 graphs are outerplanar, it follows that problem {\xxxNTP} is intractable even on popular subclasses of treewidth-2 graphs. }
+\begin{figure}[htpb]
+\centering
+\includegraphics[scale=1]{img/K_2_l}
+\includegraphics[scale=1]{img/bandwidth_2}
+\caption{\lasse{A complete bipartite graph $K_{2,\ell}$ and a graph of bandwidth 2. Problem {\xxxNTP} is NP-hard even on these simple graphs.} }
+\label{fig_easy_graphs}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%
 \begin{theorem}
@@ -388,11 +396,11 @@ with objective value $\beta$.
 Note that for every $i \in \{1,\dots,n-1\}$, we have $w(\set{x_i,a}) +w(\set{x_i,b}) = \beta+1$. 
 Hence the sum of all the edge weights in the graph is $(n-1)(\beta+1) +3n\beta +(\beta-n+1) = 4\beta n$. 
 As every spanning tree for $K_{2, 4n-1}$ has $4n$ edges, each of the connected graphs $G_1,\dots,G_\beta$ 
-must have exactly $4n$ edges (and must actually be a spanning tree). This implies that the activity interval of every edge is contained in $[0, \beta]$.
+must have exactly $4n$ edges (and must actually be a spanning tree). \lasse{The fact that the sum of all edge weights is $4\beta n$ furthermore} implies that the activity interval of every edge is contained in $[0, \beta]$.
 Now consider some vertex $x_i$ with $i\in\{1,\dots,n-1\}$. 
 Since $w(\set{x_i,a}) + w(\set{x_i,b})=\beta+1$, there is exactly one $k\in\fromto{1}{\beta}$ so 
 that the edge set $E_k$ contains both edges incident to vertex $x_i$. 
-It is easy to see that either $k=i(Q+1)$ or $k=(n-i)(Q+1)$ holds, and we say that this value $k$ 
+\lasse{Because there are only two possibilities for the two activity intervals of length $w(\set{x_i,a}) = i(Q+1)$ and $w(\set{x_i,b}) = (n-i)(Q+1)$ to cover the whole interval $[0, \beta]$, we see} that either $k=i(Q+1)$ or $k=(n-i)(Q+1)$ holds, and we say that this value $k$ 
 is associated with vertex $x_i$.
 If some value $k$ is associated with two distinct vertices $x_i$ and $x_j$, then $G_k$ contains 
 a cycle; a contradiction.
@@ -542,11 +550,29 @@ that traverses the special edge $\{u,z\}$.
 starting in vertex $u$. 
 \end{enumerate}
 \end{lemma}
+
 \begin{proof}
 \lasse{
-The algorithm selects an arbitrary vertex $x \in V(H')$ and constructs the new graph $H$ in the following way:
+The reduction is sketched in \cref{fig_hamilton_cycle_lemma}. Let $H' = (V, E)$. The algorithm chooses some arbitrary vertex $x \in V$. The graph $H$ then consists out of the following components: There are two copies of $H'$, called $H'_1$ and $H'_2$ respectively. For each vertex $v \in V$, we denote by $v_1$ its copy in $H'_1$ and by $v_2$ its copy in $H'_2$. For each vertex $v \in V-\set{x}$, we take a copy $A_v$ of $K_{4,4}$, remove some edge $\set{u_1, u_2}$ from $A_v$, and add edges $\set{v_1,u_1}$ and $\set{u_2,v_2}$. Finally, we take two copies $A_x$ and $A'_x$ of $K_{4,4}$, remove an edge $\set{u_1,u_2}$ from $A_x$ and an edge $\set{u'_1,u'_2}$ from $A'_x$, add edges $\set{x_1,u_1}$, $\set{u_2,u'_1}$, $\set{u'_2,x_2}$. The special edge is given by $\set{u, z}$ with $u := u_2$, and $z := u'_1$. Clearly, $H$ is bipartite and 4-regular, so it remains to prove claims (i) and (ii).
+}
+\begin{figure}[htpb]
+\centering
+\includegraphics[scale=0.92]{img/hamilton-prime}
+\caption{\lasse{Construction used in the proof of \cref{le:Ham-to-Ham}.}}
+\label{fig_hamilton_cycle_lemma}
+\end{figure}
+
+\lasse{
+For claim (i), assume that $H'$ has a Hamilton cycle $C'$. Then we obtain a Hamilton cycle $C$ in $H$ using the edge $\set{u,z}$ in the following fashion: We start at the vertex $u$, and traverse all the vertices of $A_x$ in such an order that we can go afterwards to $x_1$. Then we go to $x_1$. Now we follow the edges of the cycle $C'$ alternatingly in $H'_1$ and $H'_2$. Precisely, whenever we follow an edge of $C'$ to encounter a new vertex $v_1$ ($v_2$, respectively), we traverse all the vertices of $A_v$ and go to $v_2$ ($v_1$, respectively) and then follow the next edge of $C'$. Because the graph $H'$ has an even number of vertices (it is bipartite and 3-regular), we will end up at $x_2$. We then complete the tour by traversing all vertices of $A'_x$ and going along the edge $\set{u,z}$ at the end. This describes a Hamilton cycle of $H$ which uses the edge $\set{u,z}$.
+}
+
+\lasse{
+For claim (ii), we prove the contrapositive. Assume that $H$ has a Hamilton path $P = (w_1,\dots,w_n)$ starting at vertex $u$, we have to prove that $H'$ has a Hamilton cycle. Note that if $w_2 = z$, then $w_n$ is in $A_x$. On the other hand, if $w_2$ is in $A_x$, then $w_n$ is in $A'_x$. We first assume that $w_2 \in A_x$ and $w_n \in A'_x$.
+We claim that the Hamilton path $P$ necessarily switches between $H'_1$ and $H'_2$ after every of its edges in $H'_1$ or $H'_2$. Indeed, let $v \neq x$ be a vertex of $H'$ and assume without loss of generality that from the two vertices $v_1$ and $v_2$ the path $P$ first encounters $v_1$. If the path does not immediately switch to $v_2$, then it will at a later stage need to visit $v_2$. But in this case, it has to visit $A_v$ after visiting $v_2$, in contradiction to the fact that the path has to return to $A'_x$. This proves that $P$ switches between $H'_1$ and $H'_2$ after every egde in $H'_1$ or $H'_2$. Then looking at the edges of $P$ which lie in $H'_1$ or $H'_2$, we see that $H'$ has a Hamilton cycle. Finally, an anologous statement holds in the case $w_2 = z$. So we have proven the claim. \qed
 }
 \end{proof}
+
+
 %%%%%%%%%%%%%%%%%
 
 \begin{figure}[htpb]
@@ -568,8 +594,8 @@ V(G) =  \set{x, y} \cup U \cup Z
 %%%%%%%%%%%%%%%%%
 Furthermore, the graph $G$ has the following edges and edge weights:
 \begin{itemize}
-\item For every edge $e\in E(H)$, the graph $G$ also contains $e$. 
-We set $w(e) = 2$, if $e \neq \set{u_k, z_k}$ and $w(\set{u_k, z_k}) = 1$.
+\item \lasse{Between the vertex sets $U$ and $Z$, the graph $G$ has exactly the same edges as the graph $H$. 
+For every such edge $e$, we set} $w(e) = 2$, if $e \neq \set{u_k, z_k}$ and $w(\set{u_k, z_k}) = 1$.
 \item For every $i = 1,\dots,k$, the induced subgraph $L_i = G[\set{x, u_i, v_{i1}, v_{i2}, v_{i3}, v_{i4}}]$ 
 is called the \emph{$i$-th gadget of type L} and has edges and edge weights as depicted in \cref{fig:act-hamilton-cycle}.
 \item For every $i = 1,\dots,k$, the induced subgraph $R_i = G[\set{x, z_i, v'_{i1}, v'_{i2}}]$ is called the 
@@ -762,8 +788,17 @@ A set $F\subseteq W_1\cup W_2$ is independent in $\mathcal{F}_1$, if and only if
 A set $F\subseteq W_1$ is independent in $\mathcal{F}_2$, if and only if $F$ is acyclic in graph $H_{23}$.
 \item The matroid $\mathcal{F}_3$ has ground set $W_1\cup W_2$, and coincides with $\mathcal{F}_1$.
 \end{itemize}
-It is easily seen that $\ntp(G,w)\ge3$ holds, if and only if there exist three pairwise disjoint subsets
-$S_1,S_2,S_3$ of $E$, such that $S_t$ forms a base of the matroid $\mathcal{F}_t$ for $t=1,2,3$.
+\lasse{Recall that a base of a matroid is a maximal independent set. By construction, the bases of $\mathcal{F}_1, \mathcal{F}_2$ and $\mathcal{F}_3$ have the following properties. (A small technicality we have to consider is that $W_2$ and $W_{\geq3}$ may contain cycles.)}
+\lasse{
+\begin{itemize}
+\item If a set $F \subseteq W_1 \cup W_2$ is indepenedent in the matroid $\mathcal{F}_1$, then $F$ is a base of $\mathcal{F}_1$ if and only if $F$ induces a spanning tree of $H_3$ if and only if $F \cup W_{\geq 3}$ contains a spanning tree of $G$.
+\item If a set $F \subseteq W_1$ is indepenedent in the matroid $\mathcal{F}_2$, then $F$ is a base of $\mathcal{F}_2$ if and only if $F$ induces a spanning tree of $H_{23}$ if and only if $F \cup W_2 \cup W_{\geq 3}$ contains a spanning tree of $G$.
+\item If a set $F \subseteq W_1 \cup W_2$ is indepenedent in the matroid $\mathcal{F}_3$, then $F$ is a base of $\mathcal{F}_3$ if and only if $F$ induces a spanning tree of $H_3$ if and only if $F \cup W_{\geq 3}$ contains a spanning tree of $G$.
+\end{itemize}
+}
+
+\lasse{Now observe that scheduling an edge of weight 1 is equivalent to choosing in which time slot it is scheduled. Scheduling an edge 2 is equivalent to always schedule it in time slot 2 and choose whether it is scheduled in time slot 1 or 3. From these facts we can deduce that we can connect the graph during time slots 1,2 and 3, that is,} $\ntp(G,w)\ge3$ holds, if and only if there exist three pairwise disjoint subsets
+$S_1,S_2,S_3$ of $W_1 \cup W_2$, such that $S_t$ forms a base of the matroid $\mathcal{F}_t$ for $t=1,2,3$.
 This can be checked in $\bigO(m^3)$ time by using Edmond's matroid partitioning algorithm \cite{edmonds1965minimum}.
 \qed
 \end{proof}

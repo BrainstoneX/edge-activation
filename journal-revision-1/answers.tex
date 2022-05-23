@@ -78,9 +78,10 @@ This paper is a collection of nice results on the same problem and deserves publ
 
 \item[1.] The presentation of the paper needs to be improved. Many technical terms are used without being defined, for example, bandwidth, outerplanar graphs, series-parallel graphs, strongly NP-hard; for someone who is not familiar with this concepts it might be hard to follow the arguments in the paper. Below I provided a collection of minor comments; this is just a sample and do not cover all required changes. I recommend the authors to edit and proof-read the paper carefully.
 
+\textit{We agree that we were a bit careless in leaving out the definitons of these terms. We now define all graph-theoretic notions in the new section 2.3. The notion of strongly NP-hardness is given in the introduction.}
+
 \item[2.] Lemma 1 is used (in many places) without being proved. The proof is left as an easy task to the reader but it is hard for me to verify this lemma. A solid proof of this lemma is important because it is at the heard of Theorems 4, 8, 9, 10.
 The statement of the lemma also need to be reworded. Although it is one sentence, it makes two claims
-
 \begin{itemize}
 
 \item[(i)] If ntp = $T$ (the $T$ intervals are not necessarily connected) then you can shift/exchange activation times to get the same ntp but with continuous/consecutive intervals.
@@ -88,10 +89,14 @@ The statement of the lemma also need to be reworded. Although it is one sentence
 \item[(ii)] We can make the connected graph (during the above interval) to be a spanning tree.
 
 \end{itemize}
-
 Both above claims need proof.
 
+
+\textit{Thank you for pointing out this issue. It turned out that a completely formal proof of Lemma 1 is more lengthy then we imagined, so we think it is a good addition to the paper and helps the reader to get comfortable with the concepts and notation used later on. We reworded the statement of the lemma in the suggested way.}
+
 \item[3.] The following is a semi-major issue: Again Lemma 2 is used without being proved. Please provide a solid proof for this lemma.
+
+\textit{We provided a full proof of Lemma 2.}
 
 \end{itemize}
 
@@ -105,47 +110,91 @@ Both above claims need proof.
 \item A linear program is introduced at the beginning of the paper while its parameter $x_T$ has not been introduced until later. It would be better to introduce $x_T$ before or immediately after the linear program. 
 Also, the linear program that is introduced here, has not been used anywhere else in the paper. I would recommend to remove this linear program (which mainly distracts and confuses the reader) but instead state the problem in a few sentences with simple words.
 
+\textit{The initial motivation behind the decision to present the problem in this LP-form is the paper of Barahona (Packing spanning trees, reference [2]), which starts exactly the same way. However, you are correct to point out that in contrast to Barahona's paper, our paper does not require further reference to the variable $x_T$. We followed your suggestion and replaced the LP with a simple-word description and an additional image. }
+
 \item At some point in the intro (where you introduced the problem) it has to be clarified whether the goal is to have a connected graph $G$ or a spanning tree of $G$. For example if we activate all edges of the graph in Fig 1 at the same time, do we get a valid answer within an interval of length 2? 
+
+\textit{ Indeed, we agree that it has to be specified whether a connected graph or a spanning tree is required. By our definition, we are clear in pointing out that only connectedness is required.  However, we agree that the reader might be confused and think that a spanning tree is required. It is important to note that due to Lemma 1 both of these choices of definition are equivalent.  We want to keep the introduction short and believe that the right point to adress details such as these is Section 2.1 Formal Problem Definition. We added a clarifying paragraph to Section 2.1. We also added an additional paragraph to Section 2.2 to explain in detail how the \emph{preemptive} scheduling is equivalent to Nash-Williams problem.}
 
 \item page 2, lines 40-41: What if we activate two edges at time 1?
 
+\textit{See previous paragraph.}
+
 \item page 3, line 43: Is $t$ integer?
+
+\textit{Yes, added clarification.}
 
 \item page 3, line 49: induced subgraph of $G$ by $V'$
 
+\textit{Changed as proposed.}
+
 \item page 3, line 49: by removing a vertex $v$ from $G$
+
+\textit{Changed as proposed.}
 
 \item page 3, line 53: Here integer weights are considered. It would be better to say something about real weights, and whether or not it has been studied earlier. Are there some previous works on real weights?
 
+\textit{We only consider integer weights in our paper. Note that if the weights are rational, they can be multiplied by the greatest common demoninator to yield an equivalent integral instance, which is larger by at most a polynomial factor. If the weights are real-valued and encoded in finite input length (for example algebraic numbers), we are not sure if the problem becomes more interesting -- Lemma 1 still works in a similar way, which implies that the problem stays in the class NP. So the problem remains to be NP-complete, but the proofs and details become more technical. We added these observations to Section 2.1. We are not aware of any prior works with real-valued weights.}
+
 \item page 4, line 7: Shouldn't $t$ be at least $\sigma(e)$, because $e$ activates at time $\sigma(e)$? Why it is $t \geq \sigma(e)+1$?
+
+\textit{No, this is correct. If the graph in total is connected for, say, $\beta$ time units, then it is connected for the whole time interval $[0, \beta]$. This means the the $t$-th time slot is given by the interval $[t-1,t]$ for each $t=1,\dots,\beta$. The edges active in the $t$-th time slot are therefore those edges with both $\sigma(e) \leq t-1$ and $\sigma(e) + w(e) \geq t$, or equivalently, $\sigma(e) + 1 \leq t \leq \sigma(e) + w(e)$.}
 
 \item page 4, line 11: You refer to "the number of time slots" here; maybe clarify that the time slots (in which $G$ is connected) need not be continuous/consecutive.
 
+\textit{We agree that such a hint would be helpful to the reader. We added a clarification to Section 2.1.}
+
 \item page 4, line 31: Better to rewrite as "such that the numbers in every triplet sum up to $Q$".
+
+\textit{Changed as proposed.}
 
 \item page 4, line 33-35: Here the authors mentioned series-parallel (rep. outerplanar) graphs, while the following theorems use $K_{2,\ell}$ and (rep. graphs of bandwith 2). Maybe clarify that $K_{2,\ell}$ is series-parallel and bandwidth 2 is outerplanar.
 
+\textit{We rewrote the paragraph, after reviewer 3 pointed out that every outerplanar graph is subgraph of a series-parallel graph. We now distinguish between $K_{2,\ell}$ (which has unbounded bandwidth) and graphs of bandwidth 2.}
+
 \item page 4, line 53: "every edge is contained in $[0, \beta]$" Here Lemma 1 is used without being referred to.
+
+\textit{This is a subtle issue. This fact does not follow from Lemma 1. Instead, it follows from the fact that the sum of all edge weights is exactly $\beta$ times the weight of a spanning tree (if not every activity interval would be contained in the interval $[0, \beta]$, there would not be enough weight anymore to keep the graph connected for $\beta$ time slots). Here is an example why such a fact does not follow from Lemma 1: Consider again the example from the introduction, the complete graph on three vertices. The edge weights this time are $w(e_1) = w(e_2) = 2$ and $w(e_3) = 10$. In this example we have $\beta = 2$. Even though the statement of Lemma 1 is true, there does not exist a schedule such that all activity intervals of all the edges are contained in $[0, \beta]$. We reworded the sentence you pointed out to make this logic mroe clear.}
 
 \item page 4, line 55: "It is easy to see that", why? please clarify.
 
+\textit{We added a clarification.}
+
 \item page 7, lines 27-28: I think it is necessary to mention the details/proof here even if this is done by routine arguments? What do you mean by routine arguments? This is a journal paper (with no page limit) so please clarify and add necessary details.
+
+\textit{We added a proof of Lemma 2.}
 
 \item page 7, line 33: "so-called special edge $\{u, z\}$" What is this edge? What is special about this edge? Where it was introduced? any reference? 
 
+\textit{This is merely a name. We call this edge the \emph{special edge}, so that it is easier to talk about it in the proof. The algorithm returns a tuple of a graph $H$ and an edge $\{u,z\}$ in the graph. This edge has the property, that either there is a Hamilton cycle using it, or there is no Hamilton path starting at $u$. This edge is then called the special edge. We reworded the statement of Lemma 2 in order to improve its clarity.}
+
 \item page 7, line 55: "also" does not fit here
+
+\textit{The word "also" was used to indicate that the graph $G$ restricted to the vertex set $U \cup Z$ has the same edges as the graph $H$, but we agree that the formulation was a bit unclear. We reworded the statement to be more clear.}
 
 \item page 8, fig 3: Labels are large; better to have them of the same size as the main text.
 
+\textit{Changed as proposed.}
+
 \item page 10, line 10: ??
+
+\textit{Should be Table 1. Fixed.}
 
 \item page 12: Please clarify the connection of matroids to connectivity of the final graph G in time interval $[0,3]$.
 
+\textit{We added a thorough explanation of the relation between matroid bases and the connectivity of $G_t$ for $t=1,2,3$.}
+
 \item page 12, line 43: "It is easily seen" Please clarify the argument with valid reasoning.
+
+\textit{We clarified the argument further.}
 
 \item Page 13, line 39: folklore result [8]: There is a very simple counting argument for this claim. Please mention this counting argument in 1-2 sentences. Perhaps it is not necessary to mention a reference for this.
 
+\textit{In order to see $\text{ntp}(K_n, w) = \lfloor n/2 \rfloor$, we need to prove that the number of spanning trees that can be packed into $K_n$ is $\geq \lfloor n/2 \rfloor$ and $\leq \lfloor n/2 \rfloor$. But to the best of our knowledge the counting argument is only a proof for the upper bound.}
+
 \item page 13: Theorem 6: The statement of this theorem is a bit unusual. Please rephrase, or maybe just say that greedy solves the problem only on cactus graphs.
+
+\textit{We would like to keep this statement, as it is not merely a statement that Greedy solves the problem on cactus graph, but additionally that the class of cactus graphs is characterized by the property that Greedy is optimal. We think this is a nice (if not very hard to obtain) result. We are not sure in which way we should rephrase the statement, as it exactly says that item (i) and (ii) are equivalent.}
 
 \end{itemize}
 
