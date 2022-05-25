@@ -93,7 +93,7 @@ a number of parameterized and exact algorithms.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{The tree packing problem of Nash-Williams.}
 For a given undirected connected graph $G=(V,E)$ and a weight function $w:E\to\NN$,
-Nash-Williams \cite{Nash-Williams1961} considered \lasse{the optimization problem of packing as many spanning trees as possible into the graph, such that for every edge $e \in E$, it gets used in at most $w(e)$ spanning trees. For example, consider \cref{fig_spt_example}, where $G$ is a complete grap on three vertices, and $w(e) = 2$ for all edges. The optimal solution packs three spanning trees. It is not possible to pack more spanning trees, because every edge already is used twice.} 
+Nash-Williams \cite{Nash-Williams1961} considered \lasse{the optimization problem of packing as many spanning trees as possible into the graph, such that for every edge $e \in E$, it gets used in at most $w(e)$ spanning trees. For example, consider \cref{fig_spt_example}, where $G$ is a complete grap on three vertices, and $w(e) = 2$ for all edges. The optimal solution packs three spanning trees. It is not possible to pack more spanning trees, because every edge is already used twice.} 
 %%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htpb]
 \centering
@@ -107,7 +107,7 @@ Building on these results, Cunningham \cite{Cunningham1985} constructs a polynom
 algorithm for the problem by reducing it to a polynomial number of maximum flow problems.
 Barahona \cite{Barahona1995} presents another algorithm with a better time complexity.
 
-the tree packing problem may also be interpreted as a scheduling problem:
+The tree packing problem may also be interpreted as a scheduling problem:
 Every edge $e\in E$ is a resource that can be activated for a total of $w(e)$ time units.
 The objective now is to activate the edges in such a way that the graph remains connected 
 for the longest possible overall time. 
@@ -185,10 +185,31 @@ The resulting combinatorial optimization problem is called \emph{non-preemptive 
 weights $w:E\to\NN_0$ will be denoted $\ntp(G,w)$.
 
 In the example in Figure~\ref{fig:example}, every reasonable non-preemptive
-schedule will either activate two of the edges at time~$0$, or activate the three
-edges respectively at times $0,1,2$.
+schedule will activate two of the edges at time~$0$.
 As there is no way of keeping the graph connected for more than two time units, 
 the optimal objective value is $\ntp(G,w)=2$.
+
+\lasse{\paragraph{Connections to other areas.}
+The non-preemptive tree packing problem can be understood as a topic with connections to several different areas. First of all, it can be understood as a non-preemptive scheduling problem equipped with a structurally rich global constraint. Although the scheduling literature is vast, we are not aware of similar scheduling problems of this structure.
+}
+
+\lasse{Another connection to a different area of mathematics is the area of \emph{time-varying graphs} (TVG). These are graphs over time, where every edge is equipped with the information at which time it is available.
+Time-varying graphs are used to model networks, where change in the network topology is an inherent part of the system. 
+This includes for example delay-tolerant networks where information links often fail, like satellite networks, vehicular or passenger networks.
+ It includes futhermore concepts like opportunistic-mobility networks, where mobile carriers like ferries or busses are equipped with short-range radio capabilities and the mobility of the carriers is used for information transport. 
+ In the seminal paper of Casteigts, Flocchini, Quattrociocchi and Santoro, different classes of TVGs are identified \cite{time-varying-graphs}. 
+ In particular, class 9 is the class of \emph{constant connected} (also called \emph{1-connected} \cite{B-connected-1}) TVGs and contains those TVGs which are connected at every point in time. 
+ This class was for example used to always guarantee progression of a broadcast operation \cite{o2005information}, or to enable consensus in a TVG \cite{kuhn2011coordinated}. Our problem of non-preemptive tree packing can therefore be understood as scheduling the edges in a dynamic network in such a way that the resulting time-varying graph is 1-connected for the maximum possible time.}
+ 
+ \lasse{
+Finally, our problem can be understood as a tree packing problem (like the classical results of Nash-Williams \cite{Nash-Williams1961} and Edmonds \cite{edmonds1965minimum}) with additional global constraints enforcing non-preemptiveness. 
+A similar problem has been studied by Heuvel and Thomassé \cite{van2012cyclic}.
+ Translated to our vocabulary, their work is also an investigation of non-preemptive scheduling, but there are two key differences to our problem: First, they consider a cyclic scheduling where the lifetime of a scheduled element can wrap around from the end to the beginning of the schedule.
+  Second, instead of finding the longest possible time such that the scheduled elements connect the graph at any time point, they consider a dual problem, where the goal is to find the shortest possible time such that the scheduled elements are acyclic at any time point. 
+  (Precisely, they study this problem in the geralized matroid setting.)
+   They use their main theorem to make progress on a conjecture from 1976 by Gabow \cite{gabow1976decomposing} and a related conjecture by Kajitani, Ueno and Miyani \cite{kajitani1988ordering} concerning cyclic orderings of the elements of pairs of matroid bases, such that any $r$ cyclically consecutive elements form a basis. 
+   Despite recent progress, these conjectures still remain open \cite{berczi2022exchange}.
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{Contributions of this paper.}
@@ -288,7 +309,7 @@ If rational weights are considered instead, it is easy to see that by multiplyin
 
 \begin{lemma}
 \label{le:structure}
-For every instance $(G,w)$ of {\xxxNTP} with $\ntp(G,w)=\beta$, there exists an optimal schedule $\sigma$ 
+For every instance $(G,w)$ of {\xxxNTP} with $\ntp(G,w)=\lasse{\beta}$, there exists an optimal schedule $\sigma$ 
 \lasse{which makes the graph connected for the first $\beta$ consecutive time slots (that is $C(\sigma) = \fromto{1}{\beta}$)} and additionally the graphs $G^\sigma_1,\ldots,G^\sigma_\beta$ are \lasse{spanning} trees.
 \end{lemma}
 
@@ -696,7 +717,7 @@ First, recall \cref{lemma:gadgets_properties}. Consider vertex $z_i$ for some $i
 Next, consider the graph $G_1$ of active edges in the first time slot. We know that  $d_1(z_i) = 1$ for all $i= 1,\dots, k$. Hence the induced subgraph $G_1[U \cup Z]$ on $2k$ vertices is acyclic, has $k$ edges, and therefore has $k$ connected components. But because $G_1$ is connected, and because all the gadgets of type $R$ and the gadget $C$ are semi-connected during time slot 1, this implies that every single gadget of type $L$ is actually fully-connected during time slot 1. The same argument holds for time slot 7. In total, together with \cref{lemma:gadgets_properties}, we have that a gadget of type $L$ is fully-connected during the $t$-th time slot, if and only if $t \in \set{1, 3, 5, 7}$. This in turn implies that for all $i = 1,\dots, k$, one has $d_2(u_i), d_4(u_i), d_6(u_i) \geq 1$. The two facts $d_2(u_i) \geq 1$ and $d_6(u_i) \geq 1$ together imply $d_4(u_i) \leq 2$. Likewise, for all $i = 1,\dots,k$, the two facts $d_1(z_i) = 1$ and $d_7(z_i) = 1$ together imply $d_4(z_i) \leq 2$.
 
 Finally, we claim $d_4(u_k) = 1$. In fact, $d_4(u_k) = 0$ is impossible, because gadgets of type $L$ are semi-connected during time slot 4. For the sake of contradiction, assume $d_4(u_k) > 1$. We know that $d_2(u_k) \geq 1, d_6(u_k) \geq 1$ and $e_0 \not\in E_4$ and $w(e_0) = 1$. So our assumption $d_4(u_k) > 1$ is only possible if $e_0 \in E_2$ or $e_0 \in E_6$. But for the vertex $z_k$, we also know $d_1(z_k), d_3(z_k), d_5(z_k), d_7(z_k) \geq 1$. This is a contradiction to $e_0 \in E_2 \cup E_6$, hence our assumption was wrong and $d_4(u_k) = 1$.
-In summary, during time slot 4, all gadgets of type $L$ and $R$ are semi-connected. We also have for all $i=1,\dots,k$ that $d_4(u_i) \leq 2$ and $d_4(z_i) \leq 2$. Also, $d_4(u_k) = 1$. However, $G_4$ is connected. These facts together imply that the induced subgraph $G_4[U \cup Z]$ is a Hamilton path in $H$ starting at $u_k = u$.
+In summary, during time slot 4, all gadgets of type $L$ and $R$ are semi-connected. We also have for all $i=1,\dots,k$ that $d_4(u_i) \leq 2$ and $d_4(z_i) \leq 2$. \lasse{Furthermore, we have} $d_4(u_k) = 1$. However, $G_4$ is connected. These facts together imply that the induced subgraph $G_4[U \cup Z]$ is a Hamilton path in $H$ starting at $u_k = u$.
 \qed
 \end{proof}
 
@@ -776,7 +797,7 @@ during the middle time slot $[1, 2]$; the other edge can either be scheduled dur
 or during slot $[2,3]$. 
 Edges in $W_1$ are scheduled during one of the three slots $[0,1]$, $[1,2]$, $[2,3]$.
 
-By Lemma~\ref{le:structure}, we may assume that in a feasible schedule of length~$3$ the 
+By Lemma~\ref{C}, we may assume that in a feasible schedule of length~$3$ the 
 graphs $(V,E_t)$ with $t=1,2,3$ are trees.
 Let $H_3$    be the graph that results from $G$ after contracting the edge set $W_{\ge3}$, and
 let $H_{23}$ be the graph that results from $G$ after contracting the edge set $W_2\cup W_{\ge3}$.
@@ -797,7 +818,7 @@ A set $F\subseteq W_1$ is independent in $\mathcal{F}_2$, if and only if $F$ is 
 \end{itemize}
 }
 
-\lasse{Now observe that scheduling an edge of weight 1 is equivalent to choosing in which time slot it is scheduled. Scheduling an edge 2 is equivalent to always schedule it in time slot 2 and choose whether it is scheduled in time slot 1 or 3. From these facts we can deduce that we can connect the graph during time slots 1,2 and 3, that is,} $\ntp(G,w)\ge3$ holds, if and only if there exist three pairwise disjoint subsets
+\lasse{Now observe that scheduling an edge of weight 1 is equivalent to choosing in which of the three time slots 1,2 or 3 it is scheduled. Scheduling an edge 2 is equivalent to always schedule it in time slot 2 and choose whether it is scheduled in time slot 1 or 3. From these facts together with \cref{le:structure}, we can deduce that we can connect the graph during time slots 1,2 and 3 (that is $\ntp(G,w)\ge3$ holds)}, if and only if there exist three pairwise disjoint subsets
 $S_1,S_2,S_3$ of $W_1 \cup W_2$, such that $S_t$ forms a base of the matroid $\mathcal{F}_t$ for $t=1,2,3$.
 This can be checked in $\bigO(m^3)$ time by using Edmond's matroid partitioning algorithm \cite{edmonds1965minimum}.
 \qed
@@ -956,13 +977,13 @@ whereas the {\greedy} algorithm only yields an objective value of~$2$.
 \label{sec:parameterized}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 In this section, we show that problem {\xxxNTP} is fixed parameter tractable with 
-respect to various parameters. 
+respect to various parameters. \lasse{As the problem is already NP-hard even for very highly restricted graphs, considering all the usual parameters from parameterized complexity do not result in efficient algorithms. Therefore we can only provide algorithms for parameters which are in some way non-standard.}
 Note that Theorems~\ref{thm:hardness_complete_bipartite} and \ref{th:value=7} imply the NP-hardness 
 of problem {\xxxNTP}, even if either the treewidth or the edge weights are bounded by a constant. 
 
 \begin{restatable}{theorem}{fptBoundedWeightAndTW}
 \label{th:fpt_weights_and_tw_bounded}
-If both the treewidth and the maximum edge weight of the input graph $G = (V, E)$ are bounded, problem {\xxxNTP} allows for an FPT-algorithm whose running time is linear in $|E|$. 
+If both the treewidth and the maximum edge weight of the input graph $G = (V, E)$ are bounded \lasse{by a constant integer $k$}, problem {\xxxNTP} \lasse{can be solved in $\bigO(|E|)$ time. The algorithm is fixed parameter tractable with respect to $k$}. 
 \end{restatable}
 \begin{proof}
 As the graph $G=(V,E)$ has treewidth at most $k$, there is a vertex $v\in V$ of degree at most $k$ \lasse{(note that we use here the property that $G$ is a simple graph, that is, it has no parallel edges.)}.
@@ -972,7 +993,7 @@ graph logic $\text{MSO}_2$, so that $\Phi_T$ is satisfiable if and only if there
 of objective value at least $T$. 
 We introduce Boolean variables $x_{e,t}$ for every $e\in E$ and every $t\in \{1,\dots,T\}$
 to denote whether $e\in E_t$. 
-The following statement can be formulated in $\text{MSO}_2$ by routine methods:
+The following statement can be formulated in $\text{MSO}_2$ by routine methods \lasse{(see for example \cite[chapter 7.4]{cygan2015parameterized})}:
 \begin{align*}
 \exists \sigma: E\to\{0,\ldots,&T\} ~~\forall e\in E ~~\forall t\in\{1,\ldots,T\}: \\
 & x_{e,t} \iff \left(\sigma(e) < t \leq \sigma(e) + w(e)\right)\\
@@ -1021,7 +1042,7 @@ The resulting kernel satisfies $|V|\le k+1$ and $|E|\le2k$.
 
 
 The last theorem of this section shows that problem {\xxxNTP} is tractable on instances that in 
-a certain sense are close to the preemptive tree packing problem \eqref{eq:NW.1}--\eqref{eq:NW.3}. 
+a certain sense are close to the preemptive tree packing problem of Nash-Williams. 
 %%%%%%%%%%%%%%%%%%
 \begin{restatable}{theorem}{fptAlmostAllWeightOne}
 \label{th:fpt_almost_all_weight_one}
@@ -1086,7 +1107,7 @@ Where is the true approximation threshold?
 In particular, we would like to know whether our problem allows a polynomial time approximation
 algorithm with some constant worst case guarantee.
 A major step towards an answer might be the analysis of the gap between the non-preemptive optimum 
-and the polynomially computable preemptive optimum for problem \eqref{eq:NW.1}--\eqref{eq:NW.3}.
+and the polynomially computable preemptive optimum.
 ~(Q2) If all edge weights are equal to~$1$, problem {\xxxNTP} coincides with the preemptive problem 
 version and hence is polynomially solvable.
 On the other hand the problem is NP-hard, if all edge weights are in $\fromto{1}{6}$. 

@@ -51,7 +51,7 @@
 
 \section*{Answers to the Reviewers}
 
-\textit{We thank the three reviewers for their constructive and helpful feedback. We have aimed to make changes to our paper that account for all of the points raised. We respond to each of the reviewers' comments individually, and our responses are written in italics below. All the changes made to the paper are highlighted in blue.}
+\textit{We thank the three reviewers for their constructive and helpful feedback. We have aimed to make changes to our paper that account for all of the points raised. We respond to each of the reviewers' comments individually, and our responses are written in italics below. All the changes made to the paper are highlighted in \textcolor{blue}{blue}.}
 
 \section*{Editor}
 
@@ -114,11 +114,11 @@ Also, the linear program that is introduced here, has not been used anywhere els
 
 \item At some point in the intro (where you introduced the problem) it has to be clarified whether the goal is to have a connected graph $G$ or a spanning tree of $G$. For example if we activate all edges of the graph in Fig 1 at the same time, do we get a valid answer within an interval of length 2? 
 
-\textit{ Indeed, we agree that it has to be specified whether a connected graph or a spanning tree is required. By our definition, we are clear in pointing out that only connectedness is required.  However, we agree that the reader might be confused and think that a spanning tree is required. It is important to note that due to Lemma 1 both of these choices of definition are equivalent.  We want to keep the introduction short and believe that the right point to adress details such as these is Section 2.1 Formal Problem Definition. We added a clarifying paragraph to Section 2.1. We also added an additional paragraph to Section 2.2 to explain in detail how the \emph{preemptive} scheduling is equivalent to Nash-Williams problem.}
+\textit{ Indeed, we agree that it has to be specified whether a connected graph or a spanning tree is required. This is already the case, because in our definition, we state that only connectedness is required.  However, we agree that the reader might be confused and think that a spanning tree is required. It is important to note that due to Lemma 1 both of these choices of definition are equivalent.  We want to keep the introduction short and believe that the right point to adress details such as these is Section 2.1 Formal Problem Definition. We added a clarifying paragraph to Section 2.1. We also added an additional paragraph to Section 2.2 to explain in detail how the \emph{preemptive} scheduling is equivalent to Nash-Williams problem.}
 
 \item page 2, lines 40-41: What if we activate two edges at time 1?
 
-\textit{See previous paragraph.}
+\textit{You are right, we forgot to mention this case. Because another reviewer was also confused by this sentence, we decided to change it and mention at this point in the text only the possibility that two edges are activated at time 0. The formal defintion will be made clear in Section 2.1. }
 
 \item page 3, line 43: Is $t$ integer?
 
@@ -190,11 +190,11 @@ Also, the linear program that is introduced here, has not been used anywhere els
 
 \item Page 13, line 39: folklore result [8]: There is a very simple counting argument for this claim. Please mention this counting argument in 1-2 sentences. Perhaps it is not necessary to mention a reference for this.
 
-\textit{In order to see $\text{ntp}(K_n, w) = \lfloor n/2 \rfloor$, we need to prove that the number of spanning trees that can be packed into $K_n$ is $\geq \lfloor n/2 \rfloor$ and $\leq \lfloor n/2 \rfloor$. But to the best of our knowledge the counting argument is only a proof for the upper bound.}
+\textit{In order to see $\text{ntp}(K_n, w) = \lfloor n/2 \rfloor$, we need to prove that the number of spanning trees that can be packed into $K_n$ is $\geq \lfloor n/2 \rfloor$ and $\leq \lfloor n/2 \rfloor$. But to the best of our knowledge the counting argument is only a proof for the upper bound. We therefore decided to keep this sentence as is.}
 
 \item page 13: Theorem 6: The statement of this theorem is a bit unusual. Please rephrase, or maybe just say that greedy solves the problem only on cactus graphs.
 
-\textit{We would like to keep this statement, as it is not merely a statement that Greedy solves the problem on cactus graph, but additionally that the class of cactus graphs is characterized by the property that Greedy is optimal. We think this is a nice (if not very hard to obtain) result. We are not sure in which way we should rephrase the statement, as it exactly says that item (i) and (ii) are equivalent.}
+\textit{We would like to keep this statement, as it is not merely a statement that Greedy solves the problem on cactus graph, but additionally that the class of cactus graphs is characterized by the property that Greedy is optimal. We think this is a nice (if not very hard to obtain) result. We are not sure in which way we should rephrase the statement, as it already exactly states what we want to say, i.e.\ that item (i) and (ii) are equivalent.}
 
 \end{itemize}
 
@@ -218,14 +218,43 @@ The authors introduce a Non-preemptive Tree packing problem, where given an edge
 \begin{itemize}
 
 \item What is the real-life application or motivation behind this problem? 
+
+\textit{Thank you for pointing out this issue. As was also pointed out by another reviewer, our paper lacked motivation. This is due to the fact that the nature of our work was exploratory. However, relations to other areas of mathematics exist. We added a paragraph to the introduction, explaining how our problem relates to the different areas of scheduling, time-varying graphs, and tree packing with consecutivity constraints.}
+
 \item I have found the hardness results interesting enough, it might be possible to find more non-trivial algorithmic results in generalized settings 
+
+\textit{This is indeed likely to be true. However, we do not want to further extend the scope of the paper, as we believe that it already contains a large number of results.}
+
 \item can one obtain an $O(1)$ approximation in the general case? On the other hand, even in the simple case of 1-2 edge weights, the problem is not well-researched
+
+\textit{Indeed, the open question if there is an $O(1)$-approximation in the general case is probably a harder question than to understand if the problem in the 1-2-edge weight case admits a poly-time algorithm. Still, it is not the case that one statement implies the other, so the questions are independent of each other. As we are the first people to consider non-preemtive tree packing, both problems are open. We believe that both open problems are interesting to state.}
+
+
+ 
 \item Page 2: " or activate the three edges...0,1,2" Don't you have to activate two edges at time 0 to make the graph connected during $[0,1]$?
+
+\textit{We wanted to express that the set of times where the graph is connected does not necessarily have to be an interval of consecutive time slots which starts at 0 (however, this distinction is not too important, as it is equivalent to only consider consecutive intervals or not). Because this also confused another reviewer, we have decided to not mention this technical detail at this point of the introduction. Instead, we have added a paragraph to Section 2.1 Formal Problem Definition explaining the relationship in more detail. We believe that this makes the paper more clear overall.}
+
 \item Lemma 1: use a different symbol than $T$, which was used before to denote a tree
+
+\textit{Changed to $\beta$.}
+
 \item It would be better to justify the choice of the parameters for the parameterized algorithms, especially for the last two results which look fairly artificial
+
+\textit{As the problem is already NP-hard even for very highly restricted graphs, considering all the usual parameters from parameterized complexity do not result in efficient algorithms. Therefore it is expected that the considered parameters are a bit exotic. As proposed, we added this justification to the text.}
+
 \item Are there any connection between machine scheduling and the problem studied, especially is it possible to use results from the wealth of literature on scheduling?
+
+\textit{Even though we searched thoroughly, and we have some knowledge about the area of scheduling problems, we could not find any applicable results from this area. It is of course possible that there exist some, but that we could not find them.}
+
 \item LP rounding has become very handy for approximating scheduling problems. Is it possible to use LP rounding to obtain improved results?
+
+\textit{We are not experts in the area of LP-rounding, so we unfortunately do not have the necessary knowledge to answer the question. But it is definitely an interesting question for further research. It should be stated that the IP of the problem is quite complicated, due to the interaction of requiring connectedness and non-preemption.}
+
 \item What is the best approximation possible in planar, bipartite graphs? 
+
+\textit{We do not know, this is an open research question. Note that every graph can be made bipartite by subdividing an edge of cost $w$ into two edges of cost $w$ and $C$, where $C$ is a large constant. This instance is equivalent to the previous instance. So the relevant question is, what is the best approximation possible in planar graphs? }
+
 \end{itemize}
 
 
@@ -254,6 +283,8 @@ so called time-varying graphs and so on. It is unfortunate that the authors
 don't provide a broader context for the research, and limit themselves to the
 technical contribution. This feeling that the paper is a slightly expanded
 technical conference paper, is prevailing also in other parts of the paper.
+
+\textit{Thank you for pointing out this issue and for pointing out which areas could be related to our problem. We also agree that the missing motivation and connection to other areas are the weakest points of the paper. This is due to the fact that the nature of our work was exploratory. However, relations to other areas of mathematics exist. We added a paragraph to the introduction, explaining how our problem relates to the different areas of scheduling, time-varying graphs, and tree packing with consecutivity constraints.}
 
 The technical contribution is in investigating the hardness of the problem.
 Compared to the original tree-packing problem, which is polynomial-time
@@ -295,10 +326,14 @@ particular:
   you decide not to prove it, then at least rename it to "Observation", "Fact",
   or similar.
 
+\textit{We provided a proof of Lemma 1.}
+
 \item I would definitely add the proof of Lemma 2. Again, it can be agreed that it
   is not the most involved or thrilling part of the paper, and the reader
   should be able to fill in the details, but I believe that the level of
   details omitted in the proof is too high for a journal paper.
+
+\textit{We provided a proof of Lemma 2.}
 
 \item Similar situation is in Theorem 7, albeit there I am not sure whether the
   full formulation of the "spanning tree" predicate in MSO would actually
@@ -306,6 +341,8 @@ particular:
   source of those "routine methods" would be nice; the aim is to make it
   possible also for readers from different areas to check the correctness of
   the proofs.
+  
+\textit{We agree that a full formulation in MSO would rather increase confusion than reduce it. We followed your advice and inserted a reference to chapter 7.4 of the excellent book  "Parameterized Algorithms" by Cygan et al. } 
  
 \end{itemize}
 
@@ -320,15 +357,29 @@ K(2,n), and Theorem 2 for graphs with bandwidth 2 (again, graphs with bandwidth
 2 are outerplanar, but outerplanar graphs in general have unbounded bandwidth).
 Also K(2,n) has unbounded bandwidth so the theorems are indeed independent.
 
+\textit{Thank you for pointing out this issue -- we overlooked the fact that every outerplanar graph is a subgraph of a series-parallel graph. We rewrote the paragraph to distinguish between $K_{2,\ell}$ and bandwidth-2 graphs.}
 
-\item p2.  l46: the problems are computationally hard, but "devastating" is maybe
-            an overstatement
+\item p2.  l46: the problems are computationally hard, but "devastating" is maybe an overstatement
+            
+\textit{When we presented this paper at a conference, some other attendee specifically told us they enjoyed this choice of words. We argue that this is a matter of taste and would like to keep the wording.}            
+            
 \item p10. l10: ?? should be Table 1
+
+\textit{Fixed.} 
+
 \item p10. l47: Don't start the first sentence of the proof with "So".
+
+\textit{Fixed.}
+
 \item Theorem 7: If both treewidth and edge weights are bounded, then the algorithm
   is actually polynomial. It's FPT algorithm with respect to those parameters.
+  
+\textit{Thank you for pointing out this issue. We reworded the statement of the theorem accordingly.}
+  
 \item p15. l56: I see what you mean by "close to preemptive", but the reason here is 
   that (most of) the edges can be used only one time unit.
+  
+\textit{If the graph is simple, your assessment is correct. However, the proof of the theorem easily carries over to multigraphs. In a multi-graph, if there are $t$ edges of weight 1 between two vertices, this models a situation of an edge of weight $t$ which allows for preemption. Therefore this lemma indeed makes a statement about instances that are close to the preemptive case. We would like to avoid having to talk about multigraphs in the paper, because it introduces additional technical difficulties. Also notice that a multi-edge can be easily modelled by subdividing an edge of weight $w$ into two edges of weight $w$ and $C$, where $C$ is a large constant (However, this is not applicable in the context of Theorem 10, because the edge weights are bounded). }
   
 \end{itemize}
 
