@@ -224,7 +224,7 @@ The complexity results are devastating:
 \item {\xxxNTP} is strongly NP-hard, even on complete bipartite graphs $K_{2,n}$. 
 \item {\xxxNTP} is strongly NP-hard, even on graphs of bandwidth~$2$.
 \end{itemize}
-\lasse{(A problem is \emph{strongly NP-hard} if it stays NP-hard even if all its numerical parameters are bounded by a polynomial.)} Since complete bipartite graphs $K_{2,n}$ are series-parallel and since graphs of 
+Since complete bipartite graphs $K_{2,n}$ are series-parallel and since graphs of 
 bandwidth~$2$ are outerplanar, our results yield strong NP-hardness for essentially 
 all natural subclasses of graphs with treewidth~$2$.
 As edges of zero-weight are irrelevant for the objective value of {\xxxNTP}, NP-hardness 
@@ -303,15 +303,30 @@ By our definition, such a time slot also increases $\ntp(\sigma)$ by one.
 At first glance, it seems like these are important details in the definition of $\ntp(\sigma)$. 
 However, this is not the case -- the next lemma shows that one can always assume without loss of generality that an optimal schedule connects the graph for a continuous time interval and does so by using only spanning trees. }
 
-\lasse{
-Finally, in this paper we only consider weight functions $w : E \rightarrow \NN_0$ with integral values. 
-If rational weights are considered instead, it is easy to see that by multiplying with the smallest common denominator one obtains an equivalent instance with integral weights. 
-If real-valued weights are considered, all our hardness results of course still hold. 
-Furthermore, by a slight adaption of the proof it can be shown that \cref{le:structure} is still true, 
-and the problem remains in NP. We choose to omit the technical details.
-}
+% \lasse{
+% Finally, in this paper we only consider weight functions $w : E \rightarrow \NN_0$ with integral values. 
+% If rational weights are considered instead, it is easy to see that by multiplying with the smallest common denominator one obtains an equivalent instance with integral weights. 
+% If real-valued weights are considered, all our hardness results of course still hold. 
+% Furthermore, by a slight adaption of the proof it can be shown that \cref{le:structure} is still true, 
+% and the problem remains in NP. We choose to omit the technical details.
+% }
 
 
+%%%%%%%%%%%%%%%%%
+
+\subsection{\lasse{Further Definitions}}
+
+\lasse{Throughout the paper, we investigate the (parameterized) complexity of non-preemptive tree packing 
+with respect to different graph classes and structural graph parameters.}
+
+\lasse{The \emph{treewidth} of a graph is a popular parameter in the area of parameterized algorithms and measures in some sense how close the graph is to a tree. It can be defined as the minimum integer $k > 0$ such that $G$ is subgraph of a $k$-tree \cite{bodlaender1998partial}. A $k$-tree is constructed by starting with a $(k +1)$-clique and then repeatedly
+connecting a new vertex to all vertices of an existing $k$-clique.
+Two popular subclasses of treewidth-2 graphs are series-parallel graphs and outerplanar graphs. An undirected graph $G$ is \emph{series-parallel}, if there exist two vertices $s,t$ in $G$, such that $G$ has a series-parallel decomposition with respect to the source $s$ and the sink $t$ (see for example \cite[p. 22]{bodlaender1998partial} for details).  A graph is \emph{outerplanar} if it has a planar drawing where all the vertices belong to the outer face. Every outerplanar graph is subgraph of a series-parallel graph  \cite{bodlaender1998partial}.
+The \emph{bandwidth} of a graph is the minimum width of a linear arrangement, where a linear arrangement of a graph is a labeling which assigns to each vertex $v$ a distinct integer $f(v)$ and the width of a linear arrangement is $\max\set{|f(v)-f(u)| : \set{u,v} \in E}$. Graphs of bandwidth 2 are outerplanar.}
+
+\lasse{A problem is \emph{strongly NP-hard} if it is NP-hard even if all its numerical parameters are bounded by a polynomial (see Garey and Johnson~\cite{garey1979computers}).
+For an introduction to parameterized complexity and formal definitions of those concepts 
+we refer the reader to the book of Cygan et al.~\cite{cygan2015parameterized}.}
 
 
 \subsection{\lasse{General Insights}}
@@ -363,17 +378,6 @@ In summary, the preceeding argument shows that if we select a schedule $\sigma$ 
 \lasse{The ideas presented in \cref{le:structure} also provide a formal proof that the problem {\xxxNTP} is indeed a nonpreemptive variant of Nash-Williams tree packing problem. Indeed, consider the problem of keeping the weighted graph $(G, w)$ connected, but in the case where edge preemption is allowed. We claim this problem is equivalent to the Nash-Williams tree packing problem. Indeed, if $(T_1,\dots,T_\beta)$ is a sequence of $\beta$ spanning trees, then we can schedule in the $i$-th time slot exactly the edges of the $i$-th tree $T_i$ 
 (this is feasible, since preemption is allowed). On the other hand, if we can find a schedule that keeps the graph connected for $\beta$ time units, we can in the same manner as in the proof of \cref{le:structure} transform the schedule in such a way that all the graphs given by the active edges in the first $\beta$ time slots are spanning trees. 
 Therefore, it is possible to pack $\beta$ spanning trees.  }
-
-%%%%%%%%%%%%%%%%%
-
-\subsection{\lasse{Graph Classes}}
-
-\lasse{Throughout the paper, we discuss different graph classes and their behavior with respect to non-preemptive tree packing. 
-The \emph{treewidth} of a graph is a popular parameter in the area of parameterized algorithms and measures in some sense how close the graph is to a tree. It can be defined as the minimum integer $k > 0$ such that $G$ is subgraph of a $k$-tree \cite{bodlaender1998partial}. A $k$-tree is constructed by starting with a $(k +1)$-clique and then repeatedly
-connecting a new vertex to all vertices of an existing $k$-clique.
-Two popular subclasses of treewidth-2 graphs are series-parallel graphs and outerplanar graphs. An undirected graph $G$ is \emph{series-parallel}, if there exist two vertices $s,t$ in $G$, such that $G$ has a series-parallel decomposition with respect to the source $s$ and the sink $t$ (see for example \cite[p. 22]{bodlaender1998partial} for details).  A graph is \emph{outerplanar} if it has a planar drawing where all the vertices belong to the outer face. Every outerplanar graph is subgraph of a series-parallel graph  \cite{bodlaender1998partial}.
-The \emph{bandwidth} of a graph is the minimum width of a linear arrangement, where a linear arrangement of a graph is a labeling which assigns to each vertex $v$ a distinct integer $f(v)$ and the width of a linear arrangement is $\max\set{|f(v)-f(u)| : \set{u,v} \in E}$. Graphs of bandwidth 2 are outerplanar. }
-
 
 
 
@@ -988,19 +992,21 @@ whereas the {\greedy} algorithm only yields an objective value of~$2$.
 \label{sec:parameterized}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 In this section, we show that problem {\xxxNTP} is fixed parameter tractable with 
-respect to various parameters. \lasse{As the problem is already NP-hard even for very highly restricted graphs, considering all the usual parameters from parameterized complexity do not result in efficient algorithms. Therefore we can only provide algorithms for parameters which are in some way non-standard.}
+respect to various parameters. \lasse{As the problem is already NP-hard even for highly restricted graphs,
+we can only hope for positive parameterized complexity results for quite restricitive graph parameters,
+or when additionally the edge weights are restricted.}
 Note that Theorems~\ref{thm:hardness_complete_bipartite} and \ref{th:value=7} imply the NP-hardness 
 of problem {\xxxNTP}, even if either the treewidth or the edge weights are bounded by a constant. 
 
 \begin{restatable}{theorem}{fptBoundedWeightAndTW}
 \label{th:fpt_weights_and_tw_bounded}
 %If both the treewidth and the maximum edge weight of the input graph $G = (V, E)$ are bounded \lasse{by a constant integer $k$}, problem {\xxxNTP} \lasse{can be solved in $\bigO(|E|)$ time. The algorithm is fixed parameter tractable with respect to $k$}. 
-\lasse{Problem \xxxNTP is fixed parameter tractable with respect to $w_{\max} + t$, where $w_{\max}$ is the maximum edge weight and $t$ the treewidth of the input graph.}
+\lasse{Problem {\xxxNTP} is fixed parameter tractable with respect to $w_{\max} + t$, where $w_{\max}$ is the maximum edge weight and $t$ the treewidth of the input graph.}
 \end{restatable}
 \begin{proof}
 As the graph $G=(V,E)$ has treewidth $t$, there is a vertex $v\in V$ of degree at most $t$ \lasse{(note that we use here the property that $G$ is a simple graph, that is, it has no parallel edges.)}.
 As every edge incident to $v$ has weight at most $w_{\max}$, we conclude $\ntp(G,w)\le w_{\max}^2$. 
-For every $T=1,\ldots,k^2$, we construct a formula $\Phi_T$ in monadic second-order 
+For every $T=1,\ldots,w_{\max}^2$, we construct a formula $\Phi_T$ in monadic second-order 
 graph logic $\text{MSO}_2$, so that $\Phi_T$ is satisfiable if and only if there exists a schedule 
 of objective value at least $T$. 
 We introduce Boolean variables $x_{e,t}$ for every $e\in E$ and every $t\in \{1,\dots,T\}$
