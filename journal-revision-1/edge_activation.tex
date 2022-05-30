@@ -93,7 +93,10 @@ a number of parameterized and exact algorithms.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{The tree packing problem of Nash-Williams.}
 For a given undirected connected graph $G=(V,E)$ and a weight function $w:E\to\NN$,
-Nash-Williams \cite{Nash-Williams1961} considered \lasse{the optimization problem of packing as many spanning trees as possible into the graph, such that for every edge $e \in E$, it gets used in at most $w(e)$ spanning trees. For example, consider \cref{fig_spt_example}, where $G$ is a complete grap on three vertices, and $w(e) = 2$ for all edges. The optimal solution packs three spanning trees. It is not possible to pack more spanning trees, because every edge is already used twice.} 
+Nash-Williams \cite{Nash-Williams1961} considered \lasse{the optimization problem of packing as many 
+spanning trees as possible into the graph, such that every edge $e \in E$ appears in at most $w(e)$ of these spanning trees. 
+For example, consider \cref{fig_spt_example}, where $G$ is a complete graph on three vertices, 
+and $w(e) = 2$ for all edges. The optimal solution packs three spanning trees. It is not possible to pack more spanning trees, because every edge is already used twice.} 
 %%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htpb]
 \centering
@@ -189,7 +192,7 @@ schedule will activate two of the edges at time~$0$.
 As there is no way of keeping the graph connected for more than two time units, 
 the optimal objective value is $\ntp(G,w)=2$.
 
-\lasse{\paragraph{Connections to other areas.}
+\lasse{\paragraph{Related literature.}
 The non-preemptive tree packing problem can be understood as a topic with connections to several different areas. First of all, it can be understood as a non-preemptive scheduling problem equipped with a structurally rich global constraint. Although the scheduling literature is vast, we are not aware of similar scheduling problems of this structure.
 }
 
@@ -199,16 +202,17 @@ This includes for example delay-tolerant networks where information links often 
  It includes futhermore concepts like opportunistic-mobility networks, where mobile carriers like ferries or busses are equipped with short-range radio capabilities and the mobility of the carriers is used for information transport. 
  In the seminal paper of Casteigts, Flocchini, Quattrociocchi and Santoro, different classes of TVGs are identified \cite{time-varying-graphs}. 
  In particular, class 9 is the class of \emph{constant connected} (also called \emph{1-connected} \cite{B-connected-1}) TVGs and contains those TVGs which are connected at every point in time. 
- This class was for example used to always guarantee progression of a broadcast operation \cite{o2005information}, or to enable consensus in a TVG \cite{kuhn2011coordinated}. Our problem of non-preemptive tree packing can therefore be understood as scheduling the edges in a dynamic network in such a way that the resulting time-varying graph is 1-connected for the maximum possible time.}
+ This class was for example used to always guarantee progression of a broadcast operation \cite{o2005information}, or to enable consensus in a TVG \cite{kuhn2011coordinated}. Our problem of non-preemptive tree packing can therefore be understood as scheduling the edges in a dynamic network in such a way that the resulting time-varying graph is 1-connected 
+ for as long as possible.}
  
  \lasse{
 Finally, our problem can be understood as a tree packing problem (like the classical results of Nash-Williams \cite{Nash-Williams1961} and Edmonds \cite{edmonds1965minimum}) with additional global constraints enforcing non-preemptiveness. 
 A similar problem has been studied by Heuvel and Thomassé \cite{van2012cyclic}.
  Translated to our vocabulary, their work is also an investigation of non-preemptive scheduling, but there are two key differences to our problem: First, they consider a cyclic scheduling where the lifetime of a scheduled element can wrap around from the end to the beginning of the schedule.
   Second, instead of finding the longest possible time such that the scheduled elements connect the graph at any time point, they consider a dual problem, where the goal is to find the shortest possible time such that the scheduled elements are acyclic at any time point. 
-  (Precisely, they study this problem in the geralized matroid setting.)
-   They use their main theorem to make progress on a conjecture from 1976 by Gabow \cite{gabow1976decomposing} and a related conjecture by Kajitani, Ueno and Miyani \cite{kajitani1988ordering} concerning cyclic orderings of the elements of pairs of matroid bases, such that any $r$ cyclically consecutive elements form a basis. 
-   Despite recent progress, these conjectures still remain open \cite{berczi2022exchange}.
+  %(Precisely, they study this problem in the geralized matroid setting.)
+   %They use their main theorem to make progress on a conjecture from 1976 by Gabow \cite{gabow1976decomposing} and a related conjecture by Kajitani, Ueno and Miyani \cite{kajitani1988ordering} concerning cyclic orderings of the elements of pairs of matroid bases, such that any $r$ cyclically consecutive elements form a basis. 
+   %Despite recent progress, these conjectures still remain open \cite{berczi2022exchange}.
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -293,13 +297,18 @@ slots $[t-1,t]$ for which $G^\sigma_t$ is connected. When the schedule $\sigma$ 
 $E^\sigma_t$ and $G^\sigma_t$. 
 
  \lasse{We clarify a few points in this definition: 
-First, this set of time slots does not encessarily need to be a set of consecutive time slots. Formally, if $C(\sigma) = \set{t : G^\sigma_t \text{ is connected}}$ denotes the set of time slots where the graph is connected by schedule $\sigma$, then $\ntp(\sigma) = |C(\sigma)|$. Second, there can be of course a time slot $t$, where $G^\sigma_t$ is connected and contain more edges than a spanning tree, that is, the set of active edges contains a cycle. 
+First, this set of time slots does not necessarily need to be a set of consecutive integers. Formally, if $C(\sigma) = \set{t : G^\sigma_t \text{ is connected}}$ denotes the set of time slots where the graph is connected by schedule $\sigma$, then $\ntp(\sigma) = |C(\sigma)|$. 
+Second, there can of course be a time slot $t$, where $G^\sigma_t$ is connected and contains more edges than a spanning tree, that is, the set of active edges contains a cycle. 
 By our definition, such a time slot also increases $\ntp(\sigma)$ by one. 
-At first glance, it seems like these are important details in the definition of $\ntp(\sigma)$.  However, this is not the case -- the next lemma shows that one can always assume without loss of generality that an optimal schedule connects the graph for a continuous time interval and does it so by using only spanning trees. }
+At first glance, it seems like these are important details in the definition of $\ntp(\sigma)$. 
+However, this is not the case -- the next lemma shows that one can always assume without loss of generality that an optimal schedule connects the graph for a continuous time interval and does so by using only spanning trees. }
 
 \lasse{
 Finally, in this paper we only consider weight functions $w : E \rightarrow \NN_0$ with integral values. 
-If rational weights are considered instead, it is easy to see that by multiplying with the smallest common denominator one gets an equivalent integral problem. If real-valued weights are considered, all our hardness proofs of course propagate. Furthermore, it can be shown that  \cref{le:structure} still holds true in a similar way, and the problem remains to be contained in the class NP. We choose to omit the technical details.
+If rational weights are considered instead, it is easy to see that by multiplying with the smallest common denominator one obtains an equivalent instance with integral weights. 
+If real-valued weights are considered, all our hardness results of course still hold. 
+Furthermore, by a slight adaption of the proof it can be shown that \cref{le:structure} is still true, 
+and the problem remains in NP. We choose to omit the technical details.
 }
 
 
@@ -351,7 +360,9 @@ In summary, the preceeding argument shows that if we select a schedule $\sigma$ 
 }
 \end{proof}
 
-\lasse{The ideas presented in \cref{le:structure} also provide a formal proof that the problem {\xxxNTP} is indeed a nonpreemptive variant of Nash-Williams tree packing problem. Indeed, consider the problem of keeping the weighted graph $(G, w)$ connected, but in the case where edge preemption is allowed. We claim this problem is equivalent to Nash-Williams tree packing problem. Indeed, if $(T_1,\dots,T_\beta)$ is a sequence of $\beta$ spanning trees, then we can schedule in the $i$-th time slot exactly the edges of the $i$-th tree $T_i$ (this is not a problem, because preemption is allowed). On the other hand, if we can find a schedule that keeps the graph connected for $\beta$ time units, we can in the same manner as in the proof of \cref{le:structure} transform the schedule such a way that all the graphs of active edges in the first $\beta$ time slots are spanning trees. Therefore we see that it is possible to pack $\beta$ spanning trees in this instance.  }
+\lasse{The ideas presented in \cref{le:structure} also provide a formal proof that the problem {\xxxNTP} is indeed a nonpreemptive variant of Nash-Williams tree packing problem. Indeed, consider the problem of keeping the weighted graph $(G, w)$ connected, but in the case where edge preemption is allowed. We claim this problem is equivalent to the Nash-Williams tree packing problem. Indeed, if $(T_1,\dots,T_\beta)$ is a sequence of $\beta$ spanning trees, then we can schedule in the $i$-th time slot exactly the edges of the $i$-th tree $T_i$ 
+(this is feasible, since preemption is allowed). On the other hand, if we can find a schedule that keeps the graph connected for $\beta$ time units, we can in the same manner as in the proof of \cref{le:structure} transform the schedule in such a way that all the graphs given by the active edges in the first $\beta$ time slots are spanning trees. 
+Therefore, it is possible to pack $\beta$ spanning trees.  }
 
 %%%%%%%%%%%%%%%%%
 
