@@ -808,7 +808,7 @@ during the middle time slot $[1, 2]$; the other edge can either be scheduled dur
 or during slot $[2,3]$. 
 Edges in $W_1$ are scheduled during one of the three slots $[0,1]$, $[1,2]$, $[2,3]$.
 
-By Lemma~\ref{C}, we may assume that in a feasible schedule of length~$3$ the 
+By Lemma~\ref{le:structure}, we may assume that in a feasible schedule of length~$3$ the 
 graphs $(V,E_t)$ with $t=1,2,3$ are trees.
 Let $H_3$    be the graph that results from $G$ after contracting the edge set $W_{\ge3}$, and
 let $H_{23}$ be the graph that results from $G$ after contracting the edge set $W_2\cup W_{\ge3}$.
@@ -994,11 +994,12 @@ of problem {\xxxNTP}, even if either the treewidth or the edge weights are bound
 
 \begin{restatable}{theorem}{fptBoundedWeightAndTW}
 \label{th:fpt_weights_and_tw_bounded}
-If both the treewidth and the maximum edge weight of the input graph $G = (V, E)$ are bounded \lasse{by a constant integer $k$}, problem {\xxxNTP} \lasse{can be solved in $\bigO(|E|)$ time. The algorithm is fixed parameter tractable with respect to $k$}. 
+%If both the treewidth and the maximum edge weight of the input graph $G = (V, E)$ are bounded \lasse{by a constant integer $k$}, problem {\xxxNTP} \lasse{can be solved in $\bigO(|E|)$ time. The algorithm is fixed parameter tractable with respect to $k$}. 
+\lasse{Problem \xxxNTP is fixed parameter tractable with respect to $w_{\max} + t$, where $w_{\max}$ is the maximum edge weight and $t$ the treewidth of the input graph.}
 \end{restatable}
 \begin{proof}
-As the graph $G=(V,E)$ has treewidth at most $k$, there is a vertex $v\in V$ of degree at most $k$ \lasse{(note that we use here the property that $G$ is a simple graph, that is, it has no parallel edges.)}.
-As every edge incident to $v$ has weight at most $k$, we conclude $\ntp(G,w)\le k^2$. 
+As the graph $G=(V,E)$ has treewidth $t$, there is a vertex $v\in V$ of degree at most $t$ \lasse{(note that we use here the property that $G$ is a simple graph, that is, it has no parallel edges.)}.
+As every edge incident to $v$ has weight at most $w_{\max}$, we conclude $\ntp(G,w)\le w_{\max}^2$. 
 For every $T=1,\ldots,k^2$, we construct a formula $\Phi_T$ in monadic second-order 
 graph logic $\text{MSO}_2$, so that $\Phi_T$ is satisfiable if and only if there exists a schedule 
 of objective value at least $T$. 
@@ -1011,7 +1012,7 @@ The following statement can be formulated in $\text{MSO}_2$ by routine methods \
 & \land \forall t\in\{1,\ldots,T\}: \set{e\in E \mid x_{e,t}} \text{ is a spanning tree.}
 \end{align*}
 Now Courcelle's theorem \cite{courcelle1990monadic} implies that the satisfiability of $\Phi_T$ 
-can be checked in linear time for every $T=1,\ldots,k^2$.
+can be checked in linear time for every $T=1,\ldots,w_{\max}^2$.
 \qed
 \end{proof}
 
