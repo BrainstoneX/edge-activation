@@ -196,11 +196,12 @@ the optimal objective value is $\ntp(G,w)=2$.
 The non-preemptive tree packing problem can be understood as a topic with connections to several different 
 areas. First of all, it can be understood as a non-preemptive scheduling problem equipped with a structurally rich global constraint.
 In scheduling it is the conventional case to assume non-preemption of the scheduled tasks (see the seminal books of Pinedo~\cite{pinedo2012scheduling} and Brucker~\cite{brucker1999scheduling}).
-This shows the importance of handling non-premtion also for more structured scheduling problems like tree packing.
-Although the scheduling literature is vast, we are not aware of any existing literature treating this from the scheduling perspective.
+This shows the importance of handling non-preemption also for more structured scheduling problems like tree packing.
+In the work of Adjiashvili et al.~\cite{adjiashvili2014time} the computational complexity of time-expanded packing problems with non-preemption constraints 
+is studied and the authors obtain approximation algorithms for several of the studied problem variants.
 }
 
-\lasse{Another connection to a different area of mathematics is the area of \emph{time-varying graphs} (TVG). These are graphs over time, where every edge is equipped with the information at which time it is available.
+\lasse{Our model is also strongly related ot the area of \emph{time-varying graphs} (TVG). These are graphs over time, where every edge is equipped with the information at which time it is available.
 Time-varying graphs are used to model networks, where change in the network topology is an inherent part of the system. 
 This includes for example delay-tolerant networks where information links often fail, like satellite networks, vehicular or passenger networks.
  It includes futhermore concepts like opportunistic-mobility networks, where mobile carriers like ferries or busses are equipped with short-range radio capabilities and the mobility of the carriers is used for information transport. 
@@ -210,7 +211,7 @@ This includes for example delay-tolerant networks where information links often 
  for as long as possible.}
  
  \lasse{
-Finally, our problem can be understood as a tree packing problem (like the classical results of Nash-Williams \cite{Nash-Williams1961} and Edmonds \cite{edmonds1965minimum}) with additional global constraints enforcing non-preemptiveness. 
+Finally, our problem is a modification of the classic tree packing problem (like the classical results of Nash-Williams \cite{Nash-Williams1961} and Edmonds \cite{edmonds1965minimum}) with additional global constraints enforcing non-preemptiveness. 
 A similar problem has been studied by Heuvel and Thomassé \cite{van2012cyclic}.
  Translated to our vocabulary, their work is also an investigation of non-preemptive scheduling, but there are two key differences to our problem: First, they consider a cyclic scheduling where the lifetime of a scheduled element can wrap around from the end to the beginning of the schedule.
   Second, instead of finding the longest possible time such that the scheduled elements connect the graph at any time point, they consider a dual problem, where the goal is to find the shortest possible time such that the scheduled elements are acyclic at any time point. 
