@@ -43,7 +43,8 @@
 \DeclareMathOperator{\ntp}{\text{\sf ntp}}
 \newcommand{\greedy}{\text{\sf Greedy}}
 
-\newcommand{\lasse}[1]{\textcolor{blue}{#1}}
+%\newcommand{\lasse}[1]{\textcolor{blue}{#1}}
+\newcommand{\lasse}[1]{#1}
 
 
 
@@ -100,7 +101,7 @@ and $w(e) = 2$ for all edges. The optimal solution packs three spanning trees. I
 %%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htpb]
 \centering
-\includegraphics[scale=1]{img/stp-example}
+\includegraphics[scale=1]{stp-example}
 \caption{\lasse{An instance of Nash-Williams' spanning tree packing problem. The optimal solution packs three spanning trees, as indicated on the right.}}
 \label{fig_spt_example}
 \end{figure}
@@ -414,8 +415,8 @@ every triplet sum up to $Q$?
 In the following, we show that {\xxxNTP} is strongly NP-hard for \lasse{complete bipartite graphs $K_{2,\ell}$} (Theorem~\ref{thm:hardness_complete_bipartite}). \lasse{As the graph $K_{2,\ell}$ has unbounded bandwidth, one could hope that the problem becomes easy for graphs of bandwidth 2. But as we show in Theorem~\ref{thm:hardness_bandwidth}, also in this case the problem stays strongly NP-hard. As the graph $K_{2,\ell}$ is series-parallel and bandwidth-2 graphs are outerplanar, it follows that problem {\xxxNTP} is intractable even on popular subclasses of treewidth-2 graphs. }
 \begin{figure}[htpb]
 \centering
-\includegraphics[scale=1]{img/K_2_l}
-\includegraphics[scale=1]{img/bandwidth_2}
+\includegraphics[scale=1]{K_2_l}
+\includegraphics[scale=1]{bandwidth_2}
 \caption{\lasse{A complete bipartite graph $K_{2,\ell}$ and a graph of bandwidth 2. Problem {\xxxNTP} is NP-hard even on these simple graphs.} }
 \label{fig_easy_graphs}
 \end{figure}
@@ -601,7 +602,7 @@ The reduction is sketched in \cref{fig_hamilton_cycle_lemma}. Let $H' = (V, E)$.
 }
 \begin{figure}[htpb]
 \centering
-\includegraphics[scale=0.92]{img/hamilton-prime}
+\includegraphics[scale=0.92]{hamilton-prime}
 \caption{\lasse{Construction used in the proof of \cref{le:Ham-to-Ham}.}}
 \label{fig_hamilton_cycle_lemma}
 \end{figure}
@@ -621,7 +622,7 @@ We claim that the Hamilton path $P$ necessarily switches between $H'_1$ and $H'_
 
 \begin{figure}[htpb]
 \centering
- \includegraphics[scale=1.1]{img/act-hamilton-cycle-a}
+ \includegraphics[scale=1.1]{act-hamilton-cycle-a}
 \caption{Sketch of the {\xxxNTP} instance $(G, w)$ obtained from the 4-regular bipartite graph $H$.}
 \label{fig:reduction-overview}
 \end{figure}
@@ -649,9 +650,9 @@ is called the \emph{$i$-th gadget of type L} and has edges and edge weights as d
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htpb]
 \centering
- \includegraphics[scale=1.1]{img/act-hamilton-cycle-b-simplified}
+ \includegraphics[scale=1.1]{act-hamilton-cycle-b-simplified}
 \qquad\qquad\qquad
- \includegraphics[scale=1.1]{img/act-hamilton-cycle-c}
+ \includegraphics[scale=1.1]{act-hamilton-cycle-c}
 \caption{Gadget of type $L$ (on the left) and gadget of type $R$ (on the right).}
 \label{fig:act-hamilton-cycle}
 \end{figure}
@@ -774,7 +775,7 @@ Lemma~\ref{lemma:gadgets_properties} still holds true.
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[htpb]
 \centering
-\includegraphics[scale=1.1]{img/act-hamilton-cycle-b}
+\includegraphics[scale=1.1]{act-hamilton-cycle-b}
 \caption{The modified version of the type $L$ gadget without edges of weight $7$.}
 \label{fig_hamilton_cycle_improved}
 \end{figure}
@@ -1146,7 +1147,10 @@ What is the complexity of this question for $\beta\in\{4,5,6\}$?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection*{Acknowledgements.}
-\lasse{We thank the anonymous reviewers, whose comments greatly helped to improve the quality of the paper.} Stefan Lendl and Lasse Wulf acknowledge the support of the Austrian Science Fund (FWF): W1230.
+\lasse{We thank the anonymous reviewers, whose comments greatly helped to improve the quality of the paper.} 
+
+\subsubsection*{Funding.}
+Stefan Lendl and Lasse Wulf acknowledge the support of the Austrian Science Fund (FWF): W1230.
 Gerhard Woeginger acknowledges support by the DFG RTG 2236 ``UnRAVeL''.
 
 %
