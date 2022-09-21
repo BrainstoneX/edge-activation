@@ -242,7 +242,7 @@ Reduction from \textsc{3-Partition}. Let $A = \fromto{a_1}{a_{3n}}$ be an instan
 \section{Proof sketch that integrality gap for tree packing is at most log(n)}
 The proof is from Anders Martinsson who mentioned it to me in private conversation after hearing a talk about non-preemptive tree packing.
 
-The following lemma uses random scheduling of the edges and implies that the integrality gap of non-preemptive tree packing is at most $\log n$.
+The following lemma uses random scheduling of the edges and implies that the integrality gap of non-preemptive tree packing is at most $O(\log n)$. It also implies a randomized $O(\log n)$-approximation algorithm.
 
 \begin{lemma}
 There is $c > 0$ such that the following holds: Let $(G, w)$ be an instance of the non-preemptive tree packing problem, and let $k$ be the weight of a minimum weight cut. If $T = ck\log n$ and every edge is scheduled uniformly at random in the interval $[0, T]$, then with probability at least 1/2 the graph is connected for at least $T/4$ time slots.
@@ -258,7 +258,7 @@ The probability that a fixed minimum weight cut survives the contraction procedu
 \]
 For different minimum cuts these are disjoint events and therefore there are at most ${n \choose 2} = \Theta(n^2)$ different minimum weight cuts.
 
-This argument can be extended: Let $\alpha \geq 1$ and let $C$ be a cut of weight $\alpha k$. The probability that $C$ survives the contraction algorithm can be shown to be at least $n^{-c_0\alpha}$ for some constant $c_0 > 0$. Therefore there are at most $n^{c_0\alpha}$ cuts of weight $k\alpha$. Details for the proof of this known fact be found in the attached lecture notes.
+This argument can be extended: Let $\alpha \geq 1$ and let $C$ be a cut of weight $\alpha k$. The probability that $C$ survives the contraction algorithm can be shown to be at least $n^{-c_0\alpha}$ for some constant $c_0 > 0$. Therefore there are at most $n^{c_0\alpha}$ cuts of weight $k\alpha$. Details for the proof of this known for example be found in Shayan Oveis Gharan's lecture notes (section on Karger's algorithm).
 
 In the following argument, consider a fixed time slot $i \in \fromto{1}{T}$. Given a fixed cut $C$ of weight $k\alpha$, 
 we observe that $C$ disconnects the graph during time slot $i$ if and only if none of its edges are active at time slot $i$. An edge is active at time slot $i$ with probability at least $w(e)/(3T)$ and the edges are scheduled independent of each other.
